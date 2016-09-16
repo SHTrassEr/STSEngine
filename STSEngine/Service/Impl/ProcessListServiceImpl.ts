@@ -5,9 +5,13 @@
         protected commitedProcessList: IProcess[];
         protected processList: IProcess[];
 
+        protected attributeList: IAttributeList;
+
         constructor() {
             this.commitedProcessList = [];
             this.processList = [];
+            this.attributeList = new STSEngine.AttributeListImpl();
+            this.setLastId(0);
         }
 
         public getProcessList(): IProcess[] {
@@ -16,6 +20,22 @@
 
         public addProcess(process: IProcess): void {
             this.processList.push(process);
+            process.init();
+        }
+
+        public getNewProcessId(): number {
+            var lastObjectId = this.getLastId();
+            var newObjectId = lastObjectId + 1;
+            this.setLastId(newObjectId);
+            return newObjectId;
+        }
+
+        protected getLastId(): number {
+            return this.attributeList.getAttribute(ServiceAttributeType.LastId);
+        }
+
+        protected setLastId(id: number): void {
+            this.attributeList.setAttribute(ServiceAttributeType.LastId, 0);
         }
 
         public commit(): void {

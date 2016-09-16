@@ -3,9 +3,9 @@
 
     export interface IWorld {
         getSettings(): IWorldSettings;
+        getObjectListService(): IObjectListService;
+        getProcessListService(): IProcessListService;
 
-        getObjectStateListService(): IObjectListService;
-
+        step(): void;
     }
-
 }

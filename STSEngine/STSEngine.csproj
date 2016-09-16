@@ -52,6 +52,8 @@
     <TypeScriptCompile Include="Exception\NotImplementedException.ts" />
     <TypeScriptCompile Include="Exception\BaseException.ts" />
     <TypeScriptCompile Include="Process\impl\BaseProcessImpl.ts" />
+    <TypeScriptCompile Include="Process\impl\CreateObjectProcessImpl.ts" />
+    <TypeScriptCompile Include="Process\ProcessAttributeType.ts" />
     <TypeScriptCompile Include="Process\ProcessStatus.ts" />
     <TypeScriptCompile Include="Service\IEngine.ts" />
     <TypeScriptCompile Include="Service\IFilterProcessListService.ts" />
@@ -68,6 +70,7 @@
     <TypeScriptCompile Include="Service\Impl\ProcessListServiceImpl.ts" />
     <TypeScriptCompile Include="Service\IObjectListService.ts" />
     <TypeScriptCompile Include="Service\IProcessListService.ts" />
+    <TypeScriptCompile Include="Service\ServiceAttributeType.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">

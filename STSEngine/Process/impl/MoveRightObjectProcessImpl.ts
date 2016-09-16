@@ -3,7 +3,7 @@
 
     export class MoveRightObjectProcessImpl extends BaseProcessImpl {
 
-        public step() {;
+        public step() {
         }
 
         public isFinished(state: IObject): boolean {

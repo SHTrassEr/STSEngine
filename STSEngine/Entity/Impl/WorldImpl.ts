@@ -4,19 +4,32 @@
     export class WorldImpl implements IWorld {
 
         private worldSettings: IWorldSettings;
-        private objectStateListService: IObjectListService;
+        private objectListService: IObjectListService;
+        private processListService: IProcessListService;
 
-        constructor(worldSettings: IWorldSettings, objectStateListService: IObjectListService) {
+        constructor(worldSettings: IWorldSettings, objectListService: IObjectListService, processListService: IProcessListService) {
             this.worldSettings = worldSettings;
-            this.objectStateListService = objectStateListService;
+            this.objectListService = objectListService;
+            this.processListService = processListService;
         }
 
         public getSettings(): IWorldSettings {
             return this.worldSettings;
         }
 
-        public getObjectStateListService(): IObjectListService {
-            return this.objectStateListService;
+        public getObjectListService(): IObjectListService {
+            return this.objectListService;
+        }
+
+        public getProcessListService(): IProcessListService {
+            return this.processListService;
+        }
+
+        public step(): void {
+            for (var i = 0; i < this.processListService.getProcessList().length; i++) {
+                var process = this.processListService.getProcessList()[i];
+                process.step();
+            }
         }
 
     }

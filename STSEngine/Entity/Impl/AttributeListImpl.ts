@@ -26,6 +26,14 @@
             this.changedAttributeList.set(attribute, value);
         }
 
+        public setAttributeList(attributeList: Map<string, any>): void {
+            for (var kvp of attributeList) {
+                var key: string = kvp[0];
+                var value: any = kvp[1];
+                this.changedAttributeList.set(key, value);
+            }
+        }
+
         public hasAttribute(attribute: string): boolean {
             if (this.changedAttributeList.has(attribute)) {
                 return true;

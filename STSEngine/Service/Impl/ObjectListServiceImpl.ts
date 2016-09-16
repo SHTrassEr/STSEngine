@@ -5,10 +5,28 @@ module STSEngine {
     export class ObjectListServiceImpl implements IObjectListService {
         protected objectList: Map<number, IObject>;
         protected changedObjectList: Map<number, IObject>;
+        protected attributeList: IAttributeList;
 
         constructor() {
             this.objectList = new Map<number, IObject>();
             this.changedObjectList = new Map<number, IObject>();
+            this.attributeList = new STSEngine.AttributeListImpl();
+            this.setLastId(0);
+        }
+
+        public getNewObjectId(): number {
+            var lastObjectId = this.getLastId();
+            var newObjectId = lastObjectId + 1;
+            this.setLastId(newObjectId);
+            return newObjectId;
+        }
+
+        protected getLastId(): number {
+            return this.attributeList.getAttribute(ServiceAttributeType.LastId);
+        }
+
+        protected setLastId(id: number): void {
+            this.attributeList.setAttribute(ServiceAttributeType.LastId, 0);
         }
 
         public getObject(objectId: number): IObject {

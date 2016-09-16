@@ -1,4 +1,6 @@
-﻿module STSEngine {
+﻿/// <reference path="BaseException.ts" />
+
+module STSEngine {
     "use strict";
 
     export class NotImplementedException extends BaseException {

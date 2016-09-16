@@ -6,20 +6,24 @@
         protected attributeList: IAttributeList;
 
         private world: IWorld;
-        private id: number;
         private status: ProcessStatus;
 
-        constructor(id: number, world: IWorld) {
+        constructor(id: number, world: IWorld, attributeList?: Map<string, any>) {
             this.attributeList = new AttributeListImpl();
 
-            this.id = id;
+            this.setAttribute(ProcessAttributeType.Id, id);
             this.world = world;
-            this.objectListService = world.getObjectStateListService();
+            this.objectListService = world.getObjectListService();
             this.worldSettings = world.getSettings();
             this.status = ProcessStatus.Init;
+
+            if (attributeList) {
+                this.setAttributeList(attributeList);
+            }
         }
 
         public init(): void {
+            
         }
 
         public finish(): void {
@@ -37,7 +41,7 @@
         }
 
         public getId(): number {
-            return this.id;
+            return this.getAttribute(ProcessAttributeType.Id);
         }
 
         protected setStatus(status: ProcessStatus) {
@@ -52,6 +56,14 @@
             return this.objectListService.getObject(objectId);
         }
 
+        protected getObjectId(): number {
+            return this.getAttribute(ProcessAttributeType.ObjectId);
+        }
+
+        protected setObjectId(objectId: number): void {
+            this.setAttribute(ProcessAttributeType.ObjectId, objectId);
+        }
+
         protected objectListService: IObjectListService;
         protected worldSettings: IWorldSettings;
 
@@ -63,6 +75,10 @@
 
         public setAttribute(attribute: string, value: any): void {
             this.attributeList.setAttribute(attribute, value);
+        }
+
+        public setAttributeList(attributeList: Map<string, any>): void {
+            this.attributeList.setAttributeList(attributeList);
         }
 
         public hasAttribute(attribute: string): boolean {

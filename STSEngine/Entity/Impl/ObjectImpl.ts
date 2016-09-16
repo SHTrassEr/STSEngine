@@ -5,9 +5,12 @@
 
         protected attributeList: IAttributeList;
 
-        constructor(id: number) {
+        constructor(id: number, attributeList?: Map<string, any>) {
             this.attributeList = new AttributeListImpl();
             this.attributeList.setAttribute(ObjectAttributeType.Id, id);
+            if (attributeList) {
+                this.setAttributeList(attributeList);
+            }
         }
 
 
@@ -15,8 +18,8 @@
             return this.attributeList;
         }
 
-        setAttributeList(attributeList: IAttributeList): void {
-            this.attributeList = attributeList;
+        public setAttributeList(attributeList: Map<string, any>): void {
+            this.attributeList.setAttributeList(attributeList);
         }
 
         public getId(): number {
