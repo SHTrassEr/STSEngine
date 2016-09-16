@@ -15,7 +15,7 @@
             this.id = id;
             this.world = world;
             this.objectListService = world.getObjectStateListService();
-            this.worldSettings = world.getSettins();
+            this.worldSettings = world.getSettings();
             this.status = ProcessStatus.Init;
         }
 

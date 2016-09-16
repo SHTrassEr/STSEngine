@@ -8,7 +8,7 @@
 
         public isFinished(state: IObject): boolean {
             var position: IPoint = state.getPosition();
-            var gridSize: number = this.getWorld().getSettins().getMoveStepSize();
+            var gridSize: number = this.getWorld().getSettings().getMoveStepSize();
             return (position.getX() % gridSize) === 0;
         }
     }
