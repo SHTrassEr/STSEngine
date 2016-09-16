@@ -1,45 +1,82 @@
 ﻿module STSEngine {
     "use strict";
 
-    export abstract class ObjectImpl implements IObject {
+    export class ObjectImpl implements IObject {
 
-        constructor(id: number, objectType: ObjectType) {
-            this.id = id;
-            this.objectType = objectType;
+        protected attributeList: IAttributeList;
+
+        constructor(id: number) {
+            this.attributeList = new AttributeListImpl();
+            this.attributeList.setAttribute(ObjectAttributeType.Id, id);
+        }
+
+
+        public getAttributeList(): IAttributeList {
+            return this.attributeList;
+        }
+
+        setAttributeList(attributeList: IAttributeList): void {
+            this.attributeList = attributeList;
         }
 
         public getId(): number {
-            return this.id;
+            return this.attributeList.getAttribute(ObjectAttributeType.Id);
         }
 
-        protected id: number;
-        protected objectType: ObjectType;
-        protected moveDirection: number;
-        protected position: IPoint;
-
         public getObjectType(): ObjectType {
-            return this.objectType;
+            return this.attributeList.getAttribute(ObjectAttributeType.ObjectType);
         }
 
         public setObjectType(objectType: ObjectType): void {
-            this.objectType = objectType;
+            this.attributeList.setAttribute(ObjectAttributeType.ObjectType, objectType);
         }
 
+
         public getMoveDirection(): number {
-            return this.moveDirection;
+            return this.attributeList.getAttribute(ObjectAttributeType.MoveDirection);
         }
 
         public setMoveDirection(moveDirection: number): void {
-            this.moveDirection = moveDirection;
+            this.attributeList.setAttribute(ObjectAttributeType.MoveDirection, moveDirection);
         }
 
-        getPosition(): IPoint {
-            return this.position;
+        public getPosition(): IPoint {
+            return this.attributeList.getAttribute(ObjectAttributeType.Position);
         }
 
-        setPosition(position: IPoint): void {
-            this.position = position;
+        public setPosition(position: IPoint): void {
+            this.attributeList.setAttribute(ObjectAttributeType.Position, position);
         }
 
+
+        //IAttributeList
+
+        public getAttribute(attribute: string, defaultValue?: any): any {
+            return this.attributeList.getAttribute(attribute, defaultValue);
+        }
+
+        public setAttribute(attribute: string, value: any): void {
+            this.attributeList.setAttribute(attribute, value);
+        }
+
+        public hasAttribute(attribute: string): boolean {
+            return this.attributeList.hasAttribute(attribute);
+        }
+
+        public rollback(): void {
+            this.attributeList.rollback();
+        }
+
+        public commit(): void {
+            this.attributeList.commit();
+        }
+
+        public isDirty(): boolean {
+            return this.attributeList.isDirty();
+        }
+
+        public removeAttribute(attribute: string): void {
+            this.attributeList.removeAttribute(attribute);
+        }
     }
 }

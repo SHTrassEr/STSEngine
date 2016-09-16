@@ -42,6 +42,70 @@ var STSEngine;
 var STSEngine;
 (function (STSEngine) {
     "use strict";
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    "use strict";
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    "use strict";
+    class AttributeListImpl {
+        constructor() {
+            this.attributeList = new Map();
+            this.changedAttributeList = new Map();
+        }
+        getAttribute(attribute, defaultValue) {
+            if (this.changedAttributeList.has(attribute)) {
+                return this.changedAttributeList.get(attribute);
+            }
+            if (this.attributeList.has(attribute)) {
+                return this.attributeList.get(attribute);
+            }
+            return defaultValue;
+        }
+        setAttribute(attribute, value) {
+            this.attributeList.set(attribute, value);
+        }
+        hasAttribute(attribute) {
+            if (this.changedAttributeList.has(attribute)) {
+                return true;
+            }
+            if (this.attributeList.has(attribute)) {
+                return true;
+            }
+            return false;
+        }
+        rollback() {
+            this.changedAttributeList.clear();
+        }
+        commit() {
+            if (this.isDirty()) {
+                for (var kvp of this.changedAttributeList) {
+                    var key = kvp[0];
+                    var value = kvp[1];
+                    if (value === null || value === undefined) {
+                        this.attributeList.delete(key);
+                    }
+                    else {
+                        this.attributeList.set(key, value);
+                    }
+                }
+                this.changedAttributeList.clear();
+            }
+        }
+        isDirty() {
+            return this.changedAttributeList.size > 0;
+        }
+        removeAttribute(attribute) {
+            this.setAttribute(attribute, undefined);
+        }
+    }
+    STSEngine.AttributeListImpl = AttributeListImpl;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    "use strict";
     class KeyValuePairImpl {
         constructor(key, value) {
             this.key = key;
@@ -60,30 +124,58 @@ var STSEngine;
 (function (STSEngine) {
     "use strict";
     class ObjectImpl {
-        constructor(id, objectType) {
-            this.id = id;
-            this.objectType = objectType;
+        constructor(id) {
+            this.attributeList = new STSEngine.AttributeListImpl();
+            this.attributeList.setAttribute(STSEngine.ObjectAttributeType.Id, id);
+        }
+        getAttributeList() {
+            return this.attributeList;
+        }
+        setAttributeList(attributeList) {
+            this.attributeList = attributeList;
         }
         getId() {
-            return this.id;
+            return this.attributeList.getAttribute(STSEngine.ObjectAttributeType.Id);
         }
         getObjectType() {
-            return this.objectType;
+            return this.attributeList.getAttribute(STSEngine.ObjectAttributeType.ObjectType);
         }
         setObjectType(objectType) {
-            this.objectType = objectType;
+            this.attributeList.setAttribute(STSEngine.ObjectAttributeType.ObjectType, objectType);
         }
         getMoveDirection() {
-            return this.moveDirection;
+            return this.attributeList.getAttribute(STSEngine.ObjectAttributeType.MoveDirection);
         }
         setMoveDirection(moveDirection) {
-            this.moveDirection = moveDirection;
+            this.attributeList.setAttribute(STSEngine.ObjectAttributeType.MoveDirection, moveDirection);
         }
         getPosition() {
-            return this.position;
+            return this.attributeList.getAttribute(STSEngine.ObjectAttributeType.Position);
         }
         setPosition(position) {
-            this.position = position;
+            this.attributeList.setAttribute(STSEngine.ObjectAttributeType.Position, position);
+        }
+        //IAttributeList
+        getAttribute(attribute, defaultValue) {
+            return this.attributeList.getAttribute(attribute, defaultValue);
+        }
+        setAttribute(attribute, value) {
+            this.attributeList.setAttribute(attribute, value);
+        }
+        hasAttribute(attribute) {
+            return this.attributeList.hasAttribute(attribute);
+        }
+        rollback() {
+            this.attributeList.rollback();
+        }
+        commit() {
+            this.attributeList.commit();
+        }
+        isDirty() {
+            return this.attributeList.isDirty();
+        }
+        removeAttribute(attribute) {
+            this.attributeList.removeAttribute(attribute);
         }
     }
     STSEngine.ObjectImpl = ObjectImpl;
@@ -154,6 +246,10 @@ var STSEngine;
 var STSEngine;
 (function (STSEngine) {
     "use strict";
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    "use strict";
     (function (CommandType) {
         CommandType[CommandType["MoveUp"] = 0] = "MoveUp";
         CommandType[CommandType["MoveDown"] = 1] = "MoveDown";
@@ -172,6 +268,17 @@ var STSEngine;
         MoveDirection[MoveDirection["Right"] = 8] = "Right";
     })(STSEngine.MoveDirection || (STSEngine.MoveDirection = {}));
     var MoveDirection = STSEngine.MoveDirection;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    "use strict";
+    class ObjectAttributeType {
+    }
+    ObjectAttributeType.Id = "Id";
+    ObjectAttributeType.ObjectType = "ObjectType";
+    ObjectAttributeType.MoveDirection = "MoveDirection";
+    ObjectAttributeType.Position = "Position";
+    STSEngine.ObjectAttributeType = ObjectAttributeType;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -209,6 +316,7 @@ var STSEngine;
     "use strict";
     class BaseProcessImpl {
         constructor(id, world) {
+            this.attributeList = new STSEngine.AttributeListImpl();
             this.id = id;
             this.world = world;
             this.objectListService = world.getObjectStateListService();
@@ -239,8 +347,27 @@ var STSEngine;
         getObjectById(objectId) {
             return this.objectListService.getObject(objectId);
         }
-        setObject(objectStatus) {
-            this.objectListService.setObject(objectStatus);
+        //IAttributeList
+        getAttribute(attribute, defaultValue) {
+            return this.attributeList.getAttribute(attribute, defaultValue);
+        }
+        setAttribute(attribute, value) {
+            this.attributeList.setAttribute(attribute, value);
+        }
+        hasAttribute(attribute) {
+            return this.attributeList.hasAttribute(attribute);
+        }
+        rollback() {
+            this.attributeList.rollback();
+        }
+        commit() {
+            this.attributeList.commit();
+        }
+        isDirty() {
+            return this.attributeList.isDirty();
+        }
+        removeAttribute(attribute) {
+            this.attributeList.removeAttribute(attribute);
         }
     }
     STSEngine.BaseProcessImpl = BaseProcessImpl;
@@ -392,25 +519,54 @@ var STSEngine;
     "use strict";
     class ObjectListServiceImpl {
         constructor() {
-            this.currentObjectList = new Map();
-            this.newObjectList = new Map();
+            this.objectList = new Map();
+            this.changedObjectList = new Map();
         }
-        getCurrentObject(id) {
-            return this.currentObjectList.get(id);
-        }
-        getObject(id) {
-            return this.newObjectList.get(id);
-        }
-        setObject(object) {
-            var objectId = object.getId();
-            this.newObjectList.set(objectId, object);
-        }
-        commitChanges() {
-            for (var newObject of this.newObjectList.values()) {
-                var objectId = newObject.getId();
-                this.currentObjectList.set(objectId, newObject);
+        getObject(objectId) {
+            if (this.changedObjectList.has(objectId)) {
+                return this.changedObjectList.get(objectId);
             }
-            this.newObjectList.clear();
+            return this.objectList.get(objectId);
+        }
+        addObject(object) {
+            var objectId = object.getId();
+            this.changedObjectList.set(objectId, object);
+        }
+        removeObject(objectId) {
+            this.changedObjectList.set(objectId, undefined);
+        }
+        commit() {
+            for (var kvp of this.changedObjectList) {
+                var key = kvp[0];
+                var value = kvp[1];
+                if (value === null || value === undefined) {
+                    this.objectList.delete(key);
+                }
+                else {
+                    this.objectList.set(key, value);
+                }
+            }
+            this.changedObjectList.clear();
+            for (var o of this.objectList.values()) {
+                o.commit();
+            }
+        }
+        rollback() {
+            this.changedObjectList.clear();
+            for (var o of this.objectList.values()) {
+                o.rollback();
+            }
+        }
+        isDirty() {
+            if (this.changedObjectList.size > 0) {
+                return true;
+            }
+            for (var o of this.objectList.values()) {
+                if (o.isDirty()) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
     STSEngine.ObjectListServiceImpl = ObjectListServiceImpl;

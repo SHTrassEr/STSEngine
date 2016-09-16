@@ -1,11 +1,9 @@
 ﻿module STSEngine {
     "use strict";
 
-    export interface IObjectListService {
-
-        getCurrentObject(id: number): IObject;
+    export interface IObjectListService extends ICommitable {
         getObject(id: number): IObject;
-        setObject(state: IObject): void;
-        commitChanges(): void;
+        addObject(object: IObject): void;
+        removeObject(id: number): void;
     }
 }

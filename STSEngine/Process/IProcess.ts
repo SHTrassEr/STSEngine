@@ -1,7 +1,7 @@
 ﻿module STSEngine {
     "use strict";
 
-    export interface IProcess {
+    export interface IProcess extends IAttributeList {
         getId(): number;
         step(): void;
         getStatus(): ProcessStatus;
