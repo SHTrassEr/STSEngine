@@ -5,6 +5,6 @@
         Init,
         Executing,
         Finished,
-        Treminated
+        Terminated
     }
 }
