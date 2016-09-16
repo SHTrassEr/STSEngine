@@ -2,7 +2,7 @@
     "use strict";
 
     export interface IWorld {
-        getSettins(): IWorldSettings;
+        getSettings(): IWorldSettings;
 
         getObjectStateListService(): IObjectListService;
 

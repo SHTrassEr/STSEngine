@@ -6,14 +6,14 @@ module STSEngine {
 
         public filterProcessList(state: IObject, isValid: (state: IObject, process: IProcess) => boolean): IProcess[] {
             var processList: IProcess[] = [];
-            var filteredProcesssList: IProcess[] = [];
+            var filteredProcessList: IProcess[] = [];
             for (var p of processList) {
                 if (isValid(state, p)) {
-                    filteredProcesssList.push(p);
+                    filteredProcessList.push(p);
                 }
             }
 
-            return filteredProcesssList;
+            return filteredProcessList;
         }
 
     }

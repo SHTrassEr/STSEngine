@@ -11,7 +11,7 @@
             this.objectStateListService = objectStateListService;
         }
 
-        public getSettins(): IWorldSettings {
+        public getSettings(): IWorldSettings {
             return this.worldSettings;
         }
 
