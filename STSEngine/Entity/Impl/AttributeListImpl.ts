@@ -23,7 +23,7 @@
         }
 
         public setAttribute(attribute: string, value: any): void {
-            this.attributeList.set(attribute, value);
+            this.changedAttributeList.set(attribute, value);
         }
 
         public hasAttribute(attribute: string): boolean {
