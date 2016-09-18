@@ -6,9 +6,7 @@
         public init(world: IWorld, process: IProcess): void {
             var objectAttributeList = process.getAttribute(AttributeType.ObjectAttributeList);
             var objectListService = world.getObjectListService();
-            var objectId = objectListService.getNewObjectId();
-            var object = new STSEngine.ObjectImpl(objectId, objectAttributeList);
-            objectListService.addObject(object);
+            var object = objectListService.createObject(objectAttributeList);
             process.setProcessStatus(ProcessStatus.Finished);
         }
 

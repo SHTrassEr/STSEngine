@@ -8,8 +8,7 @@
             var objectAttributeList = this.createObjectAttributeList(world, command);
             var processAttributeList = this.createProcessAttributeList(world, objectAttributeList);
             var processListService = world.getProcessListService();
-            var process = new ProcessImpl(processListService.getNewProcessId(), ProcessType.CreateObject, processAttributeList);
-            processListService.addProcess(process);
+            var process = processListService.createProcess(ProcessType.CreateObject, processAttributeList);
             var processDispatcher = world.getProcessDispatcher();
             processDispatcher.init(world, process);
         }

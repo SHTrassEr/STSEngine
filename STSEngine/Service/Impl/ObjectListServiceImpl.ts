@@ -16,7 +16,7 @@ module STSEngine {
             this.setLastId(0);
         }
 
-        public getNewObjectId(): number {
+        protected getNewObjectId(): number {
             var lastObjectId = this.getLastId();
             var newObjectId = lastObjectId + 1;
             this.setLastId(newObjectId);
@@ -42,6 +42,13 @@ module STSEngine {
         public addObject(object: IObject): void {
             var objectId: number = object.getId();
             this.changedObjectList.set(objectId, object);
+        }
+
+        public createObject(attributeList?: Map<string, any> | IKeyValuePair[]): IObject {
+            var objectId = this.getNewObjectId();
+            var object = new ObjectImpl(objectId, attributeList);
+            this.addObject(object);
+            return object;
         }
 
         public removeObject(objectId: number): void {

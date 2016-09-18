@@ -20,11 +20,17 @@
             return this.processList;
         }
 
-        public addProcess(process: IProcess): void {
+        protected addProcess(process: IProcess): void {
             this.processList.push(process);
         }
 
-        public getNewProcessId(): number {
+        public createProcess(processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]): IProcess {
+            var process = new ProcessImpl(this.getNewProcessId(), processType, attributeList);
+            this.addProcess(process);
+            return process;
+        }
+
+        protected getNewProcessId(): number {
             var lastObjectId = this.getLastId();
             var newObjectId = lastObjectId + 1;
             this.setLastId(newObjectId);

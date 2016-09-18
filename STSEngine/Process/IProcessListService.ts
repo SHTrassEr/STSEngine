@@ -4,8 +4,7 @@ module STSEngine {
 
     export interface IProcessListService extends ICommitable {
         getProcessList(): IProcess[];
-        getNewProcessId(): number;
-        addProcess(process: IProcess): void;
+        createProcess(processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]): IProcess;
 
         getAll(condition: (item: IProcess) => boolean): IProcess[];
         getFirst(condition: (item: IProcess) => boolean): IProcess;
