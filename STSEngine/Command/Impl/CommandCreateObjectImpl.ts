@@ -1,7 +1,7 @@
 ﻿module STSEngine {
     "use strict";
 
-    export class CommandCreateObjectHandlerImpl implements ICommandHandler {
+    export class CommandCreateObjectImpl implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
 

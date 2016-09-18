@@ -11,7 +11,7 @@
 
         protected initCommandHandlerList() {
             this.commandHandlerList = [];
-            this.commandHandlerList[CommandType.CreateObject] = new CommandCreateObjectHandlerImpl();
+            this.commandHandlerList[CommandType.CreateObject] = new CommandCreateObjectImpl();
             this.commandHandlerList[CommandType.StartMoveUp] = new CommandStartMoveObjectImpl();
             this.commandHandlerList[CommandType.StartMoveDown] = new CommandStartMoveObjectImpl();
             this.commandHandlerList[CommandType.StartMoveLeft] = new CommandStartMoveObjectImpl();
