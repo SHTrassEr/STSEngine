@@ -1,7 +1,7 @@
 ﻿module STSEngine {
     "use strict";
 
-    export class CommandCreateObjectImpl implements ICommandHandler {
+    export class CommandRegisterPlayerImpl  implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
 
@@ -13,12 +13,15 @@
             processDispatcher.init(world, process);
         }
 
-        protected createObjectAttributeList(world: IWorld, command: ICommand): Map<string, any> {
-            var objectAttributeList = command.getAttribute(AttributeType.ObjectAttributeList);
+        protected createObjectAttributeList(world: IWorld, command: ICommand): IKeyValuePair[] {
+            var newPlayerId = command.getAttribute(AttributeType.NewPlayerId);
+            var objectAttributeList: IKeyValuePair[] = [];
+            objectAttributeList.push(new KeyValuePairImpl(AttributeType.PlayerId, newPlayerId));
+            objectAttributeList.push(new KeyValuePairImpl(AttributeType.Position, new STSEngine.PointImpl(0, 0)));
             return objectAttributeList;
         }
 
-        protected createProcessAttributeList(world: IWorld, objectAttributeList: Map<string, any>): Map<string, any> {
+        protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): Map<string, any> {
             var processAttributeList = new Map<string, any>();
             processAttributeList.set(AttributeType.ObjectAttributeList, objectAttributeList);
             return processAttributeList;

@@ -47,6 +47,14 @@
             this.attributeList.setAttribute(AttributeType.Position, position);
         }
 
+        public getPlayerId(): number {
+            return this.attributeList.getAttribute(AttributeType.PlayerId);
+        }
+
+        public setPlayerId(playerId: number): void {
+            this.attributeList.setAttribute(AttributeType.PlayerId, playerId);
+        }
+
 
         //IAttributeList
 

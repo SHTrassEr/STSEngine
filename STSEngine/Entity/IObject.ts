@@ -11,5 +11,8 @@
 
         getPosition(): IPoint;
         setPosition(position: IPoint): void;
+
+        getPlayerId(): number;
+        setPlayerId(playerId: number): void;
     }
 }

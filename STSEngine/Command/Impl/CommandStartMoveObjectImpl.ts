@@ -33,5 +33,16 @@
             return processAttributeList;
         }
 
+        public isValid(world: IWorld, command: ICommand): boolean {
+            var playerId = command.getPlayerId();
+            if (playerId > 0) {
+                var objectId = command.getAttribute(AttributeType.ObjectId);
+                var object = world.getObjectListService().getObject(objectId);
+                return object.getPlayerId() == playerId;
+            }
+
+            return command.getPlayerId() === 0;
+        }
+
     }
 }

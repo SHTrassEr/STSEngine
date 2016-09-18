@@ -12,6 +12,7 @@
         protected initCommandHandlerList() {
             this.commandHandlerList = [];
             this.commandHandlerList[CommandType.CreateObject] = new CommandCreateObjectImpl();
+            this.commandHandlerList[CommandType.RegisterPlayer] = new CommandRegisterPlayerImpl ();
             this.commandHandlerList[CommandType.StartMoveUp] = new CommandStartMoveObjectImpl();
             this.commandHandlerList[CommandType.StartMoveDown] = new CommandStartMoveObjectImpl();
             this.commandHandlerList[CommandType.StartMoveLeft] = new CommandStartMoveObjectImpl();
@@ -24,7 +25,10 @@
 
         public execute(world: IWorld, command: ICommand): void {
             var handler = this.commandHandlerList[command.getCommandType()];
-            handler.execute(world, command);
+            if (handler.isValid(world, command)) {
+                handler.execute(world, command);
+            }
+            
         }
 
     }

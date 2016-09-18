@@ -9,6 +9,7 @@
         static Position: string = "Position";
 
         static PlayerId: string = "PlayerId";
+        static NewPlayerId: string = "NewPlayerId";
 
         static ObjectId: string = "ObjectId";
         static ProcessStatus: string = "ProcessStatus";

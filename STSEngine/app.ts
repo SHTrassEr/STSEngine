@@ -11,10 +11,8 @@
     var engine: STSEngine.IEngine = new STSEngine.EngineImpl(world, commandListService);
 
 
-    var objectAttributeList = new Map<string, any>();
-    objectAttributeList.set(STSEngine.AttributeType.Position, new STSEngine.PointImpl(0, 0));
-    var createObjectCommandAttributeList = new Map<string, any>();
-    createObjectCommandAttributeList.set(STSEngine.AttributeType.ObjectAttributeList, objectAttributeList);
+    var registerPlayerAttributeList: STSEngine.IKeyValuePair[] = [];
+    registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.NewPlayerId, 1));
 
     var moveDownCommandAttributeList = new Map<string, any>();
     moveDownCommandAttributeList.set(STSEngine.AttributeType.ObjectId, 1);
@@ -31,24 +29,25 @@
 
 
     engine.step();
-    commandListService.createCommand(STSEngine.CommandType.CreateObject, createObjectCommandAttributeList);
-    commandListService.createCommand(STSEngine.CommandType.StartMoveDown, moveDownCommandAttributeList);
+    commandListService.createCommand(STSEngine.CommandType.RegisterPlayer, 0, registerPlayerAttributeList);
+    commandListService.createCommand(STSEngine.CommandType.StartMoveDown, 1, moveDownCommandAttributeList);
     engine.step();
     engine.step();
 
-    commandListService.createCommand(STSEngine.CommandType.StartMoveRight, moveRightCommandAttributeList);
+    commandListService.createCommand(STSEngine.CommandType.StartMoveRight, 1, moveRightCommandAttributeList);
     engine.step();
     engine.step();
 
-    commandListService.createCommand(STSEngine.CommandType.StopMoveDown, moveDownCommandAttributeList);
+    commandListService.createCommand(STSEngine.CommandType.StopMoveDown, 1, moveDownCommandAttributeList);
     engine.step();
 
     engine.step();
     engine.step();
     engine.step();
     engine.step();
+    engine.step();
 
-    commandListService.createCommand(STSEngine.CommandType.StopMoveRight, moveDownCommandAttributeList);
+    commandListService.createCommand(STSEngine.CommandType.StopMoveRight, 1, moveDownCommandAttributeList);
     engine.step();
 
     var o = objectListService.getObject(1);

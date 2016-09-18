@@ -31,6 +31,7 @@
     <TypeScriptCompile Include="Command\ICommand.ts" />
     <TypeScriptCompile Include="Command\ICommandDispatcher.ts" />
     <TypeScriptCompile Include="Command\ICommandHandler.ts" />
+    <TypeScriptCompile Include="Command\Impl\CommandRegisterPlayerImpl .ts" />
     <TypeScriptCompile Include="Command\Impl\CommandCreateObjectImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandListServiceImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandStartMoveObjectImpl.ts" />

@@ -4,9 +4,10 @@
     export class CommandImpl implements ICommand {
         protected attributeList: IAttributeList;
 
-        constructor(commandType: CommandType, attributeList?: Map<string, any> | IKeyValuePair[]) {
+        constructor(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]) {
             this.attributeList = new AttributeListImpl();
             this.setCommandType(commandType);
+            this.setPlayerId(playerId);
             
             if (attributeList) {
                 this.setAttributeList(attributeList);
@@ -19,6 +20,14 @@
 
         protected setCommandType(commandType: CommandType): void {
             return this.attributeList.setAttribute(AttributeType.CommandType, commandType);
+        }
+
+        public getPlayerId(): number {
+            return this.attributeList.getAttribute(AttributeType.PlayerId);
+        }
+
+        protected setPlayerId(playerId: number): void {
+            return this.attributeList.setAttribute(AttributeType.PlayerId, playerId);
         }
 
         //IAttributeList

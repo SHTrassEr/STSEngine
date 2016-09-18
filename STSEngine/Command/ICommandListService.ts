@@ -4,7 +4,7 @@ module STSEngine {
 
     export interface ICommandListService extends IFilterable<ICommand>  {
         getCommandList(): ICommand[];
-        createCommand(commandType: CommandType, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand;
+        createCommand(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand;
         clear(): void;
     }
 }

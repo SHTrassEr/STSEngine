@@ -14,8 +14,8 @@ module STSEngine {
             return this.commandList;
         }
 
-        public createCommand(commandType: CommandType, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand {
-            var command = new CommandImpl(commandType, attributeList);
+        public createCommand(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand {
+            var command = new CommandImpl(commandType, playerId, attributeList);
             this.commandList.push(command);
             return command;
         }

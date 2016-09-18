@@ -11,7 +11,7 @@
             var processDispatcher = world.getProcessDispatcher();
             processDispatcher.finish(world, process);
         }
-
+        
         protected getProcessType(command: ICommand): ProcessType {
             switch (command.getCommandType()) {
                 case CommandType.StopMoveDown:
@@ -23,6 +23,17 @@
                 case CommandType.StopMoveRight:
                     return ProcessType.MoveRight;
             }
+        }
+
+        public isValid(world: IWorld, command: ICommand): boolean {
+            var playerId = command.getPlayerId();
+            if (playerId > 0) {
+                var objectId = command.getAttribute(AttributeType.ObjectId);
+                var object = world.getObjectListService().getObject(objectId);
+                return object.getPlayerId() == playerId;
+            }
+
+            return command.getPlayerId() === 0;
         }
     }
 }

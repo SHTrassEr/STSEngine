@@ -4,6 +4,7 @@
     export enum CommandType {
         Unknown,
         CreateObject,
+        RegisterPlayer,
         StartMoveUp,
         StartMoveDown,
         StartMoveLeft,
