@@ -32,12 +32,15 @@
     <TypeScriptCompile Include="Command\ICommandDispatcher.ts" />
     <TypeScriptCompile Include="Command\ICommandHandler.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandCreateObjectImpl.ts" />
+    <TypeScriptCompile Include="Command\Impl\CommandListServiceImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandStartMoveObjectImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandStopMoveObjectImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandDispatcherImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandImpl.ts" />
+    <TypeScriptCompile Include="Command\ICommandListService.ts" />
     <TypeScriptCompile Include="CommonConstants.ts" />
     <TypeScriptCompile Include="Entity\IAttributeList.ts" />
+    <TypeScriptCompile Include="Entity\IFilterable.ts" />
     <TypeScriptCompile Include="Entity\ICommitable.ts" />
     <TypeScriptCompile Include="Entity\IKeyValuePair.ts" />
     <TypeScriptCompile Include="Entity\Impl\AttributeListImpl.ts" />

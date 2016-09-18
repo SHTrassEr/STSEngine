@@ -3,6 +3,6 @@
 
     export interface IEngine {
         getWorld(): IWorld;
-        step(commandList?: ICommand[]): void;
+        step(): void;
     }
 }
