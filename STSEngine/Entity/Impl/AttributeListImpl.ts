@@ -26,11 +26,26 @@
             this.changedAttributeList.set(attribute, value);
         }
 
-        public setAttributeList(attributeList: Map<string, any>): void {
+        public setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void {
+            if (attributeList instanceof Array) {
+                this.setAttributeListArray(attributeList);
+            }
+            else {
+                this.setAttributeListMap(attributeList);
+            }
+        }
+
+        protected setAttributeListMap(attributeList: Map<string, any>): void {
             for (var kvp of attributeList) {
                 var key: string = kvp[0];
                 var value: any = kvp[1];
                 this.changedAttributeList.set(key, value);
+            }
+        }
+
+        protected setAttributeListArray(attributeList: IKeyValuePair[]): void {
+            for (var kvp of attributeList) {
+                this.changedAttributeList.set(kvp.getKey(), kvp.getValue());
             }
         }
 

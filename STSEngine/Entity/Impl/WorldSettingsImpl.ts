@@ -9,8 +9,12 @@
             this.settings = settings;
         }
 
-        getMoveStepSize(): number {
-            return <number>(this.settings.get("moveStepSize"));
+        public getMoveStepSize(): number {
+            return <number>(this.settings.get("MoveStepSize"));
+        }
+
+        public getTickLength(): number {
+            return <number>(this.settings.get("TickLength"));
         }
 
     }

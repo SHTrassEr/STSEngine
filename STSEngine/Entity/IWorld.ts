@@ -1,11 +1,16 @@
 ﻿module STSEngine {
     "use strict";
 
-    export interface IWorld {
+    export interface IWorld extends ICommitable {
         getSettings(): IWorldSettings;
         getObjectListService(): IObjectListService;
         getProcessListService(): IProcessListService;
 
-        step(): void;
+        getProcessDispatcher(): IProcessDispatcher;
+        getCommandDispatcher(): ICommandDispatcher;
+
+        getStepNumber(): number;
+        setStepNumber(stepNumber: number): void;
+        increaseStepNumber(): void;
     }
 }

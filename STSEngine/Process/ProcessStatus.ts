@@ -4,7 +4,6 @@
     export enum ProcessStatus {
         Init,
         Executing,
-        Finished,
-        Terminated
+        Finished
     }
 }

@@ -2,9 +2,15 @@
     "use strict";
 
     export enum CommandType {
-        MoveUp,
-        MoveDown,
-        MoveLeft,
-        MoveRight
+        Unknown,
+        CreateObject,
+        StartMoveUp,
+        StartMoveDown,
+        StartMoveLeft,
+        StartMoveRight,
+        StopMoveUp,
+        StopMoveDown,
+        StopMoveLeft,
+        StopMoveRight,
     }
 }

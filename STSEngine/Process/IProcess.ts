@@ -3,9 +3,11 @@
 
     export interface IProcess extends IAttributeList {
         getId(): number;
-        step(): void;
-        getStatus(): ProcessStatus;
-        init(): void;
-        finish(): void;
+        getProcessType(): ProcessType;
+        getProcessStatus(): ProcessStatus;
+        setProcessStatus(processStatus: ProcessStatus): void;
+
+        getObjectId(): number;
+        
     }
 }

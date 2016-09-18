@@ -5,9 +5,9 @@
 
         protected attributeList: IAttributeList;
 
-        constructor(id: number, attributeList?: Map<string, any>) {
+        constructor(id: number, attributeList?: Map<string, any> | IKeyValuePair[]) {
             this.attributeList = new AttributeListImpl();
-            this.attributeList.setAttribute(ObjectAttributeType.Id, id);
+            this.attributeList.setAttribute(AttributeType.Id, id);
             if (attributeList) {
                 this.setAttributeList(attributeList);
             }
@@ -18,37 +18,33 @@
             return this.attributeList;
         }
 
-        public setAttributeList(attributeList: Map<string, any>): void {
-            this.attributeList.setAttributeList(attributeList);
-        }
-
         public getId(): number {
-            return this.attributeList.getAttribute(ObjectAttributeType.Id);
+            return this.attributeList.getAttribute(AttributeType.Id);
         }
 
         public getObjectType(): ObjectType {
-            return this.attributeList.getAttribute(ObjectAttributeType.ObjectType);
+            return this.attributeList.getAttribute(AttributeType.ObjectType);
         }
 
         public setObjectType(objectType: ObjectType): void {
-            this.attributeList.setAttribute(ObjectAttributeType.ObjectType, objectType);
+            this.attributeList.setAttribute(AttributeType.ObjectType, objectType);
         }
 
 
         public getMoveDirection(): number {
-            return this.attributeList.getAttribute(ObjectAttributeType.MoveDirection);
+            return this.attributeList.getAttribute(AttributeType.MoveDirection);
         }
 
         public setMoveDirection(moveDirection: number): void {
-            this.attributeList.setAttribute(ObjectAttributeType.MoveDirection, moveDirection);
+            this.attributeList.setAttribute(AttributeType.MoveDirection, moveDirection);
         }
 
         public getPosition(): IPoint {
-            return this.attributeList.getAttribute(ObjectAttributeType.Position);
+            return this.attributeList.getAttribute(AttributeType.Position);
         }
 
         public setPosition(position: IPoint): void {
-            this.attributeList.setAttribute(ObjectAttributeType.Position, position);
+            this.attributeList.setAttribute(AttributeType.Position, position);
         }
 
 
@@ -60,6 +56,11 @@
 
         public setAttribute(attribute: string, value: any): void {
             this.attributeList.setAttribute(attribute, value);
+        }
+
+
+        public setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void {
+            this.attributeList.setAttributeList(attributeList);
         }
 
         public hasAttribute(attribute: string): boolean {

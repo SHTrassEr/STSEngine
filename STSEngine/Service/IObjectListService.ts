@@ -6,5 +6,8 @@
         getObject(id: number): IObject;
         addObject(object: IObject): void;
         removeObject(id: number): void;
+
+        getAll(condition: (item: IObject) => boolean): IObject[];
+        getFirst(condition: (item: IObject) => boolean): IObject;
     }
 }

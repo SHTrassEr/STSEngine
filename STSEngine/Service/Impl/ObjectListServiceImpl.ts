@@ -6,11 +6,13 @@ module STSEngine {
         protected objectList: Map<number, IObject>;
         protected changedObjectList: Map<number, IObject>;
         protected attributeList: IAttributeList;
+        protected filterService: IFilterService<IObject>;
 
         constructor() {
             this.objectList = new Map<number, IObject>();
             this.changedObjectList = new Map<number, IObject>();
             this.attributeList = new STSEngine.AttributeListImpl();
+            this.filterService = new FilterServiceImpl<IObject>();
             this.setLastId(0);
         }
 
@@ -83,6 +85,14 @@ module STSEngine {
             }
 
             return false;
+        }
+
+        public getAll(condition: (item: IObject) => boolean): IObject[] {
+            return this.filterService.getAll(this.objectList.values(), condition);
+        }
+
+        public getFirst(condition: (item: IObject) => boolean): IObject {
+            return this.filterService.getFirst(this.objectList.values(), condition);
         }
     }
 }

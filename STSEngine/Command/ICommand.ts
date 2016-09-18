@@ -1,9 +1,8 @@
 ﻿module STSEngine {
     "use strict";
 
-    export interface ICommand {
+    export interface ICommand extends IAttributeList {
         getCommandType(): CommandType;
-        getParamList(): IKeyValuePair[];
     }
 
 }
