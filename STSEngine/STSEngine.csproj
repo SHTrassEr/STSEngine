@@ -27,6 +27,8 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Action\Impl\PlayerActionImpl.ts" />
+    <TypeScriptCompile Include="Action\IPlayerAction.ts" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Command\ICommand.ts" />
     <TypeScriptCompile Include="Command\ICommandDispatcher.ts" />
