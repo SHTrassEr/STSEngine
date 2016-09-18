@@ -75,6 +75,7 @@
     <TypeScriptCompile Include="Process\ProcessStatus.ts" />
     <TypeScriptCompile Include="Service\IEngine.ts" />
     <TypeScriptCompile Include="Service\IFilterService.ts" />
+    <TypeScriptCompile Include="Service\IGameServer.ts" />
     <TypeScriptCompile Include="Service\IMetronome.ts" />
     <TypeScriptCompile Include="Service\Impl\EngineImpl.ts" />
     <TypeScriptCompile Include="Service\Impl\FilterServiceImpl.ts" />
@@ -82,6 +83,7 @@
     <TypeScriptCompile Include="Process\IProcess.ts" />
     <TypeScriptCompile Include="Service\Entity\Impl\PointServiceImpl.ts" />
     <TypeScriptCompile Include="Service\Entity\IPointService.ts" />
+    <TypeScriptCompile Include="Service\Impl\GameServerImpl.ts" />
     <TypeScriptCompile Include="Service\Impl\MetronomeImpl.ts" />
     <TypeScriptCompile Include="Service\Impl\ObjectListServiceImpl.ts" />
     <TypeScriptCompile Include="Process\impl\ProcessListServiceImpl.ts" />

@@ -45,6 +45,17 @@
             this.attributeList.setAttribute(ServiceAttributeType.LastId, 0);
         }
 
+        public removeFinished(): void {
+            var list: IProcess[] = [];
+            for (var process of this.processList) {
+                if (process.getProcessStatus() != ProcessStatus.Finished) {
+                    list.push(process);
+                }
+            }
+
+            this.processList = list;
+        }
+
         public commit(): void {
             this.commitedProcessList = this.processList.slice();
             for (var process of this.processList) {

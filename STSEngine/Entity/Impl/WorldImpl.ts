@@ -42,11 +42,11 @@
         }
 
         public getStepNumber(): number {
-            return this.attributeList.getAttribute(STSEngine.AttributeType.StepNumber);
+            return this.attributeList.getAttribute(AttributeType.StepNumber);
         }
 
         public setStepNumber(stepNumber: number): void {
-            this.attributeList.setAttribute(STSEngine.AttributeType.StepNumber, 0);
+            this.attributeList.setAttribute(AttributeType.StepNumber, stepNumber);
         }
 
         public increaseStepNumber(): void {

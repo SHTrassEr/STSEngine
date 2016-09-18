@@ -31,6 +31,12 @@
                 var process = this.processListService.getProcessList()[i];
                 this.processDispatcher.execute(this.world, process);
             }
+
+            this.processListService.removeFinished();
+        }
+
+        public getCommandList(): ICommand[] {
+            return this.commandListService.getCommandList();
         }
 
         protected processCommandList() {

@@ -7,9 +7,12 @@
             var processListService = world.getProcessListService();
             var objectId = command.getAttribute(AttributeType.ObjectId);
             var processType = this.getProcessType(command);
-            var process = processListService.getFirst(p => (p.getObjectId() === objectId && p.getProcessType() === processType));
+            var processList = processListService.getAll(p => (p.getObjectId() === objectId && p.getProcessType() === processType));
             var processDispatcher = world.getProcessDispatcher();
-            processDispatcher.finish(world, process);
+            for (var process of processList) {
+                processDispatcher.finish(world, process);
+            }
+            
         }
         
         protected getProcessType(command: ICommand): ProcessType {
