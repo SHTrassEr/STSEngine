@@ -1,0 +1,12 @@
+{
+  "name": "stsengine.server",
+  "version": "0.0.0",
+  "description": "STSEngine.Server",
+  "main": "app.js",
+  "author": {
+    "name": "User"
+  },
+  "dependencies": {
+    "amdrequire": "0.0.3"
+  }
+}

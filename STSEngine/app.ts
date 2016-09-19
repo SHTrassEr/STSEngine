@@ -1,4 +1,6 @@
-﻿function ready() {
+﻿/*
+
+function ready() {
     var settings: Map<string, number | string> = new Map<string, number | string>();
     var worldSettings: STSEngine.IWorldSettings = new STSEngine.WorldSettingsImpl(settings);
     settings.set("moveStepSize", 10);
@@ -33,7 +35,7 @@
             content.innerHTML = ("stepNumber: " + stepNumber + "<br/>x: " + o.getPosition().getX() + " y:" + o.getPosition().getY());
         }
 
-    }, 100);
+    }, 50);
 
 
 
@@ -105,3 +107,4 @@
 
 
 document.addEventListener("DOMContentLoaded", ready);
+*/

@@ -1,8 +1,8 @@
-﻿module STSEngine {
+﻿namespace STSEngine {
     "use strict";
 
     export class GameServerImpl implements IGameServer {
-
+        protected emptyCommandList: ICommand[];
         protected engine: IEngine;
         protected metronome: IMetronome;
         protected commandLog: ICommand[][];
@@ -12,13 +12,14 @@
             this.engine = engine;
             this.metronome = new MetronomeImpl(100);
             this.commandLog = [];
+            this.emptyCommandList = [];
             this.timerId = 0;
         }
 
         public start(): void {
             var world = this.engine.getWorld();
             this.metronome.start();
-            this.timerId = setInterval( () => this.updateWorld(), 100);
+            this.timerId = setInterval( () => this.updateWorld(), 10);
         }
 
         public getCommandLog(startStepNumber: number): ICommand[][] {

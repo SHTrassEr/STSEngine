@@ -1,4 +1,4 @@
-﻿module STSEngine {
+﻿namespace STSEngine {
     "use strict";
 
     export class ProcessListServiceImpl implements IProcessListService {
@@ -46,14 +46,19 @@
         }
 
         public removeFinished(): void {
-            var list: IProcess[] = [];
+            var list: IProcess[];
             for (var process of this.processList) {
                 if (process.getProcessStatus() != ProcessStatus.Finished) {
+                    if (!list) {
+                        list = [];
+                    }
                     list.push(process);
                 }
             }
 
-            this.processList = list;
+            if (list) {
+                this.processList = list;
+            }
         }
 
         public commit(): void {

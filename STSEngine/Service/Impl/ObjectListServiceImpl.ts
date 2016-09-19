@@ -1,5 +1,5 @@
 ﻿
-module STSEngine {
+namespace STSEngine {
     "use strict";
 
     export class ObjectListServiceImpl implements IObjectListService {

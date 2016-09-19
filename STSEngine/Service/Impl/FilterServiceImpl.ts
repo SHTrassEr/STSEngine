@@ -1,5 +1,5 @@
 ﻿
-module STSEngine {
+namespace STSEngine {
     "use strict";
 
     export class FilterServiceImpl<T> implements IFilterService<T> {

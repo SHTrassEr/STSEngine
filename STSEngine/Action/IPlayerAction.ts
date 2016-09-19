@@ -1,4 +1,4 @@
-﻿module STSEngine {
+﻿namespace STSEngine {
     "use strict";
 
     export interface IPlayerAction {

@@ -1,4 +1,6 @@
-﻿module STSEngine {
+﻿/// <reference path="../IPlayerAction.ts" />
+
+namespace STSEngine {
     "use strict";
 
     export class PlayerActionImpl implements IPlayerAction {
@@ -71,6 +73,8 @@
             this.commandListService.createCommand(STSEngine.CommandType.StopMoveDown, this.playerId, attributeList);
         }
 
-
-    }
+    }    
 }
+
+//export = STSEngine;
+

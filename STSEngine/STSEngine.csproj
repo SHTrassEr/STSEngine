@@ -41,7 +41,6 @@
     <TypeScriptCompile Include="Command\Impl\CommandDispatcherImpl.ts" />
     <TypeScriptCompile Include="Command\Impl\CommandImpl.ts" />
     <TypeScriptCompile Include="Command\ICommandListService.ts" />
-    <TypeScriptCompile Include="CommonConstants.ts" />
     <TypeScriptCompile Include="Entity\IAttributeList.ts" />
     <TypeScriptCompile Include="Entity\IFilterable.ts" />
     <TypeScriptCompile Include="Entity\ICommitable.ts" />
@@ -90,6 +89,7 @@
     <TypeScriptCompile Include="Service\IObjectListService.ts" />
     <TypeScriptCompile Include="Process\IProcessListService.ts" />
     <TypeScriptCompile Include="Service\ServiceAttributeType.ts" />
+    <TypeScriptCompile Include="STSEngine.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
@@ -137,7 +137,7 @@
     <TypeScriptOutFile>STSEngine.js</TypeScriptOutFile>
     <TypeScriptOutDir>
     </TypeScriptOutDir>
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
@@ -147,4 +147,8 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y $(SolutionDir)STSEngine\STSEngine.js $(SolutionDir)STSEngine.Server\Scripts\lib\STSEngine.js
+copy /Y $(SolutionDir)STSEngine\STSEngine.js.map $(SolutionDir)STSEngine.Server\Scripts\lib\STSEngine.js.map</PostBuildEvent>
+  </PropertyGroup>
 </Project>

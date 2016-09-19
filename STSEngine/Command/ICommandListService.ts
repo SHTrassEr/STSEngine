@@ -1,5 +1,5 @@
 ﻿
-module STSEngine {
+namespace STSEngine {
     "use strict";
 
     export interface ICommandListService extends IFilterable<ICommand>  {
