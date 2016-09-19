@@ -15,7 +15,7 @@ function ready() {
 
     var gameServer = new STSEngine.GameServerImpl(engine);
 
-    gameServer.start();
+    //gameServer.start();
 
 
     var registerPlayerAttributeList: STSEngine.IKeyValuePair[] = [];
@@ -25,9 +25,9 @@ function ready() {
     
     
 
-    var content = document.getElementById("content");
+    
 
-    setInterval(() => {
+    /*setInterval(() => {
         var o = objectListService.getObject(1);
         if (o) {
             var stepNumber = world.getStepNumber();
@@ -35,7 +35,7 @@ function ready() {
         }
 
     }, 50);
-
+    */
 
 
 
@@ -102,10 +102,16 @@ function ready() {
 
 
 
-    var ws = new WebSocket('ws://localhost:62785');
+    var socket = new WebSocket('ws://localhost:62785');
 
-    ws.onmessage = function (message) {
+    socket.onopen = function () {
+        socket.send("test");
+    };
 
+    var content = document.getElementById("content");
+    
+    socket.onmessage = function (message) {
+        content.innerHTML = message.data;
     }
 
 

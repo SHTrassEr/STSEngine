@@ -7,22 +7,22 @@ var STSEngine = require(__dirname + '/Scripts/Lib/STSEngine.js');
 
 var objectListService = new STSEngine.ObjectListServiceImpl();
 
-var port = process.env.port || 1337
-http.createServer(function (req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World\n');
-}).listen(port);
+
+var WebSocketServer = require('ws').Server;
+var wss = new WebSocketServer({ port: 62785 });
 
 
-
-var WebSocketServer = require('ws').Server
-    , wss = new WebSocketServer({ port: 62785 });
-
+var clients = {};
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
     });
+
+    console.log('connected');
+
+    var id = Math.random();
+    clients[id] = ws;
 
     ws.send('something');
 });
@@ -42,7 +42,17 @@ var playerAction = new STSEngine.PlayerActionImpl(1, commandListService);
 
 var gameServer = new STSEngine.GameServerImpl(engine);
 
+
+var handler = (world, currentStepNumber: number, commandList) => {
+    for (var key in clients) {
+        clients[key].send("" + currentStepNumber);
+    }
+};
+
+gameServer.setOnUpdateWorld(handler);
 gameServer.start();
+
+
 
 
 var registerPlayerAttributeList = [];

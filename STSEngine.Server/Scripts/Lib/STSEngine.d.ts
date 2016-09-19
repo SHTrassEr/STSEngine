@@ -449,6 +449,7 @@ declare namespace STSEngine {
     interface IGameServer {
         start(): void;
         getCommandLog(startStepNumber: number): ICommand[][];
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
     }
 }
 declare namespace STSEngine {
@@ -520,11 +521,13 @@ declare namespace STSEngine {
         protected metronome: IMetronome;
         protected commandLog: ICommand[][];
         protected timerId: number;
+        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
         constructor(engine: IEngine);
         start(): void;
         getCommandLog(startStepNumber: number): ICommand[][];
         protected updateWorld(): void;
         protected getStepNumber(): number;
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
     }
 }
 declare namespace STSEngine {

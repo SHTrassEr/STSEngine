@@ -8,6 +8,8 @@
         protected commandLog: ICommand[][];
         protected timerId: number;
 
+        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
+
         constructor(engine: IEngine) {
             this.engine = engine;
             this.metronome = new MetronomeImpl(100);
@@ -29,10 +31,15 @@
         protected updateWorld() {
             var metronomeStepNumber = this.metronome.getTickCount();
             var currentStepNumber = this.getStepNumber();
-
             while (currentStepNumber < metronomeStepNumber) {
                 currentStepNumber += 1;
-                this.commandLog[currentStepNumber] = this.engine.getCommandList();
+                var commandList = this.engine.getCommandList();
+                this.commandLog[currentStepNumber] = commandList;
+
+                if (this.onUpdateWorld) {
+                    this.onUpdateWorld(this.engine.getWorld(), currentStepNumber, commandList);
+                }
+                
                 this.engine.step();
             }
         }
@@ -41,6 +48,12 @@
             var world = this.engine.getWorld();
             return world.getStepNumber();
         }
+
+        public setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void {
+            this.onUpdateWorld = handler;
+        }
+
+
     }
 }
 
