@@ -22,14 +22,8 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.css" />
-    <Content Include="index.html" />
-    <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Action\Impl\PlayerActionImpl.ts" />
     <TypeScriptCompile Include="Action\IPlayerAction.ts" />
-    <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="Command\ICommand.ts" />
     <TypeScriptCompile Include="Command\ICommandDispatcher.ts" />
     <TypeScriptCompile Include="Command\ICommandHandler.ts" />
@@ -91,14 +85,6 @@
     <TypeScriptCompile Include="Service\ServiceAttributeType.ts" />
     <TypeScriptCompile Include="STSEngine.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-  </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
@@ -149,6 +135,11 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y $(SolutionDir)STSEngine\STSEngine.js $(SolutionDir)STSEngine.Server\Scripts\lib\STSEngine.js
-copy /Y $(SolutionDir)STSEngine\STSEngine.js.map $(SolutionDir)STSEngine.Server\Scripts\lib\STSEngine.js.map</PostBuildEvent>
+copy /Y $(SolutionDir)STSEngine\STSEngine.js.map $(SolutionDir)STSEngine.Server\Scripts\lib\STSEngine.js.map
+copy /Y $(SolutionDir)STSEngine\STSEngine.d.ts $(SolutionDir)STSEngine.Server\Scripts\lib\STSEngine.d.ts
+
+copy /Y $(SolutionDir)STSEngine\STSEngine.js $(SolutionDir)STSEngine.Site\wwwroot\js\STSEngine.js
+copy /Y $(SolutionDir)STSEngine\STSEngine.js.map $(SolutionDir)STSEngine.Site\wwwroot\js\STSEngine.js.map
+copy /Y $(SolutionDir)STSEngine\STSEngine.d.ts $(SolutionDir)STSEngine.Site\wwwroot\js\STSEngine.d.ts</PostBuildEvent>
   </PropertyGroup>
 </Project>
