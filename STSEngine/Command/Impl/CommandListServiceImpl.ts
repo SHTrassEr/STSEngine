@@ -20,6 +20,12 @@ namespace STSEngine {
             return command;
         }
 
+        public setCommandList(commandList: IKeyValuePair[][]): void {
+            for (var attributeList of commandList) {
+                this.createCommand(attributeList);
+            }
+        }
+
         public clear(): void {
             this.commandList = [];
         }

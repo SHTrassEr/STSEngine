@@ -53,6 +53,12 @@ namespace STSEngine {
             return object;
         }
 
+        public setObjectList(objectList: IKeyValuePair[][]): void {
+            for (var attributeList of objectList) {
+                this.createObject(attributeList);
+            }
+        }
+
         public removeObject(objectId: number): void {
             this.changedObjectList.set(objectId, undefined);
         }

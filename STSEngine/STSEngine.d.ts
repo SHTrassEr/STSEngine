@@ -65,6 +65,7 @@ declare namespace STSEngine {
     interface ICommandListService extends IFilterable<ICommand> {
         getCommandList(): ICommand[];
         createCommand(attributeList: IKeyValuePair[]): ICommand;
+        setCommandList(commandList: IKeyValuePair[][]): void;
         clear(): void;
     }
 }
@@ -108,6 +109,7 @@ declare namespace STSEngine {
         constructor();
         getCommandList(): ICommand[];
         createCommand(attributeList: IKeyValuePair[]): ICommand;
+        setCommandList(commandList: IKeyValuePair[][]): void;
         clear(): void;
         getAll(condition: (item: ICommand) => boolean): ICommand[];
         getFirst(condition: (item: ICommand) => boolean): ICommand;
@@ -391,6 +393,7 @@ declare namespace STSEngine {
         getProcessList(): IProcess[];
         protected addProcess(process: IProcess): void;
         createProcess(attributeList: IKeyValuePair[]): IProcess;
+        setProcessList(processList: IKeyValuePair[][]): void;
         protected getNewProcessId(): number;
         protected getLastId(): number;
         protected setLastId(id: number): void;
@@ -457,6 +460,7 @@ declare namespace STSEngine {
     interface IProcessListService extends ICommitable, IFilterable<IProcess> {
         getProcessList(): IProcess[];
         createProcess(processType: IKeyValuePair[]): IProcess;
+        setProcessList(processList: IKeyValuePair[][]): void;
         removeFinished(): void;
     }
 }
@@ -549,7 +553,7 @@ declare namespace STSEngine {
         protected engine: IEngine;
         protected metronome: IMetronome;
         protected commandLog: ICommand[][];
-        protected timerId: number;
+        protected timerId: any;
         protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
         constructor(engine: IEngine);
         start(): void;
@@ -588,6 +592,7 @@ declare namespace STSEngine {
         getObject(objectId: number): IObject;
         addObject(object: IObject): void;
         createObject(attributeList: IKeyValuePair[]): IObject;
+        setObjectList(objectList: IKeyValuePair[][]): void;
         removeObject(objectId: number): void;
         commit(): void;
         rollback(): void;
@@ -600,6 +605,7 @@ declare namespace STSEngine {
     interface IObjectListService extends ICommitable, IFilterable<IObject> {
         getObject(id: number): IObject;
         createObject(attributeList: IKeyValuePair[]): IObject;
+        setObjectList(objectList: IKeyValuePair[][]): void;
         removeObject(id: number): void;
     }
 }
@@ -608,4 +614,3 @@ declare namespace STSEngine {
         static LastId: string;
     }
 }
-declare var module: any;

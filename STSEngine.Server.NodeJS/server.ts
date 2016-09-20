@@ -1,5 +1,7 @@
-﻿
-import http = require('http');
+﻿/// <reference path="Scripts/Lib/STSEngine.d.ts" />
+//import http = require('http');
+
+import * as http from  'http';
 
 var STSEngine = require(__dirname + '/Scripts/Lib/STSEngine.js');
 
@@ -53,8 +55,10 @@ gameServer.setOnUpdateWorld(handler);
 gameServer.start();
 
 
+var registerPlayerAttributeList: STSEngine.IKeyValuePair[] = [];
+registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.CommandType, STSEngine.CommandType.RegisterPlayer));
+registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.PlayerId, 0))
+registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.NewPlayerId, 1))
+commandListService.createCommand(registerPlayerAttributeList);
 
 
-var registerPlayerAttributeList = [];
-registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.NewPlayerId, 1));
-commandListService.createCommand(STSEngine.CommandType.RegisterPlayer, 0, registerPlayerAttributeList);

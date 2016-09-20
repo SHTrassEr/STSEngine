@@ -6,7 +6,7 @@
         protected engine: IEngine;
         protected metronome: IMetronome;
         protected commandLog: ICommand[][];
-        protected timerId: number;
+        protected timerId: any;
 
         protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
 

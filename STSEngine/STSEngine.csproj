@@ -56,6 +56,7 @@
     <TypeScriptCompile Include="Entity\ObjectType.ts" />
     <TypeScriptCompile Include="Exception\NotImplementedException.ts" />
     <TypeScriptCompile Include="Exception\BaseException.ts" />
+    <TypeScriptCompile Include="Lib\node\node.d.ts" />
     <TypeScriptCompile Include="Process\impl\ProcessDispatcherImpl.ts" />
     <TypeScriptCompile Include="Process\impl\ProcessMoveRightObjectImpl.ts" />
     <TypeScriptCompile Include="Process\impl\ProcessMoveLeftObjectImpl.ts" />
@@ -85,7 +86,9 @@
     <TypeScriptCompile Include="Service\ServiceAttributeType.ts" />
     <TypeScriptCompile Include="STSEngine.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

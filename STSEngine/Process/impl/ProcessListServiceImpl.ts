@@ -31,6 +31,12 @@
             return process;
         }
 
+        public setProcessList(processList: IKeyValuePair[][]): void {
+            for (var attributeList of processList) {
+                this.createProcess(attributeList);
+            }
+        }
+
         protected getNewProcessId(): number {
             var lastObjectId = this.getLastId();
             var newObjectId = lastObjectId + 1;

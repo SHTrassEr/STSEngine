@@ -1,5 +1,9 @@
-﻿declare var module: any;
+﻿/*declare var module: NodeModule;
 
-if (typeof module != undefined && module != null) {
-    module.exports = STSEngine;
+try {
+    if (typeof module != undefined && module != null) {
+        module.exports = STSEngine;
+    }
+} catch (e) {
 }
+*/

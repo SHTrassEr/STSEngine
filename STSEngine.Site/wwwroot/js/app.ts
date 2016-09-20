@@ -15,7 +15,7 @@ function ready() {
 
     var gameServer = new STSEngine.GameServerImpl(engine);
 
-    //gameServer.start();
+    gameServer.start();
 
 
     var registerPlayerAttributeList: STSEngine.IKeyValuePair[] = [];
@@ -29,7 +29,7 @@ function ready() {
 
     
 
-    /*setInterval(() => {
+    setInterval(() => {
         var o = objectListService.getObject(1);
         if (o) {
             var stepNumber = world.getStepNumber();
@@ -37,7 +37,7 @@ function ready() {
         }
 
     }, 50);
-    */
+    
 
 
 
