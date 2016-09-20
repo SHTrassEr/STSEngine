@@ -14,8 +14,8 @@ namespace STSEngine {
             return this.commandList;
         }
 
-        public createCommand(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand {
-            var command = new CommandImpl(commandType, playerId, attributeList);
+        public createCommand(attributeList: IKeyValuePair[]): ICommand {
+            var command = new CommandImpl(attributeList);
             this.commandList.push(command);
             return command;
         }

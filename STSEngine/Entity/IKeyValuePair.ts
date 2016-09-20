@@ -2,8 +2,8 @@
     "use strict";
 
     export interface IKeyValuePair {
-        getKey(): string;
-        getValue(): any;
+        key: string;
+        value: any;
     }
 
 }

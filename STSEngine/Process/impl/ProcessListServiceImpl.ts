@@ -24,8 +24,9 @@
             this.processList.push(process);
         }
 
-        public createProcess(processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]): IProcess {
-            var process = new ProcessImpl(this.getNewProcessId(), processType, attributeList);
+        public createProcess(attributeList: IKeyValuePair[]): IProcess {
+            attributeList.push(new KeyValuePairImpl(AttributeType.Id, this.getNewProcessId()));
+            var process = new ProcessImpl(attributeList);
             this.addProcess(process);
             return process;
         }

@@ -8,7 +8,7 @@
             var objectAttributeList = this.createObjectAttributeList(world, command);
             var processAttributeList = this.createProcessAttributeList(world, objectAttributeList);
             var processListService = world.getProcessListService();
-            var process = processListService.createProcess(ProcessType.CreateObject, processAttributeList);
+            var process = processListService.createProcess(processAttributeList);
             var processDispatcher = world.getProcessDispatcher();
             processDispatcher.init(world, process);
         }
@@ -21,9 +21,10 @@
             return objectAttributeList;
         }
 
-        protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): Map<string, any> {
-            var processAttributeList = new Map<string, any>();
-            processAttributeList.set(AttributeType.ObjectAttributeList, objectAttributeList);
+        protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): IKeyValuePair[] {
+            var processAttributeList: IKeyValuePair[] = [];
+            processAttributeList.push(new KeyValuePairImpl(AttributeType.ProcessType, ProcessType.CreateObject));
+            processAttributeList.push(new KeyValuePairImpl(AttributeType.ObjectAttributeList, objectAttributeList));
             return processAttributeList;
         }
 

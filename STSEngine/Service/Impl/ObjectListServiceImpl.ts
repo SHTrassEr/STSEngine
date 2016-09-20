@@ -7,6 +7,7 @@ namespace STSEngine {
         protected changedObjectList: Map<number, IObject>;
         protected attributeList: IAttributeList;
         protected filterService: IFilterService<IObject>;
+        
 
         constructor() {
             this.objectList = new Map<number, IObject>();
@@ -44,9 +45,10 @@ namespace STSEngine {
             this.changedObjectList.set(objectId, object);
         }
 
-        public createObject(attributeList?: Map<string, any> | IKeyValuePair[]): IObject {
+        public createObject(attributeList: IKeyValuePair[]): IObject {
             var objectId = this.getNewObjectId();
-            var object = new ObjectImpl(objectId, attributeList);
+            attributeList.push(new KeyValuePairImpl(AttributeType.Id, objectId));
+            var object = new ObjectImpl(attributeList);
             this.addObject(object);
             return object;
         }

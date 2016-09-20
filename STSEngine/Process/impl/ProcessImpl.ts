@@ -4,10 +4,8 @@
     export class ProcessImpl implements IProcess {
         protected attributeList: IAttributeList;
 
-        constructor(id: number, processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]) {
+        constructor(attributeList: IKeyValuePair[]) {
             this.attributeList = new AttributeListImpl();
-            this.setId(id);
-            this.setProcessType(processType);
             this.setProcessStatus(ProcessStatus.Init);
 
             if (attributeList) {
@@ -79,6 +77,10 @@
 
         public removeAttribute(attribute: string): void {
             this.attributeList.removeAttribute(attribute);
+        }
+
+        public getKeyValuePairList(): IKeyValuePair[] {
+            return this.attributeList.getKeyValuePairList();
         }
     }
 

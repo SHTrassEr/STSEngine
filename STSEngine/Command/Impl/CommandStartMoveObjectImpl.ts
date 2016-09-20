@@ -4,10 +4,10 @@
     export class CommandStartMoveObjectImpl implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
-            var processAttributeList = this.createProcessAttributeList(world, command);
-            var processListService = world.getProcessListService();
             var processType = this.getProcessType(command);
-            var process = processListService.createProcess(processType, processAttributeList);
+            var processAttributeList = this.createProcessAttributeList(processType, command);
+            var processListService = world.getProcessListService();
+            var process = processListService.createProcess(processAttributeList);
             var processDispatcher = world.getProcessDispatcher();
             processDispatcher.init(world, process);
         }
@@ -26,10 +26,11 @@
             }
         }
 
-        protected createProcessAttributeList(world: IWorld, command: ICommand): Map<string, any> {
+        protected createProcessAttributeList(processType: ProcessType, command: ICommand): IKeyValuePair[] {
+            var processAttributeList: IKeyValuePair[] = [];
+            processAttributeList.push(new KeyValuePairImpl(AttributeType.ProcessType, processType));
             var objectId = command.getAttribute(AttributeType.ObjectId);
-            var processAttributeList = new Map<string, any>();
-            processAttributeList.set(AttributeType.ObjectId, objectId);
+            processAttributeList.push(new KeyValuePairImpl(AttributeType.ObjectId, objectId));
             return processAttributeList;
         }
 

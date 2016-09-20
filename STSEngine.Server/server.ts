@@ -12,7 +12,7 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port: 62785 });
 
 
-var clients = {};
+var clients = new Map<number, any>();
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {

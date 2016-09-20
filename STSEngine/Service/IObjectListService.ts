@@ -3,7 +3,7 @@
 
     export interface IObjectListService extends ICommitable, IFilterable<IObject> {
         getObject(id: number): IObject;
-        createObject(attributeList?: Map<string, any> | IKeyValuePair[]): IObject;
+        createObject(attributeList: IKeyValuePair[]): IObject;
         removeObject(id: number): void;
     }
 }

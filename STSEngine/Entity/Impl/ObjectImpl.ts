@@ -5,12 +5,9 @@
 
         protected attributeList: IAttributeList;
 
-        constructor(id: number, attributeList?: Map<string, any> | IKeyValuePair[]) {
+        constructor(attributeList: IKeyValuePair[]) {
             this.attributeList = new AttributeListImpl();
-            this.attributeList.setAttribute(AttributeType.Id, id);
-            if (attributeList) {
-                this.setAttributeList(attributeList);
-            }
+            this.setAttributeList(attributeList);
         }
 
 
@@ -89,6 +86,10 @@
 
         public removeAttribute(attribute: string): void {
             this.attributeList.removeAttribute(attribute);
+        }
+
+        public getKeyValuePairList(): IKeyValuePair[] {
+            return this.attributeList.getKeyValuePairList();
         }
     }
 }

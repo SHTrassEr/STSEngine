@@ -17,7 +17,7 @@ declare namespace STSEngine {
         protected playerId: number;
         constructor(playerId: number, commandListService: ICommandListService);
         getPlayerId(): number;
-        protected createAttributeList(): IKeyValuePair[];
+        protected createAttributeList(commandType: CommandType): IKeyValuePair[];
         protected addObjectIdAttribute(attributeList: IKeyValuePair[], objectId: number): void;
         startMoveRight(objectId: number): void;
         startMoveLeft(objectId: number): void;
@@ -50,15 +50,15 @@ declare namespace STSEngine {
     class CommandRegisterPlayerImpl implements ICommandHandler {
         execute(world: IWorld, command: ICommand): void;
         protected createObjectAttributeList(world: IWorld, command: ICommand): IKeyValuePair[];
-        protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): Map<string, any>;
+        protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): IKeyValuePair[];
         isValid(world: IWorld, command: ICommand): boolean;
     }
 }
 declare namespace STSEngine {
     class CommandCreateObjectImpl implements ICommandHandler {
         execute(world: IWorld, command: ICommand): void;
-        protected createObjectAttributeList(world: IWorld, command: ICommand): Map<string, any>;
-        protected createProcessAttributeList(world: IWorld, objectAttributeList: Map<string, any>): Map<string, any>;
+        protected getObjectAttributeList(command: ICommand): IKeyValuePair[];
+        protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): IKeyValuePair[];
         isValid(world: IWorld, command: ICommand): boolean;
     }
 }
@@ -68,7 +68,7 @@ declare namespace STSEngine {
         protected filterService: IFilterService<ICommand>;
         constructor();
         getCommandList(): ICommand[];
-        createCommand(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand;
+        createCommand(attributeList: IKeyValuePair[]): ICommand;
         clear(): void;
         getAll(condition: (item: ICommand) => boolean): ICommand[];
         getFirst(condition: (item: ICommand) => boolean): ICommand;
@@ -78,7 +78,7 @@ declare namespace STSEngine {
     class CommandStartMoveObjectImpl implements ICommandHandler {
         execute(world: IWorld, command: ICommand): void;
         protected getProcessType(command: ICommand): ProcessType;
-        protected createProcessAttributeList(world: IWorld, command: ICommand): Map<string, any>;
+        protected createProcessAttributeList(processType: ProcessType, command: ICommand): IKeyValuePair[];
         isValid(world: IWorld, command: ICommand): boolean;
     }
 }
@@ -100,11 +100,9 @@ declare namespace STSEngine {
 declare namespace STSEngine {
     class CommandImpl implements ICommand {
         protected attributeList: IAttributeList;
-        constructor(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]);
+        constructor(attributeList: IKeyValuePair[]);
         getCommandType(): CommandType;
-        protected setCommandType(commandType: CommandType): void;
         getPlayerId(): number;
-        protected setPlayerId(playerId: number): void;
         getAttribute(attribute: string, defaultValue?: any): any;
         setAttribute(attribute: string, value: any): void;
         setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void;
@@ -113,12 +111,13 @@ declare namespace STSEngine {
         commit(): void;
         isDirty(): boolean;
         removeAttribute(attribute: string): void;
+        getKeyValuePairList(): IKeyValuePair[];
     }
 }
 declare namespace STSEngine {
     interface ICommandListService extends IFilterable<ICommand> {
         getCommandList(): ICommand[];
-        createCommand(commandType: CommandType, playerId: number, attributeList?: Map<string, any> | IKeyValuePair[]): ICommand;
+        createCommand(attributeList: IKeyValuePair[]): ICommand;
         clear(): void;
     }
 }
@@ -129,6 +128,7 @@ declare namespace STSEngine {
         setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void;
         hasAttribute(attribute: string): boolean;
         removeAttribute(attribute: string): void;
+        getKeyValuePairList(): IKeyValuePair[];
     }
 }
 declare namespace STSEngine {
@@ -146,14 +146,14 @@ declare namespace STSEngine {
 }
 declare namespace STSEngine {
     interface IKeyValuePair {
-        getKey(): string;
-        getValue(): any;
+        key: string;
+        value: any;
     }
 }
 declare namespace STSEngine {
     class AttributeListImpl implements IAttributeList {
+        protected commitedAttributeList: Map<string, any>;
         protected attributeList: Map<string, any>;
-        protected changedAttributeList: Map<string, any>;
         constructor();
         getAttribute(attribute: string, defaultValue?: any): any;
         setAttribute(attribute: string, value: any): void;
@@ -165,21 +165,20 @@ declare namespace STSEngine {
         commit(): void;
         isDirty(): boolean;
         removeAttribute(attribute: string): void;
+        getKeyValuePairList(): IKeyValuePair[];
     }
 }
 declare namespace STSEngine {
     class KeyValuePairImpl implements IKeyValuePair {
-        private key;
-        private value;
+        key: string;
+        value: any;
         constructor(key: string, value: any);
-        getKey(): string;
-        getValue(): any;
     }
 }
 declare namespace STSEngine {
     class ObjectImpl implements IObject {
         protected attributeList: IAttributeList;
-        constructor(id: number, attributeList?: Map<string, any> | IKeyValuePair[]);
+        constructor(attributeList: IKeyValuePair[]);
         getAttributeList(): IAttributeList;
         getId(): number;
         getObjectType(): ObjectType;
@@ -198,6 +197,7 @@ declare namespace STSEngine {
         commit(): void;
         isDirty(): boolean;
         removeAttribute(attribute: string): void;
+        getKeyValuePairList(): IKeyValuePair[];
     }
 }
 declare namespace STSEngine {
@@ -385,7 +385,7 @@ declare namespace STSEngine {
 declare namespace STSEngine {
     class ProcessImpl implements IProcess {
         protected attributeList: IAttributeList;
-        constructor(id: number, processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]);
+        constructor(attributeList: IKeyValuePair[]);
         getId(): number;
         protected setId(processId: number): void;
         getProcessType(): ProcessType;
@@ -402,6 +402,7 @@ declare namespace STSEngine {
         commit(): void;
         isDirty(): boolean;
         removeAttribute(attribute: string): void;
+        getKeyValuePairList(): IKeyValuePair[];
     }
 }
 declare namespace STSEngine {
@@ -558,7 +559,7 @@ declare namespace STSEngine {
         protected setLastId(id: number): void;
         getObject(objectId: number): IObject;
         addObject(object: IObject): void;
-        createObject(attributeList?: Map<string, any> | IKeyValuePair[]): IObject;
+        createObject(attributeList: IKeyValuePair[]): IObject;
         removeObject(objectId: number): void;
         commit(): void;
         rollback(): void;
@@ -576,7 +577,7 @@ declare namespace STSEngine {
         constructor();
         getProcessList(): IProcess[];
         protected addProcess(process: IProcess): void;
-        createProcess(processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]): IProcess;
+        createProcess(attributeList: IKeyValuePair[]): IProcess;
         protected getNewProcessId(): number;
         protected getLastId(): number;
         protected setLastId(id: number): void;
@@ -591,14 +592,14 @@ declare namespace STSEngine {
 declare namespace STSEngine {
     interface IObjectListService extends ICommitable, IFilterable<IObject> {
         getObject(id: number): IObject;
-        createObject(attributeList?: Map<string, any> | IKeyValuePair[]): IObject;
+        createObject(attributeList: IKeyValuePair[]): IObject;
         removeObject(id: number): void;
     }
 }
 declare namespace STSEngine {
     interface IProcessListService extends ICommitable, IFilterable<IProcess> {
         getProcessList(): IProcess[];
-        createProcess(processType: ProcessType, attributeList?: Map<string, any> | IKeyValuePair[]): IProcess;
+        createProcess(processType: IKeyValuePair[]): IProcess;
         removeFinished(): void;
     }
 }

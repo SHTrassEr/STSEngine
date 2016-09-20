@@ -7,5 +7,6 @@
         setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void;
         hasAttribute(attribute: string): boolean;
         removeAttribute(attribute: string): void;
+        getKeyValuePairList(): IKeyValuePair[];
     }
 }
