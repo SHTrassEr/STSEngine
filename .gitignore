@@ -252,6 +252,4 @@ paket-files/
 *.sln.iml
 
 
-*.js
-*.js.map
-*.d
+[Oo]ut/

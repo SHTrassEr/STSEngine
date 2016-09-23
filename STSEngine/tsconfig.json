@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "declaration": true,
+    "sourceMap": false,
+    "target": "es6",
+    //"outFile": "./out/tmp/test.js",
+    "outDir": "./out/tmp"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot",
+    "bin",
+    //"lib",
+    "out"
+  ]
+}
