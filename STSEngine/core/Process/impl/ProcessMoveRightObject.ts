@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class ProcessMoveLeftObjectImpl implements IProcessHandler {
+    export class ProcessMoveRightObject implements IProcessHandler {
 
         public init(world: IWorld, process: IProcess): void {
             process.setProcessStatus(ProcessStatus.Executing);
@@ -10,7 +10,7 @@
             var objectListService = world.getObjectListService();
             var object = objectListService.getObject(process.getObjectId());
             var position = object.getPosition();
-            var newPosition = new STSEngine.PointImpl(position.getX() - 1, position.getY());
+            var newPosition = new STSEngine.Point(position.getX() + 1, position.getY());
             object.setPosition(newPosition);
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class GameServerImpl implements IGameServer {
+    export class GameServer implements IGameServer {
         protected emptyCommandList: ICommand[];
         protected engine: IEngine;
         protected metronome: IMetronome;
@@ -11,7 +11,7 @@
 
         constructor(engine: IEngine) {
             this.engine = engine;
-            this.metronome = new MetronomeImpl(100);
+            this.metronome = new Metronome(100);
             this.commandLog = [];
             this.emptyCommandList = [];
             this.timerId = 0;

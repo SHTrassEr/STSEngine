@@ -1,10 +1,11 @@
 ﻿namespace STSEngine {
 
     export class ProcessImpl implements IProcess {
+
         protected attributeList: IAttributeList;
 
         constructor(attributeList: IKeyValuePair[]) {
-            this.attributeList = new AttributeListImpl();
+            this.attributeList = new AttributeList();
             this.setProcessStatus(ProcessStatus.Init);
 
             if (attributeList) {

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class PlayerActionImpl implements IPlayerAction {
+    export class PlayerAction implements IPlayerAction {
 
         protected commandListService: ICommandListService;
         protected playerId: number;
@@ -17,13 +17,13 @@
 
         protected createAttributeList(commandType: CommandType): IKeyValuePair[] {
             var list: IKeyValuePair[] = [];
-            list.push(new KeyValuePairImpl(AttributeType.PlayerId, this.playerId));
-            list.push(new KeyValuePairImpl(AttributeType.CommandType, commandType));
+            list.push(new KeyValuePair(AttributeType.PlayerId, this.playerId));
+            list.push(new KeyValuePair(AttributeType.CommandType, commandType));
             return list;
         }
 
         protected addObjectIdAttribute(attributeList: IKeyValuePair[], objectId: number): void {
-            attributeList.push(new KeyValuePairImpl(AttributeType.ObjectId, objectId));
+            attributeList.push(new KeyValuePair(AttributeType.ObjectId, objectId));
         }
 
         public startMoveRight(objectId: number): void {

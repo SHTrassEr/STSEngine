@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class AttributeListImpl implements IAttributeList {
+    export class AttributeList implements IAttributeList {
         protected commitedAttributeList: Map<string, any>;
         protected attributeList: Map<string, any>;
 
@@ -94,7 +94,7 @@
                 var key: string = kvp[0];
                 var value: any = kvp[1];
                 if (value !== null && value !== undefined) {
-                    list.push(new KeyValuePairImpl(key, value));
+                    list.push(new KeyValuePair(key, value));
                 }
             }
 
@@ -103,7 +103,7 @@
                 var value: any = kvp[1];
                 if (value !== null && value !== undefined) {
                     if (!this.attributeList.has(key)) {
-                        list.push(new KeyValuePairImpl(key, value));
+                        list.push(new KeyValuePair(key, value));
                     }
                 }
             }

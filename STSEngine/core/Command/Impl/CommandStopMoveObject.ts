@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class CommandStopMoveObjectImpl implements ICommandHandler {
+    export class CommandStopMoveObject implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
             var processListService = world.getProcessListService();

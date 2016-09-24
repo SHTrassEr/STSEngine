@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class EngineImpl implements IEngine {
+    export class Engine implements IEngine {
         protected world: IWorld;
         protected objectListService: IObjectListService;
         protected processListService: IProcessListService;
@@ -8,7 +8,7 @@
         protected commandDispatcher: ICommandDispatcher;
         protected worldSettings: IWorldSettings;
         protected commandListService: ICommandListService;
-
+        
         constructor(world: IWorld, commandListService: ICommandListService) {
             this.world = world;
             this.commandListService = commandListService;

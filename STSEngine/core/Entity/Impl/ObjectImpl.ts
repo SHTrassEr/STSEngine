@@ -5,7 +5,7 @@
         protected attributeList: IAttributeList;
 
         constructor(attributeList: IKeyValuePair[]) {
-            this.attributeList = new AttributeListImpl();
+            this.attributeList = new AttributeList();
             this.setAttributeList(attributeList);
         }
 

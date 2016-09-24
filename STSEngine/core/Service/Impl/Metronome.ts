@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class MetronomeImpl implements IMetronome {
+    export class Metronome implements IMetronome {
         protected tickLength: number;
         protected startTime: number;
         protected pauseStart: number;

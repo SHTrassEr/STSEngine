@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class PointImpl implements IPoint {
+    export class Point implements IPoint {
 
         private x: number;
         private y: number;

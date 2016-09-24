@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class WorldImpl implements IWorld {
+    export class World implements IWorld {
 
         protected worldSettings: IWorldSettings;
         protected objectListService: IObjectListService;
@@ -14,9 +14,9 @@
             this.worldSettings = worldSettings;
             this.objectListService = objectListService;
             this.processListService = processListService;
-            this.attributeList = new AttributeListImpl();
-            this.processDispatcher = new ProcessDispatcherImpl();
-            this.commandDispatcher = new CommandDispatcherImpl();
+            this.attributeList = new AttributeList();
+            this.processDispatcher = new ProcessDispatcher();
+            this.commandDispatcher = new CommandDispatcher();
             this.setStepNumber(0);
         }
 

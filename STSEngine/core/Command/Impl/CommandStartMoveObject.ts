@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class CommandStartMoveObjectImpl implements ICommandHandler {
+    export class CommandStartMoveObject implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
             var processType = this.getProcessType(command);
@@ -26,9 +26,9 @@
 
         protected createProcessAttributeList(processType: ProcessType, command: ICommand): IKeyValuePair[] {
             var processAttributeList: IKeyValuePair[] = [];
-            processAttributeList.push(new KeyValuePairImpl(AttributeType.ProcessType, processType));
+            processAttributeList.push(new KeyValuePair(AttributeType.ProcessType, processType));
             var objectId = command.getAttribute(AttributeType.ObjectId);
-            processAttributeList.push(new KeyValuePairImpl(AttributeType.ObjectId, objectId));
+            processAttributeList.push(new KeyValuePair(AttributeType.ObjectId, objectId));
             return processAttributeList;
         }
 

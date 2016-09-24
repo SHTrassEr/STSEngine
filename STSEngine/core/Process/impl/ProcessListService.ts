@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class ProcessListServiceImpl implements IProcessListService {
+    export class ProcessListService implements IProcessListService {
         protected commitedProcessList: IProcess[];
         protected processList: IProcess[];
         protected filterService: IFilterService<IProcess>;
@@ -10,8 +10,8 @@
         constructor() {
             this.commitedProcessList = [];
             this.processList = [];
-            this.attributeList = new STSEngine.AttributeListImpl();
-            this.filterService = new FilterServiceImpl<IProcess>();
+            this.attributeList = new STSEngine.AttributeList();
+            this.filterService = new FilterService<IProcess>();
             this.setLastId(0);
         }
 
@@ -24,7 +24,7 @@
         }
 
         public createProcess(attributeList: IKeyValuePair[]): IProcess {
-            attributeList.push(new KeyValuePairImpl(AttributeType.Id, this.getNewProcessId()));
+            attributeList.push(new KeyValuePair(AttributeType.Id, this.getNewProcessId()));
             var process = new ProcessImpl(attributeList);
             this.addProcess(process);
             return process;

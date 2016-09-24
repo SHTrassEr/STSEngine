@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class ProcessDispatcherImpl implements IProcessDispatcher {
+    export class ProcessDispatcher implements IProcessDispatcher {
 
         protected processHandlerList: IProcessHandler[];
 
@@ -10,11 +10,11 @@
 
         protected initProcessHandlerList() {
             this.processHandlerList = [];
-            this.processHandlerList[ProcessType.CreateObject] = new ProcessCreateObjectImpl();
-            this.processHandlerList[ProcessType.MoveDown] = new ProcessMoveDownObjectImpl();
-            this.processHandlerList[ProcessType.MoveLeft] = new ProcessMoveLeftObjectImpl();
-            this.processHandlerList[ProcessType.MoveRight] = new ProcessMoveRightObjectImpl();
-            this.processHandlerList[ProcessType.MoveUp] = new ProcessMoveUpObjectImpl();
+            this.processHandlerList[ProcessType.CreateObject] = new ProcessCreateObject();
+            this.processHandlerList[ProcessType.MoveDown] = new ProcessMoveDownObject();
+            this.processHandlerList[ProcessType.MoveLeft] = new ProcessMoveLeftObject();
+            this.processHandlerList[ProcessType.MoveRight] = new ProcessMoveRightObject();
+            this.processHandlerList[ProcessType.MoveUp] = new ProcessMoveUpObject();
         }
 
         public execute(world: IWorld, process: IProcess): void {

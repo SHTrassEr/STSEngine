@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class ProcessCreateObjectImpl implements IProcessHandler {
+    export class ProcessCreateObject implements IProcessHandler {
 
         public init(world: IWorld, process: IProcess): void {
             var objectAttributeList = process.getAttribute(AttributeType.ObjectAttributeList);

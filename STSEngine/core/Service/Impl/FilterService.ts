@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class FilterServiceImpl<T> implements IFilterService<T> {
+    export class FilterService<T> implements IFilterService<T> {
 
         public getAll(itemList: Iterable<T>, condition: (item: T) => boolean): T[] {
             var result: T[] = [];

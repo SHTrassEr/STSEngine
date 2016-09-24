@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class ObjectListServiceImpl implements IObjectListService {
+    export class ObjectListService implements IObjectListService {
         protected objectList: Map<number, IObject>;
         protected changedObjectList: Map<number, IObject>;
         protected attributeList: IAttributeList;
@@ -9,8 +9,8 @@
         constructor() {
             this.objectList = new Map<number, IObject>();
             this.changedObjectList = new Map<number, IObject>();
-            this.attributeList = new STSEngine.AttributeListImpl();
-            this.filterService = new FilterServiceImpl<IObject>();
+            this.attributeList = new STSEngine.AttributeList();
+            this.filterService = new FilterService<IObject>();
             this.setLastId(0);
         }
 
@@ -44,7 +44,7 @@
 
         public createObject(attributeList: IKeyValuePair[]): IObject {
             var objectId = this.getNewObjectId();
-            attributeList.push(new KeyValuePairImpl(AttributeType.Id, objectId));
+            attributeList.push(new KeyValuePair(AttributeType.Id, objectId));
             var object = new ObjectImpl(attributeList);
             this.addObject(object);
             return object;

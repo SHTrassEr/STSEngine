@@ -1,10 +1,10 @@
 ﻿namespace STSEngine {
 
-    export class CommandImpl implements ICommand {
+    export class Command implements ICommand {
         protected attributeList: IAttributeList;
 
         constructor(attributeList: IKeyValuePair[]) {
-            this.attributeList = new AttributeListImpl();
+            this.attributeList = new AttributeList();
 
             if (attributeList) {
                 this.setAttributeList(attributeList);

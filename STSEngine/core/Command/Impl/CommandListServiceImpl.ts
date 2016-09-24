@@ -13,7 +13,7 @@
         }
 
         public createCommand(attributeList: IKeyValuePair[]): ICommand {
-            var command = new CommandImpl(attributeList);
+            var command = new Command(attributeList);
             this.commandList.push(command);
             return command;
         }

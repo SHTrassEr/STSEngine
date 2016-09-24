@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class WorldSettingsImpl implements IWorldSettings {
+    export class WorldSettings implements IWorldSettings {
 
         private settings: Map<string, number | string>;
 

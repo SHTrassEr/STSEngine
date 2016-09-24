@@ -4,10 +4,9 @@
     "noImplicitAny": false,
     "noEmitOnError": true,
     "removeComments": false,
-    "declaration": true,
+    "declaration": false,
     "sourceMap": false,
     "target": "es6",
-    //"outFile": "./out/tmp/test.js",
     "outDir": "./out/tmp"
   },
   "exclude": [

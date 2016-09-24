@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class KeyValuePairImpl implements IKeyValuePair {
+    export class KeyValuePair implements IKeyValuePair {
         public key: string;
         public value: any;
 
