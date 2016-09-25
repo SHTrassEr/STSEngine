@@ -10,10 +10,10 @@
 
         protected attributeList: IAttributeList;
 
-        constructor(worldSettings: IWorldSettings, objectListService: IObjectListService, processListService: IProcessListService) {
+        constructor(worldSettings: IWorldSettings) {
+            this.objectListService = new ObjectListService();
+            this.processListService = new ProcessListService();
             this.worldSettings = worldSettings;
-            this.objectListService = objectListService;
-            this.processListService = processListService;
             this.attributeList = new AttributeList();
             this.processDispatcher = new ProcessDispatcher();
             this.commandDispatcher = new CommandDispatcher();

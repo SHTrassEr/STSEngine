@@ -1,6 +1,7 @@
 ﻿namespace STSEngine {
 
     export enum ClientMessageType {
-        InitialConnect
+        Unknown,
+        ResponseAuthentication
     }
 }

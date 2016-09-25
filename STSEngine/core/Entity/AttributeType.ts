@@ -17,5 +17,8 @@
         static ObjectAttributeList: string = "ObjectAttributeList";
 
         static CommandType: string = "CommandType";
+
+        static SID: string = "SID";
+        static CurrentStep: string = "CurrentStep";
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class CommandListServiceImpl implements ICommandListService {
+    export class CommandListService implements ICommandListService {
         protected commandList: ICommand[];
         protected filterService: IFilterService<ICommand>;
 

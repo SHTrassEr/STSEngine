@@ -2,10 +2,17 @@
 
     export class WorldSettings implements IWorldSettings {
 
-        private settings: Map<string, number | string>;
+        protected settings: Map<string, any>;
 
-        constructor(settings: Map<string, number | string>) {
-            this.settings = settings;
+        constructor(settings: IKeyValuePair[]) {
+            this.settings = new Map<string, any>();
+            this.setSettilgs(settings);
+        }
+
+        protected setSettilgs(settings: IKeyValuePair[]) {
+            for (var kvp of settings) {
+                this.settings.set(kvp.key, kvp.value);
+            }
         }
 
         public getMoveStepSize(): number {
