@@ -20,5 +20,6 @@
 
         static SID: string = "SID";
         static CurrentStep: string = "CurrentStep";
+        static CommandList: string = "CommandList";
     }
 }

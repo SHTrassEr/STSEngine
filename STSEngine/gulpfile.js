@@ -19,5 +19,22 @@ gulp.task('ts-server', function () {
     return merge([
         tsResult.js.pipe(insert.prepend(useStrict)).pipe(gulp.dest('out/stsEngine')),
         tsResult.dts.pipe(insert.append(nodeJsModuleDeclaration)).pipe(gulp.dest('out/stsEngine'))
-    ])
+    ]);
 });
+
+
+gulp.task('ts-client', function () {
+    var tsResult = gulp.src(['core/**/*.ts', 'client/**/*.ts'])
+        .pipe(ts({
+            declaration: true,
+            removeComments: true,
+            target: 'es6',
+            outFile: 'client.js'
+        }));
+
+    return merge([
+        tsResult.js.pipe(insert.prepend(useStrict)).pipe(gulp.dest('out/stsEngineClient')),
+        tsResult.dts.pipe(gulp.dest('out/stsEngineClient'))
+    ]);
+});
+

@@ -17,8 +17,8 @@
             var world = this.createWorld();
             var engine = new Engine(world, this.commandListService);
             this.gameServer = new GameServer(engine);
-            this.gameServer.setOnUpdateWorld(this.onUpdateWorld);
-            this.webSocketServer.setOnClientConnected(this.onClientConnected);
+            this.gameServer.setOnUpdateWorld(this.onUpdateWorld.bind(this));
+            this.webSocketServer.setOnClientConnected(this.onClientConnected.bind(this));
         }
 
         protected createWorld(): IWorld {
@@ -33,18 +33,27 @@
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
-            var message = this.createTickMessage(world, currentStepNumber, commandList);
+            var message = this.createTickMessage(currentStepNumber, commandList);
             this.webSocketServer.sendAll(message);
         }
 
-        protected createTickMessage(world: IWorld, currentStepNumber: number, commandList: ICommand[]): IClientServerMessage {
-            var attributeList = this.createTickAttributeList(world, currentStepNumber, commandList);
+        protected createTickMessage(currentStepNumber: number, commandList: ICommand[]): IClientServerMessage {
+            var attributeList = this.createTickAttributeList(currentStepNumber, commandList);
             return new ClientServerMessage(ServerMessageType.Tick, attributeList);
         }
 
-        protected createTickAttributeList(world: IWorld, currentStepNumber: number, commandList: ICommand[]): IKeyValuePair[] {
+        protected createTickAttributeList(currentStepNumber: number, commandList: ICommand[]): IKeyValuePair[] {
             var attributeList: IKeyValuePair[] = [];
             attributeList.push(new KeyValuePair(AttributeType.StepNumber, currentStepNumber));
+
+            var commandAttributeList: IKeyValuePair[][] = []
+            if (commandList) {
+                for (var command of commandList) {
+                    commandAttributeList.push(command.getKeyValuePairList());
+                }
+            }
+
+            attributeList.push(new KeyValuePair(AttributeType.CommandList, commandAttributeList));
             return attributeList;
         }
 
@@ -57,7 +66,13 @@
         }
 
         protected onClientConnected(client: IWebSocketClient): void {
-            //this.registerNewPlayer();
+            var clientId = parseInt(client.getSID());
+            this.registerNewPlayer(clientId);
+            var commandLog = this.gameServer.getCommandLog(0);
+            for (var commandList of commandLog) {
+                var message = this.createTickMessage(0, commandList);
+                client.sendMessage(message);
+            }
         }
 
         public start(): void {

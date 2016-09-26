@@ -17,17 +17,21 @@
         }
 
         protected init() {
-            this.client.on('message', this.onMessage);
-            this.client.on('close', this.onMessage);
+            this.client.on('message', this.onMessage.bind(this));
+            this.client.on('close', this.onMessage.bind(this));
         }
 
-        protected onMessage(message: IClientServerMessage) {
+        protected onMessage(message: any): void {
+            this.processMessage(JSON.parse(message));
+        }
+
+        protected processMessage(message: IClientServerMessage): void {
             if (message.messageType && this.onMessageHandler) {
                 this.onMessageHandler(this, message);
             }
         }
 
-        protected onClose() {
+        protected onClose(): void {
             if (this.onCloseHandler) {
                 this.onCloseHandler(this);
             }
@@ -53,7 +57,7 @@
             this.sid = sid;
         }
 
-        public sendMessage(message: IClientServerMessage) {
+        public sendMessage(message: IClientServerMessage): void {
             this.client.send(JSON.stringify(message));
         }
 

@@ -15,7 +15,7 @@
         }
 
         protected init() {
-            this.server.on('connection', this.onConnection);
+            this.server.on('connection', this.onConnection.bind(this));
         }
 
         public sendAll(message: IClientServerMessage): void {
@@ -45,8 +45,8 @@
         }
 
         protected initWebSocketClient(webSocketClient: IWebSocketClient) {
-            webSocketClient.setOnMessage(this.onClientMessage);
-            webSocketClient.setOnClose(this.onClientDisconnected);
+            webSocketClient.setOnMessage(this.onClientMessage.bind(this));
+            webSocketClient.setOnClose(this.onClientDisconnected.bind(this));
             webSocketClient.sendMessage(new ClientServerMessage(ServerMessageType.RequestAuthentication, null));
         }
 
@@ -64,7 +64,8 @@
 
         protected doAuthentication(webSocketClient: IWebSocketClient, message: IClientServerMessage) {
             if (message.attributeList && message.attributeList.length == 1 && message.attributeList[0].key == AttributeType.SID) {
-                var sid = message.attributeList[1].key;
+                var sid = message.attributeList[0].value;
+                console.log("Client connected. SID:" + sid);
                 webSocketClient.setSID(sid);
                 this.onClientConnected(webSocketClient);
             }

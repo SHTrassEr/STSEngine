@@ -1,31 +1,10 @@
 ﻿
 function ready() {
-    var settings: Map<string, number | string> = new Map<string, number | string>();
-    var worldSettings: STSEngine.IWorldSettings = new STSEngine.WorldSettingsImpl(settings);
-    settings.set("moveStepSize", 10);
 
-    var objectListService = new STSEngine.ObjectListServiceImpl();
-    var processListService = new STSEngine.ProcessListServiceImpl();
-    var commandListService = new STSEngine.CommandListServiceImpl();
+    var socket = new WebSocket('ws://localhost:62785');
+    var client = new STSEngine.WebSocketGameClient(socket, "1");
 
-    var world: STSEngine.IWorld = new STSEngine.WorldImpl(worldSettings, objectListService, processListService);
-    var engine: STSEngine.IEngine = new STSEngine.EngineImpl(world, commandListService);
-
-    var playerAction = new STSEngine.PlayerActionImpl(1, commandListService);
-
-    var gameServer = new STSEngine.GameServerImpl(engine);
-
-    gameServer.start();
-
-
-    var registerPlayerAttributeList: STSEngine.IKeyValuePair[] = [];
-    registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.CommandType, STSEngine.CommandType.RegisterPlayer));
-    registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.PlayerId, 0))
-    registerPlayerAttributeList.push(new STSEngine.KeyValuePairImpl(STSEngine.AttributeType.NewPlayerId, 1))
-    commandListService.createCommand(registerPlayerAttributeList);
-
-    
-    
+   /* var playerAction = new STSEngine.PlayerAction(1, commandListService);
 
     
 
@@ -115,7 +94,7 @@ function ready() {
     socket.onmessage = function (message) {
         content.innerHTML = message.data;
     }
-
+    */
 
 };
 

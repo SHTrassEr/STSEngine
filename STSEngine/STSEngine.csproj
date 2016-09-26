@@ -26,6 +26,8 @@
   <ItemGroup>
     <Content Include="gulpfile.js" />
     <Content Include="tsconfig.json" />
+    <TypeScriptCompile Include="client\Service\Impl\WebSocketGameClient.ts" />
+    <TypeScriptCompile Include="client\Service\IWebSocketGameClient.ts" />
     <TypeScriptCompile Include="core\Action\Impl\PlayerAction.ts" />
     <TypeScriptCompile Include="core\Action\IPlayerAction.ts" />
     <TypeScriptCompile Include="core\Command\ICommand.ts" />
