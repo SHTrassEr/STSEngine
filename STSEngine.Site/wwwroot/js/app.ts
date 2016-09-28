@@ -1,77 +1,96 @@
 ﻿
 function ready() {
 
-    var socket = new WebSocket('ws://localhost:62785');
-    var client = new STSEngine.WebSocketGameClient(socket, "1");
+    var playerId = Math.floor(Math.random() * (100000));
 
-   /* var playerAction = new STSEngine.PlayerAction(1, commandListService);
+    var loc = window.location;
 
-    
+    var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
+    var playerAction = new STSEngine.PlayerAction(playerId);
+    var client = new STSEngine.WebSocketGameClient(socket, playerAction);
 
+
+
+    var world: STSEngine.IWorld = client.getWorld();
+    var objectListService = world.getObjectListService();
+    var content = document.getElementById("content");
     setInterval(() => {
-        var o = objectListService.getObject(1);
-        if (o) {
-            var stepNumber = world.getStepNumber();
-            content.innerHTML = ("stepNumber: " + stepNumber + "<br/>x: " + o.getPosition().getX() + " y:" + o.getPosition().getY());
+
+        var lastId = objectListService.getLastId();
+        var objectStatusStr = "";
+        for (var id = 1; id <= lastId; id++) {
+            var o = objectListService.getObject(id);
+            if (o) {
+                
+                objectStatusStr += "<br/>x: " + o.getPosition().getX() + " y:" + o.getPosition().getY();
+            }
         }
 
-    }, 50);
-    
+        var stepNumber = world.getStepNumber();
+        content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);
 
+    }, 50);
 
 
     var up: boolean, down: boolean, left: boolean, right: boolean;
 
+    function getPlayerObjectId() {
+        var o = objectListService.getFirst(o => o.getPlayerId() == playerId);
+        return o.getId();
+    }
+
     function keyDownHandler(e: any) {
+        var playerObjectId = getPlayerObjectId();
 
         if (e.keyCode == 87) {
             if (!up) {
-                playerAction.startMoveUp(1);
+                playerAction.startMoveUp(playerObjectId);
                 up = true;
             }
         }
         else if (e.keyCode == 83) {
             if (!down) {
-                playerAction.startMoveDown(1);
+                playerAction.startMoveDown(playerObjectId);
                 down = true;
             }
         }
         else if (e.keyCode == 68) {
             if (!right) {
-                playerAction.startMoveRight(1);
+                playerAction.startMoveRight(playerObjectId);
                 right = true;
             }
         }
         else if (e.keyCode == 65) {
             if (!left) {
-                playerAction.startMoveLeft(1);
+                playerAction.startMoveLeft(playerObjectId);
                 left = true;
             }
         }
     }
     function keyUpHandler(e: any) {
+        var playerObjectId = getPlayerObjectId();
         if (e.keyCode == 87) {
             if (up) {
-                playerAction.stopMoveUp(1);
+                playerAction.stopMoveUp(playerObjectId);
                 up = false;
             }
         }
         else if (e.keyCode == 83) {
             if (down) {
-                playerAction.stopMoveDown(1);
+                playerAction.stopMoveDown(playerObjectId);
                 down = false;
             }
         }
         else if (e.keyCode == 68) {
             if (right) {
-                playerAction.stopMoveRight(1);
+                playerAction.stopMoveRight(playerObjectId);
                 right = false;
             }
-            playerAction.stopMoveRight(1);
+            playerAction.stopMoveRight(playerObjectId);
         }
         else if (e.keyCode == 65) {
             if (left) {
-                playerAction.stopMoveLeft(1);
+                playerAction.stopMoveLeft(playerObjectId);
                 left = false;
             }
         }
@@ -82,7 +101,7 @@ function ready() {
     document.addEventListener("keyup", keyUpHandler, false);
 
 
-
+   /*
     var socket = new WebSocket('ws://localhost:62785');
 
     socket.onopen = function () {

@@ -43,6 +43,7 @@ var STSEngine;
     (function (ClientMessageType) {
         ClientMessageType[ClientMessageType["Unknown"] = 0] = "Unknown";
         ClientMessageType[ClientMessageType["ResponseAuthentication"] = 1] = "ResponseAuthentication";
+        ClientMessageType[ClientMessageType["CommandList"] = 2] = "CommandList";
     })(STSEngine.ClientMessageType || (STSEngine.ClientMessageType = {}));
     var ClientMessageType = STSEngine.ClientMessageType;
 })(STSEngine || (STSEngine = {}));
@@ -61,13 +62,6 @@ var STSEngine;
         ServerMessageType[ServerMessageType["Tick"] = 2] = "Tick";
     })(STSEngine.ServerMessageType || (STSEngine.ServerMessageType = {}));
     var ServerMessageType = STSEngine.ServerMessageType;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ServiceAttributeType {
-    }
-    ServiceAttributeType.LastId = "LastId";
-    STSEngine.ServiceAttributeType = ServiceAttributeType;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -110,10 +104,17 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
+    class ServiceAttributeType {
+    }
+    ServiceAttributeType.LastId = "LastId";
+    STSEngine.ServiceAttributeType = ServiceAttributeType;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
     class PlayerAction {
-        constructor(playerId, commandListService) {
+        constructor(playerId) {
+            this.commandListService = new STSEngine.CommandListService();
             this.playerId = playerId;
-            this.commandListService = commandListService;
         }
         getPlayerId() {
             return this.playerId;
@@ -131,41 +132,63 @@ var STSEngine;
             var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveRight);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         startMoveLeft(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveLeft);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         startMoveUp(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveUp);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         startMoveDown(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveDown);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         stopMoveRight(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveRight);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         stopMoveLeft(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveLeft);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         stopMoveUp(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveUp);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
         }
         stopMoveDown(objectId) {
             var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveDown);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
+            this.onAction();
+        }
+        getCommandKeyValuePairList() {
+            return this.commandListService.getCommandKeyValuePairList();
+        }
+        clear() {
+            this.commandListService.clear();
+        }
+        setOnAction(handler) {
+            this.onActionHandler = handler;
+        }
+        onAction() {
+            if (this.onActionHandler) {
+                this.onActionHandler(this);
+            }
         }
     }
     STSEngine.PlayerAction = PlayerAction;
@@ -288,6 +311,13 @@ var STSEngine;
             for (var attributeList of commandList) {
                 this.createCommand(attributeList);
             }
+        }
+        getCommandKeyValuePairList() {
+            var list = [];
+            for (var command of this.commandList) {
+                list.push(command.getKeyValuePairList());
+            }
+            return list;
         }
         clear() {
             this.commandList = [];
@@ -686,240 +716,6 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class Engine {
-        constructor(world, commandListService) {
-            this.world = world;
-            this.commandListService = commandListService;
-            this.objectListService = world.getObjectListService();
-            this.processListService = world.getProcessListService();
-            this.worldSettings = world.getSettings();
-            this.processDispatcher = world.getProcessDispatcher();
-            this.commandDispatcher = world.getCommandDispatcher();
-        }
-        getWorld() {
-            return this.world;
-        }
-        step() {
-            this.world.increaseStepNumber();
-            this.processCommandList();
-            for (var i = 0; i < this.processListService.getProcessList().length; i++) {
-                var process = this.processListService.getProcessList()[i];
-                this.processDispatcher.execute(this.world, process);
-            }
-            this.processListService.removeFinished();
-        }
-        getCommandList() {
-            return this.commandListService.getCommandList();
-        }
-        processCommandList() {
-            var commandList = this.commandListService.getCommandList();
-            for (var command of commandList) {
-                this.commandDispatcher.execute(this.world, command);
-            }
-            this.commandListService.clear();
-        }
-    }
-    STSEngine.Engine = Engine;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class FilterService {
-        getAll(itemList, condition) {
-            var result = [];
-            for (var item of itemList) {
-                if (condition(item)) {
-                    result.push(item);
-                }
-            }
-            return result;
-        }
-        getFirst(itemList, condition) {
-            for (var item of itemList) {
-                if (condition(item)) {
-                    return item;
-                }
-            }
-            return null;
-        }
-    }
-    STSEngine.FilterService = FilterService;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class GameServer {
-        constructor(engine) {
-            this.engine = engine;
-            this.metronome = new STSEngine.Metronome(100);
-            this.commandLog = [];
-            this.emptyCommandList = [];
-            this.timerId = 0;
-        }
-        start() {
-            var world = this.engine.getWorld();
-            this.metronome.start();
-            this.timerId = setInterval(() => this.updateWorld(), 10);
-        }
-        getCommandLog(startStepNumber) {
-            return this.commandLog;
-        }
-        updateWorld() {
-            var metronomeStepNumber = this.metronome.getTickCount();
-            var currentStepNumber = this.getStepNumber();
-            while (currentStepNumber < metronomeStepNumber) {
-                currentStepNumber += 1;
-                var commandList = this.engine.getCommandList();
-                this.commandLog[currentStepNumber] = commandList;
-                if (this.onUpdateWorld) {
-                    this.onUpdateWorld(this.engine.getWorld(), currentStepNumber, commandList);
-                }
-                this.engine.step();
-            }
-        }
-        getStepNumber() {
-            var world = this.engine.getWorld();
-            return world.getStepNumber();
-        }
-        setOnUpdateWorld(handler) {
-            this.onUpdateWorld = handler;
-        }
-    }
-    STSEngine.GameServer = GameServer;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class Metronome {
-        constructor(tickLength) {
-            this.tickLength = tickLength;
-            this.isPaused = true;
-            this.pauseLength = 0;
-        }
-        start(startTime) {
-            if (!startTime) {
-                this.startTime = Date.now();
-            }
-            else {
-                this.startTime = startTime;
-            }
-            this.pauseStart = this.startTime;
-            this.resume();
-        }
-        getStartTime() {
-            return this.startTime;
-        }
-        pause() {
-            if (!this.isPaused) {
-                this.pauseStart = Date.now();
-                this.isPaused = true;
-            }
-        }
-        resume() {
-            if (this.isPaused) {
-                var pauseEnd = Date.now();
-                this.pauseLength += (pauseEnd - this.pauseStart);
-                this.isPaused = false;
-            }
-        }
-        getTickLength() {
-            return this.tickLength;
-        }
-        getTickCount() {
-            var totalTime = Date.now() - this.startTime - this.pauseLength;
-            return Math.floor(totalTime / this.tickLength);
-        }
-    }
-    STSEngine.Metronome = Metronome;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ObjectListService {
-        constructor() {
-            this.objectList = new Map();
-            this.changedObjectList = new Map();
-            this.attributeList = new STSEngine.AttributeList();
-            this.filterService = new STSEngine.FilterService();
-            this.setLastId(0);
-        }
-        getNewObjectId() {
-            var lastObjectId = this.getLastId();
-            var newObjectId = lastObjectId + 1;
-            this.setLastId(newObjectId);
-            return newObjectId;
-        }
-        getLastId() {
-            return this.attributeList.getAttribute(STSEngine.ServiceAttributeType.LastId);
-        }
-        setLastId(id) {
-            this.attributeList.setAttribute(STSEngine.ServiceAttributeType.LastId, 0);
-        }
-        getObject(objectId) {
-            if (this.changedObjectList.has(objectId)) {
-                return this.changedObjectList.get(objectId);
-            }
-            return this.objectList.get(objectId);
-        }
-        addObject(object) {
-            var objectId = object.getId();
-            this.changedObjectList.set(objectId, object);
-        }
-        createObject(attributeList) {
-            var objectId = this.getNewObjectId();
-            attributeList.push(new STSEngine.KeyValuePair(STSEngine.AttributeType.Id, objectId));
-            var object = new STSEngine.ObjectImpl(attributeList);
-            this.addObject(object);
-            return object;
-        }
-        setObjectList(objectList) {
-            for (var attributeList of objectList) {
-                this.createObject(attributeList);
-            }
-        }
-        removeObject(objectId) {
-            this.changedObjectList.set(objectId, undefined);
-        }
-        commit() {
-            for (var kvp of this.changedObjectList) {
-                var key = kvp[0];
-                var value = kvp[1];
-                if (value === null || value === undefined) {
-                    this.objectList.delete(key);
-                }
-                else {
-                    this.objectList.set(key, value);
-                }
-            }
-            this.changedObjectList.clear();
-            for (var o of this.objectList.values()) {
-                o.commit();
-            }
-        }
-        rollback() {
-            this.changedObjectList.clear();
-            for (var o of this.objectList.values()) {
-                o.rollback();
-            }
-        }
-        isDirty() {
-            if (this.changedObjectList.size > 0) {
-                return true;
-            }
-            for (var o of this.objectList.values()) {
-                if (o.isDirty()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        getAll(condition) {
-            return this.filterService.getAll(this.objectList.values(), condition);
-        }
-        getFirst(condition) {
-            return this.filterService.getFirst(this.objectList.values(), condition);
-        }
-    }
-    STSEngine.ObjectListService = ObjectListService;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
     class ProcessCreateObject {
         init(world, process) {
             var objectAttributeList = process.getAttribute(STSEngine.AttributeType.ObjectAttributeList);
@@ -1202,6 +998,240 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
+    class Engine {
+        constructor(world, commandListService) {
+            this.world = world;
+            this.commandListService = commandListService;
+            this.objectListService = world.getObjectListService();
+            this.processListService = world.getProcessListService();
+            this.worldSettings = world.getSettings();
+            this.processDispatcher = world.getProcessDispatcher();
+            this.commandDispatcher = world.getCommandDispatcher();
+        }
+        getWorld() {
+            return this.world;
+        }
+        step() {
+            this.world.increaseStepNumber();
+            this.processCommandList();
+            for (var i = 0; i < this.processListService.getProcessList().length; i++) {
+                var process = this.processListService.getProcessList()[i];
+                this.processDispatcher.execute(this.world, process);
+            }
+            this.processListService.removeFinished();
+        }
+        getCommandList() {
+            return this.commandListService.getCommandList();
+        }
+        processCommandList() {
+            var commandList = this.commandListService.getCommandList();
+            for (var command of commandList) {
+                this.commandDispatcher.execute(this.world, command);
+            }
+            this.commandListService.clear();
+        }
+    }
+    STSEngine.Engine = Engine;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class FilterService {
+        getAll(itemList, condition) {
+            var result = [];
+            for (var item of itemList) {
+                if (condition(item)) {
+                    result.push(item);
+                }
+            }
+            return result;
+        }
+        getFirst(itemList, condition) {
+            for (var item of itemList) {
+                if (condition(item)) {
+                    return item;
+                }
+            }
+            return null;
+        }
+    }
+    STSEngine.FilterService = FilterService;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class GameServer {
+        constructor(engine) {
+            this.engine = engine;
+            this.metronome = new STSEngine.Metronome(100);
+            this.commandLog = [];
+            this.emptyCommandList = [];
+            this.timerId = 0;
+        }
+        start() {
+            var world = this.engine.getWorld();
+            this.metronome.start();
+            this.timerId = setInterval(() => this.updateWorld(), 10);
+        }
+        getCommandLog(startStepNumber) {
+            return this.commandLog;
+        }
+        updateWorld() {
+            var metronomeStepNumber = this.metronome.getTickCount();
+            var currentStepNumber = this.getStepNumber();
+            while (currentStepNumber < metronomeStepNumber) {
+                currentStepNumber += 1;
+                var commandList = this.engine.getCommandList();
+                this.commandLog[currentStepNumber] = commandList;
+                if (this.onUpdateWorld) {
+                    this.onUpdateWorld(this.engine.getWorld(), currentStepNumber, commandList);
+                }
+                this.engine.step();
+            }
+        }
+        getStepNumber() {
+            var world = this.engine.getWorld();
+            return world.getStepNumber();
+        }
+        setOnUpdateWorld(handler) {
+            this.onUpdateWorld = handler;
+        }
+    }
+    STSEngine.GameServer = GameServer;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class Metronome {
+        constructor(tickLength) {
+            this.tickLength = tickLength;
+            this.isPaused = true;
+            this.pauseLength = 0;
+        }
+        start(startTime) {
+            if (!startTime) {
+                this.startTime = Date.now();
+            }
+            else {
+                this.startTime = startTime;
+            }
+            this.pauseStart = this.startTime;
+            this.resume();
+        }
+        getStartTime() {
+            return this.startTime;
+        }
+        pause() {
+            if (!this.isPaused) {
+                this.pauseStart = Date.now();
+                this.isPaused = true;
+            }
+        }
+        resume() {
+            if (this.isPaused) {
+                var pauseEnd = Date.now();
+                this.pauseLength += (pauseEnd - this.pauseStart);
+                this.isPaused = false;
+            }
+        }
+        getTickLength() {
+            return this.tickLength;
+        }
+        getTickCount() {
+            var totalTime = Date.now() - this.startTime - this.pauseLength;
+            return Math.floor(totalTime / this.tickLength);
+        }
+    }
+    STSEngine.Metronome = Metronome;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ObjectListService {
+        constructor() {
+            this.objectList = new Map();
+            this.changedObjectList = new Map();
+            this.attributeList = new STSEngine.AttributeList();
+            this.filterService = new STSEngine.FilterService();
+            this.setLastId(0);
+        }
+        getNewObjectId() {
+            var lastObjectId = this.getLastId();
+            var newObjectId = lastObjectId + 1;
+            this.setLastId(newObjectId);
+            return newObjectId;
+        }
+        getLastId() {
+            return this.attributeList.getAttribute(STSEngine.ServiceAttributeType.LastId);
+        }
+        setLastId(id) {
+            this.attributeList.setAttribute(STSEngine.ServiceAttributeType.LastId, id);
+        }
+        getObject(objectId) {
+            if (this.changedObjectList.has(objectId)) {
+                return this.changedObjectList.get(objectId);
+            }
+            return this.objectList.get(objectId);
+        }
+        addObject(object) {
+            var objectId = object.getId();
+            this.changedObjectList.set(objectId, object);
+        }
+        createObject(attributeList) {
+            var objectId = this.getNewObjectId();
+            attributeList.push(new STSEngine.KeyValuePair(STSEngine.AttributeType.Id, objectId));
+            var object = new STSEngine.ObjectImpl(attributeList);
+            this.addObject(object);
+            return object;
+        }
+        setObjectList(objectList) {
+            for (var attributeList of objectList) {
+                this.createObject(attributeList);
+            }
+        }
+        removeObject(objectId) {
+            this.changedObjectList.set(objectId, undefined);
+        }
+        commit() {
+            for (var kvp of this.changedObjectList) {
+                var key = kvp[0];
+                var value = kvp[1];
+                if (value === null || value === undefined) {
+                    this.objectList.delete(key);
+                }
+                else {
+                    this.objectList.set(key, value);
+                }
+            }
+            this.changedObjectList.clear();
+            for (var o of this.objectList.values()) {
+                o.commit();
+            }
+        }
+        rollback() {
+            this.changedObjectList.clear();
+            for (var o of this.objectList.values()) {
+                o.rollback();
+            }
+        }
+        isDirty() {
+            if (this.changedObjectList.size > 0) {
+                return true;
+            }
+            for (var o of this.objectList.values()) {
+                if (o.isDirty()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        getAll(condition) {
+            return this.filterService.getAll(this.changedObjectList.values(), condition);
+        }
+        getFirst(condition) {
+            return this.filterService.getFirst(this.changedObjectList.values(), condition);
+        }
+    }
+    STSEngine.ObjectListService = ObjectListService;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
     class PointService {
         copy(point) {
             return new STSEngine.Point(point.getX(), point.getY());
@@ -1218,10 +1248,12 @@ var STSEngine;
 var STSEngine;
 (function (STSEngine) {
     class WebSocketGameClient {
-        constructor(socket, sid) {
+        constructor(socket, playerAction) {
             this.commandListService = new STSEngine.CommandListService();
             this.socket = socket;
-            this.sid = sid;
+            this.playerAction = playerAction;
+            this.sid = playerAction.getPlayerId().toString();
+            this.playerAction.setOnAction(this.onPlayerAction.bind(this));
             this.init();
         }
         init() {
@@ -1231,6 +1263,17 @@ var STSEngine;
             this.socket.onmessage = this.onMessage.bind(this);
             this.socket.onclose = this.onClose.bind(this);
             this.socket.onerror = this.onError.bind(this);
+        }
+        getWorld() {
+            return this.engine.getWorld();
+        }
+        onPlayerAction(playerAction) {
+            var commandList = playerAction.getCommandKeyValuePairList();
+            playerAction.clear();
+            var attributeList = [];
+            attributeList.push(new STSEngine.KeyValuePair(STSEngine.AttributeType.CommandList, commandList));
+            var message = new STSEngine.ClientServerMessage(STSEngine.ClientMessageType.CommandList, attributeList);
+            this.sendMessage(message);
         }
         onOpen(ev) {
         }

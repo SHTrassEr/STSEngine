@@ -1,6 +1,9 @@
 declare namespace STSEngine {
     interface IPlayerAction {
         getPlayerId(): number;
+        setOnAction(handler: () => void): any;
+        getCommandKeyValuePairList(): IKeyValuePair[][];
+        clear(): void;
         startMoveRight(objectId: number): void;
         startMoveLeft(objectId: number): void;
         startMoveUp(objectId: number): void;
@@ -48,6 +51,7 @@ declare namespace STSEngine {
         getCommandList(): ICommand[];
         createCommand(attributeList: IKeyValuePair[]): ICommand;
         setCommandList(commandList: IKeyValuePair[][]): void;
+        getCommandKeyValuePairList(): IKeyValuePair[][];
         clear(): void;
     }
 }
@@ -75,6 +79,7 @@ declare namespace STSEngine {
     enum ClientMessageType {
         Unknown = 0,
         ResponseAuthentication = 1,
+        CommandList = 2,
     }
 }
 declare namespace STSEngine {
@@ -178,49 +183,6 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    interface IEngine {
-        getWorld(): IWorld;
-        step(): void;
-        getCommandList(): ICommand[];
-    }
-}
-declare namespace STSEngine {
-    interface IFilterService<T> {
-        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): T[];
-        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
-    }
-}
-declare namespace STSEngine {
-    interface IGameServer {
-        start(): void;
-        getCommandLog(startStepNumber: number): ICommand[][];
-        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
-    }
-}
-declare namespace STSEngine {
-    interface IMetronome {
-        start(startTime?: number): void;
-        getStartTime(): number;
-        pause(): void;
-        resume(): void;
-        getTickLength(): number;
-        getTickCount(): number;
-    }
-}
-declare namespace STSEngine {
-    interface IObjectListService extends ICommitable, IFilterable<IObject> {
-        getObject(id: number): IObject;
-        createObject(attributeList: IKeyValuePair[]): IObject;
-        setObjectList(objectList: IKeyValuePair[][]): void;
-        removeObject(id: number): void;
-    }
-}
-declare namespace STSEngine {
-    class ServiceAttributeType {
-        static LastId: string;
-    }
-}
-declare namespace STSEngine {
     class BaseException {
         private message;
         constructor(message?: string);
@@ -280,10 +242,55 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    interface IEngine {
+        getWorld(): IWorld;
+        step(): void;
+        getCommandList(): ICommand[];
+    }
+}
+declare namespace STSEngine {
+    interface IFilterService<T> {
+        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): T[];
+        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
+    }
+}
+declare namespace STSEngine {
+    interface IGameServer {
+        start(): void;
+        getCommandLog(startStepNumber: number): ICommand[][];
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
+    }
+}
+declare namespace STSEngine {
+    interface IMetronome {
+        start(startTime?: number): void;
+        getStartTime(): number;
+        pause(): void;
+        resume(): void;
+        getTickLength(): number;
+        getTickCount(): number;
+    }
+}
+declare namespace STSEngine {
+    interface IObjectListService extends ICommitable, IFilterable<IObject> {
+        getObject(id: number): IObject;
+        getLastId(): number;
+        createObject(attributeList: IKeyValuePair[]): IObject;
+        setObjectList(objectList: IKeyValuePair[][]): void;
+        removeObject(id: number): void;
+    }
+}
+declare namespace STSEngine {
+    class ServiceAttributeType {
+        static LastId: string;
+    }
+}
+declare namespace STSEngine {
     class PlayerAction implements IPlayerAction {
         protected commandListService: ICommandListService;
         protected playerId: number;
-        constructor(playerId: number, commandListService: ICommandListService);
+        protected onActionHandler: (playerAction: IPlayerAction) => void;
+        constructor(playerId: number);
         getPlayerId(): number;
         protected createAttributeList(commandType: CommandType): IKeyValuePair[];
         protected addObjectIdAttribute(attributeList: IKeyValuePair[], objectId: number): void;
@@ -295,6 +302,10 @@ declare namespace STSEngine {
         stopMoveLeft(objectId: number): void;
         stopMoveUp(objectId: number): void;
         stopMoveDown(objectId: number): void;
+        getCommandKeyValuePairList(): IKeyValuePair[][];
+        clear(): void;
+        setOnAction(handler: (playerAction: IPlayerAction) => void): void;
+        protected onAction(): void;
     }
 }
 declare namespace STSEngine {
@@ -338,6 +349,7 @@ declare namespace STSEngine {
         getCommandList(): ICommand[];
         createCommand(attributeList: IKeyValuePair[]): ICommand;
         setCommandList(commandList: IKeyValuePair[][]): void;
+        getCommandKeyValuePairList(): IKeyValuePair[][];
         clear(): void;
         getAll(condition: (item: ICommand) => boolean): ICommand[];
         getFirst(condition: (item: ICommand) => boolean): ICommand;
@@ -464,89 +476,6 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    interface IPointService {
-        copy(point: IPoint): IPoint;
-        add(p1: IPoint, p2: IPoint): IPoint;
-        substract(p1: IPoint, p2: IPoint): IPoint;
-    }
-}
-declare namespace STSEngine {
-    class Engine implements IEngine {
-        protected world: IWorld;
-        protected objectListService: IObjectListService;
-        protected processListService: IProcessListService;
-        protected processDispatcher: IProcessDispatcher;
-        protected commandDispatcher: ICommandDispatcher;
-        protected worldSettings: IWorldSettings;
-        protected commandListService: ICommandListService;
-        constructor(world: IWorld, commandListService: ICommandListService);
-        getWorld(): IWorld;
-        step(): void;
-        getCommandList(): ICommand[];
-        protected processCommandList(): void;
-    }
-}
-declare namespace STSEngine {
-    class FilterService<T> implements IFilterService<T> {
-        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): T[];
-        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
-    }
-}
-declare namespace STSEngine {
-    class GameServer implements IGameServer {
-        protected emptyCommandList: ICommand[];
-        protected engine: IEngine;
-        protected metronome: IMetronome;
-        protected commandLog: ICommand[][];
-        protected timerId: any;
-        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
-        constructor(engine: IEngine);
-        start(): void;
-        getCommandLog(startStepNumber: number): ICommand[][];
-        protected updateWorld(): void;
-        protected getStepNumber(): number;
-        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
-    }
-}
-declare namespace STSEngine {
-    class Metronome implements IMetronome {
-        protected tickLength: number;
-        protected startTime: number;
-        protected pauseStart: number;
-        protected pauseLength: number;
-        protected isPaused: boolean;
-        constructor(tickLength: number);
-        start(startTime?: number): void;
-        getStartTime(): number;
-        pause(): void;
-        resume(): void;
-        getTickLength(): number;
-        getTickCount(): number;
-    }
-}
-declare namespace STSEngine {
-    class ObjectListService implements IObjectListService {
-        protected objectList: Map<number, IObject>;
-        protected changedObjectList: Map<number, IObject>;
-        protected attributeList: IAttributeList;
-        protected filterService: IFilterService<IObject>;
-        constructor();
-        protected getNewObjectId(): number;
-        protected getLastId(): number;
-        protected setLastId(id: number): void;
-        getObject(objectId: number): IObject;
-        addObject(object: IObject): void;
-        createObject(attributeList: IKeyValuePair[]): IObject;
-        setObjectList(objectList: IKeyValuePair[][]): void;
-        removeObject(objectId: number): void;
-        commit(): void;
-        rollback(): void;
-        isDirty(): boolean;
-        getAll(condition: (item: IObject) => boolean): IObject[];
-        getFirst(condition: (item: IObject) => boolean): IObject;
-    }
-}
-declare namespace STSEngine {
     class ProcessCreateObject implements IProcessHandler {
         init(world: IWorld, process: IProcess): void;
         execute(world: IWorld, process: IProcess): void;
@@ -638,6 +567,89 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    interface IPointService {
+        copy(point: IPoint): IPoint;
+        add(p1: IPoint, p2: IPoint): IPoint;
+        substract(p1: IPoint, p2: IPoint): IPoint;
+    }
+}
+declare namespace STSEngine {
+    class Engine implements IEngine {
+        protected world: IWorld;
+        protected objectListService: IObjectListService;
+        protected processListService: IProcessListService;
+        protected processDispatcher: IProcessDispatcher;
+        protected commandDispatcher: ICommandDispatcher;
+        protected worldSettings: IWorldSettings;
+        protected commandListService: ICommandListService;
+        constructor(world: IWorld, commandListService: ICommandListService);
+        getWorld(): IWorld;
+        step(): void;
+        getCommandList(): ICommand[];
+        protected processCommandList(): void;
+    }
+}
+declare namespace STSEngine {
+    class FilterService<T> implements IFilterService<T> {
+        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): T[];
+        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
+    }
+}
+declare namespace STSEngine {
+    class GameServer implements IGameServer {
+        protected emptyCommandList: ICommand[];
+        protected engine: IEngine;
+        protected metronome: IMetronome;
+        protected commandLog: ICommand[][];
+        protected timerId: any;
+        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
+        constructor(engine: IEngine);
+        start(): void;
+        getCommandLog(startStepNumber: number): ICommand[][];
+        protected updateWorld(): void;
+        protected getStepNumber(): number;
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
+    }
+}
+declare namespace STSEngine {
+    class Metronome implements IMetronome {
+        protected tickLength: number;
+        protected startTime: number;
+        protected pauseStart: number;
+        protected pauseLength: number;
+        protected isPaused: boolean;
+        constructor(tickLength: number);
+        start(startTime?: number): void;
+        getStartTime(): number;
+        pause(): void;
+        resume(): void;
+        getTickLength(): number;
+        getTickCount(): number;
+    }
+}
+declare namespace STSEngine {
+    class ObjectListService implements IObjectListService {
+        protected objectList: Map<number, IObject>;
+        protected changedObjectList: Map<number, IObject>;
+        protected attributeList: IAttributeList;
+        protected filterService: IFilterService<IObject>;
+        constructor();
+        protected getNewObjectId(): number;
+        getLastId(): number;
+        protected setLastId(id: number): void;
+        getObject(objectId: number): IObject;
+        addObject(object: IObject): void;
+        createObject(attributeList: IKeyValuePair[]): IObject;
+        setObjectList(objectList: IKeyValuePair[][]): void;
+        removeObject(objectId: number): void;
+        commit(): void;
+        rollback(): void;
+        isDirty(): boolean;
+        getAll(condition: (item: IObject) => boolean): IObject[];
+        getFirst(condition: (item: IObject) => boolean): IObject;
+    }
+}
+declare namespace STSEngine {
     class PointService implements IPointService {
         copy(point: IPoint): IPoint;
         add(p1: IPoint, p2: IPoint): IPoint;
@@ -647,6 +659,7 @@ declare namespace STSEngine {
 declare namespace STSEngine {
     interface IWebSocketGameClient {
         start(): void;
+        getWorld(): IWorld;
     }
 }
 declare namespace STSEngine {
@@ -655,8 +668,11 @@ declare namespace STSEngine {
         protected socket: WebSocket;
         protected sid: string;
         protected engine: IEngine;
-        constructor(socket: WebSocket, sid: string);
+        protected playerAction: IPlayerAction;
+        constructor(socket: WebSocket, playerAction: IPlayerAction);
         protected init(): void;
+        getWorld(): IWorld;
+        protected onPlayerAction(playerAction: IPlayerAction): void;
         protected onOpen(ev: Event): void;
         protected onMessage(ev: MessageEvent): void;
         protected processServerMessage(message: IClientServerMessage): void;

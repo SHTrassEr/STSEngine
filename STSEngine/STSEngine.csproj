@@ -22,88 +22,98 @@
   </PropertyGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gulpfile.js" />
+    <Content Include="index.html" />
+    <Content Include="lib\jasmine-2.5.2\boot.js" />
+    <Content Include="lib\jasmine-2.5.2\console.js" />
+    <Content Include="lib\jasmine-2.5.2\jasmine-html.js" />
+    <Content Include="lib\jasmine-2.5.2\jasmine.css" />
+    <Content Include="lib\jasmine-2.5.2\jasmine.js" />
+    <Content Include="lib\jasmine-2.5.2\jasmine_favicon.png" />
     <Content Include="tsconfig.json" />
-    <TypeScriptCompile Include="client\Service\Impl\WebSocketGameClient.ts" />
-    <TypeScriptCompile Include="client\Service\IWebSocketGameClient.ts" />
-    <TypeScriptCompile Include="core\Action\Impl\PlayerAction.ts" />
-    <TypeScriptCompile Include="core\Action\IPlayerAction.ts" />
-    <TypeScriptCompile Include="core\Command\ICommand.ts" />
-    <TypeScriptCompile Include="core\Command\ICommandDispatcher.ts" />
-    <TypeScriptCompile Include="core\Command\ICommandHandler.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\CommandRegisterPlayer.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\CommandCreateObject.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\CommandListService.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\CommandStartMoveObject.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\CommandStopMoveObject.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\CommandDispatcher.ts" />
-    <TypeScriptCompile Include="core\Command\Impl\Command.ts" />
-    <TypeScriptCompile Include="core\Command\ICommandListService.ts" />
-    <TypeScriptCompile Include="core\Entity\ServerMessageType.ts" />
-    <TypeScriptCompile Include="core\Entity\ClientMessageType.ts" />
-    <TypeScriptCompile Include="core\Entity\IAttributeList.ts" />
-    <TypeScriptCompile Include="core\Entity\IClientServerMessage.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\ClientServerMessage.ts" />
-    <TypeScriptCompile Include="core\Entity\ITestInterface.ts" />
-    <TypeScriptCompile Include="core\Entity\IFilterable.ts" />
-    <TypeScriptCompile Include="core\Entity\ICommitable.ts" />
-    <TypeScriptCompile Include="core\Entity\IKeyValuePair.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\AttributeList.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\KeyValuePair.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\ObjectImpl.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\Point.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\World.ts" />
-    <TypeScriptCompile Include="core\Entity\Impl\WorldSettings.ts" />
-    <TypeScriptCompile Include="core\Entity\ICommitRollback.ts" />
-    <TypeScriptCompile Include="core\Entity\IObject.ts" />
-    <TypeScriptCompile Include="core\Entity\IPoint.ts" />
-    <TypeScriptCompile Include="core\Entity\IWorld.ts" />
-    <TypeScriptCompile Include="core\Entity\IWorldSettings.ts" />
-    <TypeScriptCompile Include="core\Command\CommandType.ts" />
-    <TypeScriptCompile Include="core\Entity\AttributeType.ts" />
-    <TypeScriptCompile Include="core\Entity\ObjectType.ts" />
-    <TypeScriptCompile Include="core\Exception\NotImplementedException.ts" />
-    <TypeScriptCompile Include="core\Exception\BaseException.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessDispatcher.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessMoveRightObject.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessMoveLeftObject.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessMoveUpObject.ts" />
-    <TypeScriptCompile Include="core\Process\ProcessType.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessImpl.ts" />
-    <TypeScriptCompile Include="core\Process\IProcessDispatcher.ts" />
-    <TypeScriptCompile Include="core\Process\IProcessHandler.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessCreateObject.ts" />
-    <TypeScriptCompile Include="core\Process\ProcessStatus.ts" />
-    <TypeScriptCompile Include="core\Service\IEngine.ts" />
-    <TypeScriptCompile Include="core\Service\IFilterService.ts" />
-    <TypeScriptCompile Include="core\Service\IGameServer.ts" />
-    <TypeScriptCompile Include="core\Service\IMetronome.ts" />
-    <TypeScriptCompile Include="core\Service\Impl\Engine.ts" />
-    <TypeScriptCompile Include="core\Service\Impl\FilterService.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessMoveDownObject.ts" />
-    <TypeScriptCompile Include="core\Process\IProcess.ts" />
-    <TypeScriptCompile Include="core\Service\Entity\Impl\PointService.ts" />
-    <TypeScriptCompile Include="core\Service\Entity\IPointService.ts" />
-    <TypeScriptCompile Include="core\Service\Impl\GameServer.ts" />
-    <TypeScriptCompile Include="core\Service\Impl\Metronome.ts" />
-    <TypeScriptCompile Include="core\Service\Impl\ObjectListService.ts" />
-    <TypeScriptCompile Include="core\Process\Impl\ProcessListService.ts" />
-    <TypeScriptCompile Include="core\Service\IObjectListService.ts" />
-    <TypeScriptCompile Include="core\Process\IProcessListService.ts" />
-    <TypeScriptCompile Include="core\Service\ServiceAttributeType.ts" />
-    <TypeScriptCompile Include="lib\typings\node\node.d.ts" />
-    <TypeScriptCompile Include="server\Entity\Impl\WebSocketClient.ts" />
-    <TypeScriptCompile Include="server\Entity\WebSocketClientStatus.ts" />
-    <TypeScriptCompile Include="server\Service\Impl\WebSocketGameServer .ts" />
-    <TypeScriptCompile Include="server\Service\Impl\WebSocketClientListService.ts" />
-    <TypeScriptCompile Include="server\Entity\IWebSocketClient.ts" />
-    <TypeScriptCompile Include="server\Export.ts" />
-    <TypeScriptCompile Include="server\Service\Impl\WebSocketServer.ts" />
-    <TypeScriptCompile Include="server\Service\IWebSocketClientListService.ts" />
-    <TypeScriptCompile Include="server\Service\IWebSocketGameServer .ts" />
-    <TypeScriptCompile Include="server\Service\IWebSocketServer.ts" />
+    <TypeScriptCompile Include="lib\typings\jasmine.d.ts" />
+    <TypeScriptCompile Include="src\Test\Core\Entity\AttributeListSpec.ts" />
+    <TypeScriptCompile Include="src\Client\Service\Impl\WebSocketGameClient.ts" />
+    <TypeScriptCompile Include="src\Client\Service\IWebSocketGameClient.ts" />
+    <TypeScriptCompile Include="src\Core\Action\Impl\PlayerAction.ts" />
+    <TypeScriptCompile Include="src\Core\Action\IPlayerAction.ts" />
+    <TypeScriptCompile Include="src\Core\Command\ICommand.ts" />
+    <TypeScriptCompile Include="src\Core\Command\ICommandDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Command\ICommandHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandRegisterPlayer.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandCreateObject.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandListService.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandStartMoveObject.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandStopMoveObject.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\Command.ts" />
+    <TypeScriptCompile Include="src\Core\Command\ICommandListService.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ServerMessageType.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ClientMessageType.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IAttributeList.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IClientServerMessage.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\ClientServerMessage.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ITestInterface.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IFilterable.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ICommitable.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IKeyValuePair.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\AttributeList.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\KeyValuePair.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\ObjectImpl.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\Point.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\World.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\WorldSettings.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ICommitRollback.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IObject.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IPoint.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IWorld.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IWorldSettings.ts" />
+    <TypeScriptCompile Include="src\Core\Command\CommandType.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\AttributeType.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ObjectType.ts" />
+    <TypeScriptCompile Include="src\Core\Exception\NotImplementedException.ts" />
+    <TypeScriptCompile Include="src\Core\Exception\BaseException.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveRightObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveLeftObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveUpObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\ProcessType.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessImpl.ts" />
+    <TypeScriptCompile Include="src\Core\Process\IProcessDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Process\IProcessHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessCreateObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\ProcessStatus.ts" />
+    <TypeScriptCompile Include="src\Core\Service\IEngine.ts" />
+    <TypeScriptCompile Include="src\Core\Service\IFilterService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\IGameServer.ts" />
+    <TypeScriptCompile Include="src\Core\Service\IMetronome.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\Engine.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\FilterService.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveDownObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\IProcess.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Entity\Impl\PointService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Entity\IPointService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\GameServer.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\Metronome.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\ObjectListService.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessListService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\IObjectListService.ts" />
+    <TypeScriptCompile Include="src\Core\Process\IProcessListService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\ServiceAttributeType.ts" />
+    <TypeScriptCompile Include="lib\typings\node.d.ts" />
+    <TypeScriptCompile Include="src\Server\Entity\Impl\WebSocketClient.ts" />
+    <TypeScriptCompile Include="src\Server\Entity\WebSocketClientStatus.ts" />
+    <TypeScriptCompile Include="src\Server\Service\Impl\WebSocketGameServer .ts" />
+    <TypeScriptCompile Include="src\Server\Service\Impl\WebSocketClientListService.ts" />
+    <TypeScriptCompile Include="src\Server\Entity\IWebSocketClient.ts" />
+    <TypeScriptCompile Include="src\Server\Export.ts" />
+    <TypeScriptCompile Include="src\Server\Service\Impl\WebSocketServer.ts" />
+    <TypeScriptCompile Include="src\Server\Service\IWebSocketClientListService.ts" />
+    <TypeScriptCompile Include="src\Server\Service\IWebSocketGameServer .ts" />
+    <TypeScriptCompile Include="src\Server\Service\IWebSocketServer.ts" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -114,7 +124,17 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
@@ -163,8 +183,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>gulp build-all</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
