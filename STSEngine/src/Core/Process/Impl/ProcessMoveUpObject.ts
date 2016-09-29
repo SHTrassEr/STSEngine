@@ -7,10 +7,10 @@
         }
 
         public execute(world: IWorld, process: IProcess): void {
-            var objectListService = world.getObjectListService();
-            var object = objectListService.getObject(process.getObjectId());
-            var position = object.getPosition();
-            var newPosition = new STSEngine.Point(position.getX(), position.getY() + 1);
+            let objectListService = world.getObjectListService();
+            let object = objectListService.get(process.getObjectId());
+            let position = object.getPosition();
+            let newPosition = new STSEngine.Point(position.getX(), position.getY() + 1);
             object.setPosition(newPosition);
         }
 

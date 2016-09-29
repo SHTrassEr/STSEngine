@@ -18,7 +18,7 @@
         }
 
         public start(): void {
-            var world = this.engine.getWorld();
+            let world = this.engine.getWorld();
             this.metronome.start();
             this.timerId = setInterval( () => this.updateWorld(), 10);
         }
@@ -28,11 +28,11 @@
         }
 
         protected updateWorld() {
-            var metronomeStepNumber = this.metronome.getTickCount();
-            var currentStepNumber = this.getStepNumber();
+            let metronomeStepNumber = this.metronome.getTickCount();
+            let currentStepNumber = this.getStepNumber();
             while (currentStepNumber < metronomeStepNumber) {
                 currentStepNumber += 1;
-                var commandList = this.engine.getCommandList();
+                let commandList = this.engine.getCommandList();
                 this.commandLog[currentStepNumber] = commandList;
 
                 if (this.onUpdateWorld) {
@@ -44,7 +44,7 @@
         }
 
         protected getStepNumber(): number {
-            var world = this.engine.getWorld();
+            let world = this.engine.getWorld();
             return world.getStepNumber();
         }
 

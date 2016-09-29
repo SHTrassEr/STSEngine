@@ -3,11 +3,11 @@
     export class CommandStartMoveObject implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
-            var processType = this.getProcessType(command);
-            var processAttributeList = this.createProcessAttributeList(processType, command);
-            var processListService = world.getProcessListService();
-            var process = processListService.createProcess(processAttributeList);
-            var processDispatcher = world.getProcessDispatcher();
+            let processType = this.getProcessType(command);
+            let processAttributeList = this.createProcessAttributeList(processType, command);
+            let processListService = world.getProcessListService();
+            let process = processListService.createProcess(processAttributeList);
+            let processDispatcher = world.getProcessDispatcher();
             processDispatcher.init(world, process);
         }
 
@@ -25,18 +25,18 @@
         }
 
         protected createProcessAttributeList(processType: ProcessType, command: ICommand): IKeyValuePair[] {
-            var processAttributeList: IKeyValuePair[] = [];
+            let processAttributeList: IKeyValuePair[] = [];
             processAttributeList.push(new KeyValuePair(AttributeType.ProcessType, processType));
-            var objectId = command.getAttribute(AttributeType.ObjectId);
+            let objectId = command.get(AttributeType.ObjectId);
             processAttributeList.push(new KeyValuePair(AttributeType.ObjectId, objectId));
             return processAttributeList;
         }
 
         public isValid(world: IWorld, command: ICommand): boolean {
-            var playerId = command.getPlayerId();
+            let playerId = command.getPlayerId();
             if (playerId > 0) {
-                var objectId = command.getAttribute(AttributeType.ObjectId);
-                var object = world.getObjectListService().getObject(objectId);
+                let objectId = command.get(AttributeType.ObjectId);
+                let object = world.getObjectListService().get(objectId);
                 return object.getPlayerId() == playerId;
             }
 

@@ -27,19 +27,20 @@
   <ItemGroup>
     <Content Include="gulpfile.js" />
     <Content Include="index.html" />
-    <Content Include="lib\jasmine-2.5.2\boot.js" />
-    <Content Include="lib\jasmine-2.5.2\console.js" />
-    <Content Include="lib\jasmine-2.5.2\jasmine-html.js" />
-    <Content Include="lib\jasmine-2.5.2\jasmine.css" />
-    <Content Include="lib\jasmine-2.5.2\jasmine.js" />
-    <Content Include="lib\jasmine-2.5.2\jasmine_favicon.png" />
+    <Content Include="lib\qunit-2.0.1\qunit-2.0.1.css" />
+    <Content Include="lib\qunit-2.0.1\qunit-2.0.1.js" />
     <Content Include="tsconfig.json" />
-    <TypeScriptCompile Include="lib\typings\jasmine.d.ts" />
+    <TypeScriptCompile Include="lib\typings\qunit.d.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IAttributeList.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\AttributeList.ts" />
+    <TypeScriptCompile Include="src\Core\Object\Impl\ObjectCommitable.ts" />
+    <TypeScriptCompile Include="src\Core\Object\Impl\ObjectListService.ts" />
+    <TypeScriptCompile Include="src\Core\Object\IObjectListService.ts" />
     <TypeScriptCompile Include="src\Test\Core\Entity\AttributeListSpec.ts" />
     <TypeScriptCompile Include="src\Client\Service\Impl\WebSocketGameClient.ts" />
     <TypeScriptCompile Include="src\Client\Service\IWebSocketGameClient.ts" />
-    <TypeScriptCompile Include="src\Core\Action\Impl\PlayerAction.ts" />
-    <TypeScriptCompile Include="src\Core\Action\IPlayerAction.ts" />
+    <TypeScriptCompile Include="src\Client\Action\Impl\PlayerAction.ts" />
+    <TypeScriptCompile Include="src\Client\Action\IPlayerAction.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommand.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommandDispatcher.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommandHandler.ts" />
@@ -53,21 +54,21 @@
     <TypeScriptCompile Include="src\Core\Command\ICommandListService.ts" />
     <TypeScriptCompile Include="src\Core\Entity\ServerMessageType.ts" />
     <TypeScriptCompile Include="src\Core\Entity\ClientMessageType.ts" />
-    <TypeScriptCompile Include="src\Core\Entity\IAttributeList.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\ICommitableAttributeList.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IClientServerMessage.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\ClientServerMessage.ts" />
     <TypeScriptCompile Include="src\Core\Entity\ITestInterface.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IFilterable.ts" />
     <TypeScriptCompile Include="src\Core\Entity\ICommitable.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IKeyValuePair.ts" />
-    <TypeScriptCompile Include="src\Core\Entity\Impl\AttributeList.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\AttributeListCommitable.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\KeyValuePair.ts" />
-    <TypeScriptCompile Include="src\Core\Entity\Impl\ObjectImpl.ts" />
+    <TypeScriptCompile Include="src\Core\Object\Impl\ObjectImpl.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\Point.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\World.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\WorldSettings.ts" />
     <TypeScriptCompile Include="src\Core\Entity\ICommitRollback.ts" />
-    <TypeScriptCompile Include="src\Core\Entity\IObject.ts" />
+    <TypeScriptCompile Include="src\Core\Object\IObject.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IPoint.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IWorld.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IWorldSettings.ts" />
@@ -98,9 +99,9 @@
     <TypeScriptCompile Include="src\Core\Service\Entity\IPointService.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\GameServer.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\Metronome.ts" />
-    <TypeScriptCompile Include="src\Core\Service\Impl\ObjectListService.ts" />
+    <TypeScriptCompile Include="src\Core\Object\Impl\ObjectListServiceCommitable.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessListService.ts" />
-    <TypeScriptCompile Include="src\Core\Service\IObjectListService.ts" />
+    <TypeScriptCompile Include="src\Core\Object\IObjectListServiceCommitable.ts" />
     <TypeScriptCompile Include="src\Core\Process\IProcessListService.ts" />
     <TypeScriptCompile Include="src\Core\Service\ServiceAttributeType.ts" />
     <TypeScriptCompile Include="lib\typings\node.d.ts" />
@@ -114,6 +115,7 @@
     <TypeScriptCompile Include="src\Server\Service\IWebSocketClientListService.ts" />
     <TypeScriptCompile Include="src\Server\Service\IWebSocketGameServer .ts" />
     <TypeScriptCompile Include="src\Server\Service\IWebSocketServer.ts" />
+    <TypeScriptCompile Include="src\Test\Util\RandomGenerator.ts" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

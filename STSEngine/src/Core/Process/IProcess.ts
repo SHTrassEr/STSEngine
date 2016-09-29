@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export interface IProcess extends IAttributeList {
+    export interface IProcess extends ICommitableAttributeList {
         getId(): number;
         getProcessType(): ProcessType;
         getProcessStatus(): ProcessStatus;

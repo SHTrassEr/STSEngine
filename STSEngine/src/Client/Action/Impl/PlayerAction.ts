@@ -16,7 +16,7 @@
         }
 
         protected createAttributeList(commandType: CommandType): IKeyValuePair[] {
-            var list: IKeyValuePair[] = [];
+            let list: IKeyValuePair[] = [];
             list.push(new KeyValuePair(AttributeType.PlayerId, this.playerId));
             list.push(new KeyValuePair(AttributeType.CommandType, commandType));
             return list;
@@ -27,56 +27,56 @@
         }
 
         public startMoveRight(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveRight);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveRight);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public startMoveLeft(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveLeft);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveLeft);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public startMoveUp(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveUp);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveUp);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public startMoveDown(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveDown);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StartMoveDown);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public stopMoveRight(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveRight);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveRight);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public stopMoveLeft(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveLeft);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveLeft);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public stopMoveUp(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveUp);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveUp);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();
         }
 
         public stopMoveDown(objectId: number): void {
-            var attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveDown);
+            let attributeList = this.createAttributeList(STSEngine.CommandType.StopMoveDown);
             this.addObjectIdAttribute(attributeList, objectId);
             this.commandListService.createCommand(attributeList);
             this.onAction();

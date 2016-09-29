@@ -3,9 +3,9 @@
     export class ProcessCreateObject implements IProcessHandler {
 
         public init(world: IWorld, process: IProcess): void {
-            var objectAttributeList = process.getAttribute(AttributeType.ObjectAttributeList);
-            var objectListService = world.getObjectListService();
-            var object = objectListService.createObject(objectAttributeList);
+            let objectAttributeList = process.get(AttributeType.ObjectAttributeList);
+            let objectListService = world.getObjectListService();
+            let object = objectListService.create(objectAttributeList);
             process.setProcessStatus(ProcessStatus.Finished);
         }
 

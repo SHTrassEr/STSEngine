@@ -18,7 +18,7 @@
         }
 
         protected init() {
-            var world = this.createWorld();
+            let world = this.createWorld();
             this.engine = new Engine(world, this.commandListService);
 
             this.socket.onopen = this.onOpen.bind(this);
@@ -32,11 +32,11 @@
         }
 
         protected onPlayerAction(playerAction: IPlayerAction) {
-            var commandList = playerAction.getCommandKeyValuePairList();
+            let commandList = playerAction.getCommandKeyValuePairList();
             playerAction.clear();
-            var attributeList: IKeyValuePair[] = [];
+            let attributeList: IKeyValuePair[] = [];
             attributeList.push(new KeyValuePair(AttributeType.CommandList, commandList));
-            var message = new ClientServerMessage(ClientMessageType.CommandList, attributeList);
+            let message = new ClientServerMessage(ClientMessageType.CommandList, attributeList);
             this.sendMessage(message);
         }
 
@@ -44,7 +44,7 @@
         }
 
         protected onMessage(ev: MessageEvent): void {
-            var message = JSON.parse(ev.data);
+            let message = JSON.parse(ev.data);
             this.processServerMessage(message);
         }
 
@@ -59,26 +59,26 @@
         }
 
         protected sendAuthentication() {
-            var attributeList: IKeyValuePair[] = [];
+            let attributeList: IKeyValuePair[] = [];
             attributeList.push(new KeyValuePair(AttributeType.SID, this.sid));
-            var message = new ClientServerMessage(ClientMessageType.ResponseAuthentication, attributeList);
+            let message = new ClientServerMessage(ClientMessageType.ResponseAuthentication, attributeList);
             this.sendMessage(message);
         }
 
         protected processTick(attributeList: IKeyValuePair[]) {
-            var commandList = <IKeyValuePair[][]>attributeList[1].value;
+            let commandList = <IKeyValuePair[][]>attributeList[1].value;
             this.commandListService.setCommandList(commandList);
             this.engine.step();
         }
 
 
         protected createWorld(): IWorld {
-            var settings = this.createWorldSettings();
+            let settings = this.createWorldSettings();
             return new World(settings);
         }
 
         protected createWorldSettings(): IWorldSettings {
-            var settings: IKeyValuePair[] = [];
+            let settings: IKeyValuePair[] = [];
             settings.push(new KeyValuePair("moveStepSize", 10));
             return new WorldSettings(settings);
         }

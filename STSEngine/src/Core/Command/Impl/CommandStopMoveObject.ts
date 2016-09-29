@@ -3,12 +3,12 @@
     export class CommandStopMoveObject implements ICommandHandler {
 
         public execute(world: IWorld, command: ICommand): void {
-            var processListService = world.getProcessListService();
-            var objectId = command.getAttribute(AttributeType.ObjectId);
-            var processType = this.getProcessType(command);
-            var processList = processListService.getAll(p => (p.getObjectId() === objectId && p.getProcessType() === processType));
-            var processDispatcher = world.getProcessDispatcher();
-            for (var process of processList) {
+            let processListService = world.getProcessListService();
+            let objectId = command.get(AttributeType.ObjectId);
+            let processType = this.getProcessType(command);
+            let processList = processListService.getAll(p => (p.getObjectId() === objectId && p.getProcessType() === processType));
+            let processDispatcher = world.getProcessDispatcher();
+            for (let process of processList) {
                 processDispatcher.finish(world, process);
             }
 
@@ -28,10 +28,10 @@
         }
 
         public isValid(world: IWorld, command: ICommand): boolean {
-            var playerId = command.getPlayerId();
+            let playerId = command.getPlayerId();
             if (playerId > 0) {
-                var objectId = command.getAttribute(AttributeType.ObjectId);
-                var object = world.getObjectListService().getObject(objectId);
+                let objectId = command.get(AttributeType.ObjectId);
+                let object = world.getObjectListService().get(objectId);
                 return object.getPlayerId() == playerId;
             }
 

@@ -13,20 +13,22 @@
         }
 
         public createCommand(attributeList: IKeyValuePair[]): ICommand {
-            var command = new Command(attributeList);
+            let commandAttributeList = new AttributeList();
+            commandAttributeList.setList(attributeList);
+            let command = new Command(commandAttributeList);
             this.commandList.push(command);
             return command;
         }
 
         public setCommandList(commandList: IKeyValuePair[][]): void {
-            for (var attributeList of commandList) {
+            for (let attributeList of commandList) {
                 this.createCommand(attributeList);
             }
         }
 
         public getCommandKeyValuePairList(): IKeyValuePair[][] {
-            var list: IKeyValuePair[][] = [];
-            for (var command of this.commandList) {
+            let list: IKeyValuePair[][] = [];
+            for (let command of this.commandList) {
                 list.push(command.getKeyValuePairList());
             }
 
@@ -37,7 +39,7 @@
             this.commandList = [];
         }
 
-        public getAll(condition: (item: ICommand) => boolean): ICommand[] {
+        public getAll(condition: (item: ICommand) => boolean): IterableIterator<ICommand> {
             return this.filterService.getAll(this.commandList, condition);
         }
 

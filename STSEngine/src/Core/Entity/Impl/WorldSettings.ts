@@ -10,7 +10,7 @@
         }
 
         protected setSettilgs(settings: IKeyValuePair[]) {
-            for (var kvp of settings) {
+            for (let kvp of settings) {
                 this.settings.set(kvp.key, kvp.value);
             }
         }

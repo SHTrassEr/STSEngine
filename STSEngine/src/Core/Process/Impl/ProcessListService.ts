@@ -1,16 +1,15 @@
 ﻿namespace STSEngine {
 
     export class ProcessListService implements IProcessListService {
+        protected commitedLastId: number;
         protected commitedProcessList: IProcess[];
+        protected lastId: number;
         protected processList: IProcess[];
         protected filterService: IFilterService<IProcess>;
-
-        protected attributeList: IAttributeList;
 
         constructor() {
             this.commitedProcessList = [];
             this.processList = [];
-            this.attributeList = new STSEngine.AttributeList();
             this.filterService = new FilterService<IProcess>();
             this.setLastId(0);
         }
@@ -25,35 +24,35 @@
 
         public createProcess(attributeList: IKeyValuePair[]): IProcess {
             attributeList.push(new KeyValuePair(AttributeType.Id, this.getNewProcessId()));
-            var process = new ProcessImpl(attributeList);
+            let process = new ProcessImpl(attributeList);
             this.addProcess(process);
             return process;
         }
 
         public setProcessList(processList: IKeyValuePair[][]): void {
-            for (var attributeList of processList) {
+            for (let attributeList of processList) {
                 this.createProcess(attributeList);
             }
         }
 
         protected getNewProcessId(): number {
-            var lastObjectId = this.getLastId();
-            var newObjectId = lastObjectId + 1;
+            let lastObjectId = this.getLastId();
+            let newObjectId = lastObjectId + 1;
             this.setLastId(newObjectId);
             return newObjectId;
         }
 
         protected getLastId(): number {
-            return this.attributeList.getAttribute(ServiceAttributeType.LastId);
+            return this.lastId;
         }
 
         protected setLastId(id: number): void {
-            this.attributeList.setAttribute(ServiceAttributeType.LastId, 0);
+            this.lastId = id;
         }
 
         public removeFinished(): void {
-            var list: IProcess[];
-            for (var process of this.processList) {
+            let list: IProcess[];
+            for (let process of this.processList) {
                 if (process.getProcessStatus() != ProcessStatus.Finished) {
                     if (!list) {
                         list = [];
@@ -69,17 +68,19 @@
 
         public commit(): void {
             this.commitedProcessList = this.processList.slice();
-            for (var process of this.processList) {
+            this.commitedLastId = this.lastId;
+            for (let process of this.processList) {
                 process.commit();
             }
         }
 
         public rollback(): void {
-            for (var process of this.processList) {
+            for (let process of this.processList) {
                 process.rollback();
             }
 
             this.processList = this.commitedProcessList.slice();
+            this.lastId = this.commitedLastId;
         }
 
         public isDirty(): boolean {
@@ -87,7 +88,11 @@
                 return true;
             }
 
-            for (var process of this.processList) {
+            if (this.lastId != this.commitedLastId) {
+                return true;
+            }
+
+            for (let process of this.processList) {
                 if (process.isDirty()) {
                     return true;
                 }
@@ -96,7 +101,7 @@
             return false;
         }
 
-        public getAll(condition: (item: IProcess) => boolean): IProcess[] {
+        public getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess> {
             return this.filterService.getAll(this.processList, condition);
         }
 

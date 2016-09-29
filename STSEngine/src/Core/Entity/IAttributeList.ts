@@ -1,11 +1,11 @@
 ﻿namespace STSEngine {
 
-    export interface IAttributeList extends ICommitable{
-        getAttribute(attribute: string, defaultValue?: any): any;
-        setAttribute(attribute: string, value: any): void;
-        setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void;
-        hasAttribute(attribute: string): boolean;
-        removeAttribute(attribute: string): void;
+    export interface IAttributeList {
+        get(attribute: string, defaultValue?: any): any;
+        set(attribute: string, value: any): void;
+        setList(attributeList: Map<string, any> | IKeyValuePair[]): void;
+        has(attribute: string): boolean;
+        delete(attribute: string): void;
         getKeyValuePairList(): IKeyValuePair[];
     }
 }

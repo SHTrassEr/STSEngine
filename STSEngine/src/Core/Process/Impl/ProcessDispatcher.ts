@@ -18,25 +18,25 @@
         }
 
         public execute(world: IWorld, process: IProcess): void {
-            var processStatus = process.getProcessStatus();
+            let processStatus = process.getProcessStatus();
             if (processStatus === ProcessStatus.Executing) {
-                var handler = this.getProcessHandler(process);
+                let handler = this.getProcessHandler(process);
                 handler.execute(world, process);
             }
         }
 
         public init(world: IWorld, process: IProcess): void {
-            var processStatus = process.getProcessStatus();
+            let processStatus = process.getProcessStatus();
             if (processStatus === ProcessStatus.Init) {
-                var handler = this.getProcessHandler(process);
+                let handler = this.getProcessHandler(process);
                 handler.init(world, process);
             }
         }
 
         public finish(world: IWorld, process: IProcess): void {
-            var processStatus = process.getProcessStatus();
+            let processStatus = process.getProcessStatus();
             if (processStatus !== ProcessStatus.Finished) {
-                var handler = this.getProcessHandler(process);
+                let handler = this.getProcessHandler(process);
                 handler.finish(world, process);
             }
         }

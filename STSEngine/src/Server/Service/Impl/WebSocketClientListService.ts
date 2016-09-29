@@ -11,8 +11,8 @@
         }
 
         public addWebSocketClient(client: any): IWebSocketClient {
-            var newClientId = this.getNewSocketClientId();
-            var webSocketClient = new WebSocketClient(newClientId, client);
+            let newClientId = this.getNewSocketClientId();
+            let webSocketClient = new WebSocketClient(newClientId, client);
             this.webSocketClientList.set(newClientId, webSocketClient);
             return webSocketClient;
         }

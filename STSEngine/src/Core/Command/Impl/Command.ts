@@ -3,54 +3,42 @@
     export class Command implements ICommand {
         protected attributeList: IAttributeList;
 
-        constructor(attributeList: IKeyValuePair[]) {
-            this.attributeList = new AttributeList();
-
-            if (attributeList) {
-                this.setAttributeList(attributeList);
-            }
+        constructor(attributeList: IAttributeList) {
+            this.attributeList = attributeList;
         }
 
-        public getCommandType(): CommandType {
-            return this.attributeList.getAttribute(AttributeType.CommandType);
+        public getCommandType(): number {
+            return this.attributeList.get(AttributeType.CommandType);
         }
 
         public getPlayerId(): number {
-            return this.attributeList.getAttribute(AttributeType.PlayerId);
+            return this.attributeList.get(AttributeType.PlayerId);
+        }
+
+        public getAttributeList(): IAttributeList {
+            return this.attributeList;
         }
 
         //IAttributeList
 
-        public getAttribute(attribute: string, defaultValue?: any): any {
-            return this.attributeList.getAttribute(attribute, defaultValue);
+        public get(attribute: string, defaultValue?: any): any {
+            return this.attributeList.get(attribute, defaultValue);
         }
 
-        public setAttribute(attribute: string, value: any): void {
-            this.attributeList.setAttribute(attribute, value);
+        public set(attribute: string, value: any): void {
+            this.attributeList.set(attribute, value);
         }
 
-        public setAttributeList(attributeList: Map<string, any> | IKeyValuePair[]): void {
-            this.attributeList.setAttributeList(attributeList);
+        public setList(attributeList: Map<string, any> | IKeyValuePair[]): void {
+            this.attributeList.setList(attributeList);
         }
 
-        public hasAttribute(attribute: string): boolean {
-            return this.attributeList.hasAttribute(attribute);
+        public has(attribute: string): boolean {
+            return this.attributeList.has(attribute);
         }
 
-        public rollback(): void {
-            this.attributeList.rollback();
-        }
-
-        public commit(): void {
-            this.attributeList.commit();
-        }
-
-        public isDirty(): boolean {
-            return this.attributeList.isDirty();
-        }
-
-        public removeAttribute(attribute: string): void {
-            this.attributeList.removeAttribute(attribute);
+        public delete(attribute: string): void {
+            this.attributeList.delete(attribute);
         }
 
         public getKeyValuePairList(): IKeyValuePair[] {

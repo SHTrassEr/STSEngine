@@ -4,24 +4,24 @@
 
         public execute(world: IWorld, command: ICommand): void {
 
-            var objectAttributeList = this.createObjectAttributeList(world, command);
-            var processAttributeList = this.createProcessAttributeList(world, objectAttributeList);
-            var processListService = world.getProcessListService();
-            var process = processListService.createProcess(processAttributeList);
-            var processDispatcher = world.getProcessDispatcher();
+            let objectAttributeList = this.createObjectAttributeList(world, command);
+            let processAttributeList = this.createProcessAttributeList(world, objectAttributeList);
+            let processListService = world.getProcessListService();
+            let process = processListService.createProcess(processAttributeList);
+            let processDispatcher = world.getProcessDispatcher();
             processDispatcher.init(world, process);
         }
 
         protected createObjectAttributeList(world: IWorld, command: ICommand): IKeyValuePair[] {
-            var newPlayerId = command.getAttribute(AttributeType.NewPlayerId);
-            var objectAttributeList: IKeyValuePair[] = [];
+            let newPlayerId = command.get(AttributeType.NewPlayerId);
+            let objectAttributeList: IKeyValuePair[] = [];
             objectAttributeList.push(new KeyValuePair(AttributeType.PlayerId, newPlayerId));
             objectAttributeList.push(new KeyValuePair(AttributeType.Position, new STSEngine.Point(0, 0)));
             return objectAttributeList;
         }
 
         protected createProcessAttributeList(world: IWorld, objectAttributeList: IKeyValuePair[]): IKeyValuePair[] {
-            var processAttributeList: IKeyValuePair[] = [];
+            let processAttributeList: IKeyValuePair[] = [];
             processAttributeList.push(new KeyValuePair(AttributeType.ProcessType, ProcessType.CreateObject));
             processAttributeList.push(new KeyValuePair(AttributeType.ObjectAttributeList, objectAttributeList));
             return processAttributeList;

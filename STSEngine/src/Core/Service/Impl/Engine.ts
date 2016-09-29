@@ -22,8 +22,8 @@
         public step() {
             this.world.increaseStepNumber();
             this.processCommandList();
-            for (var i = 0; i < this.processListService.getProcessList().length; i++) {
-                var process = this.processListService.getProcessList()[i];
+            for (let i = 0; i < this.processListService.getProcessList().length; i++) {
+                let process = this.processListService.getProcessList()[i];
                 this.processDispatcher.execute(this.world, process);
             }
 
@@ -35,8 +35,8 @@
         }
 
         protected processCommandList() {
-            var commandList = this.commandListService.getCommandList();
-            for (var command of commandList) {
+            let commandList = this.commandListService.getCommandList();
+            for (let command of commandList) {
                 this.commandDispatcher.execute(this.world, command);
             }
 

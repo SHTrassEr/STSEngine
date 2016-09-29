@@ -14,8 +14,8 @@
         }
 
         protected init() {
-            var world = this.createWorld();
-            var engine = new Engine(world, this.commandListService);
+            let world = this.createWorld();
+            let engine = new Engine(world, this.commandListService);
             this.gameServer = new GameServer(engine);
             this.gameServer.setOnUpdateWorld(this.onUpdateWorld.bind(this));
             this.webSocketServer.setOnClientConnected(this.onClientConnected.bind(this));
@@ -23,33 +23,33 @@
         }
 
         protected createWorld(): IWorld {
-            var settings = this.createWorldSettings();
+            let settings = this.createWorldSettings();
             return new World(settings);
         }
 
         protected createWorldSettings(): IWorldSettings {
-            var settings: IKeyValuePair[] = [];
+            let settings: IKeyValuePair[] = [];
             settings.push(new KeyValuePair("moveStepSize", 10));
             return new WorldSettings(settings);
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
-            var message = this.createTickMessage(currentStepNumber, commandList);
+            let message = this.createTickMessage(currentStepNumber, commandList);
             this.webSocketServer.sendAll(message);
         }
 
         protected createTickMessage(currentStepNumber: number, commandList: ICommand[]): IClientServerMessage {
-            var attributeList = this.createTickAttributeList(currentStepNumber, commandList);
+            let attributeList = this.createTickAttributeList(currentStepNumber, commandList);
             return new ClientServerMessage(ServerMessageType.Tick, attributeList);
         }
 
         protected createTickAttributeList(currentStepNumber: number, commandList: ICommand[]): IKeyValuePair[] {
-            var attributeList: IKeyValuePair[] = [];
+            let attributeList: IKeyValuePair[] = [];
             attributeList.push(new KeyValuePair(AttributeType.StepNumber, currentStepNumber));
 
-            var commandAttributeList: IKeyValuePair[][] = []
+            let commandAttributeList: IKeyValuePair[][] = []
             if (commandList) {
-                for (var command of commandList) {
+                for (let command of commandList) {
                     commandAttributeList.push(command.getKeyValuePairList());
                 }
             }
@@ -59,7 +59,7 @@
         }
 
         protected registerNewPlayer(newPlayerId: number) {
-            var registerPlayerAttributeList: IKeyValuePair[] = [];
+            let registerPlayerAttributeList: IKeyValuePair[] = [];
             registerPlayerAttributeList.push(new KeyValuePair(STSEngine.AttributeType.CommandType, STSEngine.CommandType.RegisterPlayer));
             registerPlayerAttributeList.push(new KeyValuePair(STSEngine.AttributeType.PlayerId, 0));
             registerPlayerAttributeList.push(new KeyValuePair(STSEngine.AttributeType.NewPlayerId, newPlayerId));
@@ -67,11 +67,11 @@
         }
 
         protected onClientConnected(client: IWebSocketClient): void {
-            var clientId = parseInt(client.getSID());
+            let clientId = parseInt(client.getSID());
             this.registerNewPlayer(clientId);
-            var commandLog = this.gameServer.getCommandLog(0);
-            for (var commandList of commandLog) {
-                var message = this.createTickMessage(0, commandList);
+            let commandLog = this.gameServer.getCommandLog(0);
+            for (let commandList of commandLog) {
+                let message = this.createTickMessage(0, commandList);
                 client.sendMessage(message);
             }
         }

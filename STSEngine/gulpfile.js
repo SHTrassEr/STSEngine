@@ -8,7 +8,7 @@ var nodeJsModuleDeclaration = '\ndeclare module \'stsEngine/server\' { export de
 var useStrict = '\'use strict\';\n';
 
 
-var srcCorePath = 'src/Server/**/*.ts';
+var srcCorePath = 'src/Core/**/*.ts';
 var srcServerPath = 'src/Server/**/*.ts';
 var srcClientPath = 'src/Client/**/*.ts';
 var srcTestPath = 'src/Test/**/*.ts';

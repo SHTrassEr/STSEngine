@@ -38,7 +38,7 @@
 
         public resume(): void {
             if (this.isPaused) {
-                var pauseEnd = Date.now();
+                let pauseEnd = Date.now();
                 this.pauseLength += (pauseEnd - this.pauseStart);
                 this.isPaused = false;
             }
@@ -49,7 +49,7 @@
         }
 
         public getTickCount(): number {
-            var totalTime = Date.now() - this.startTime - this.pauseLength;
+            let totalTime = Date.now() - this.startTime - this.pauseLength;
             return Math.floor(totalTime / this.tickLength);
         }
     }

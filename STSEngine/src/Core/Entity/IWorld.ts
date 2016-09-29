@@ -1,8 +1,8 @@
 ﻿namespace STSEngine {
 
-    export interface IWorld extends ICommitable {
+    export interface IWorld {
         getSettings(): IWorldSettings;
-        getObjectListService(): IObjectListService;
+        getObjectListService(): IObjectListService<IObject>;
         getProcessListService(): IProcessListService;
 
         getProcessDispatcher(): IProcessDispatcher;
