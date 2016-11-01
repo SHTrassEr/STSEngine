@@ -10,9 +10,9 @@
         constructor(world: IWorld, commandListService: ICommandListService) {
             this.world = world;
             this.commandListService = commandListService;
-            this.processListService = world.getProcessListService();
-            this.processDispatcher = world.getProcessDispatcher();
-            this.commandDispatcher = world.getCommandDispatcher();
+            this.processListService = world.getServiceList().getProcessListService();
+            this.processDispatcher = world.getServiceList().getProcessDispatcher();
+            this.commandDispatcher = world.getServiceList().getCommandDispatcher();
         }
 
         public getWorld(): IWorld {
@@ -34,13 +34,21 @@
             return this.commandListService.getCommandList();
         }
 
-        protected processCommandList() {
+        protected processCommandList() : void {
             let commandList = this.commandListService.getCommandList();
             for (let command of commandList) {
                 this.commandDispatcher.execute(this.world, command);
             }
-
             this.commandListService.clear();
+        }
+
+        protected addProcessList(processList: Iterable<IProcess>) {
+            if (processList) {
+                for (var process of processList) {
+                    this.processListService.add(process);
+                    this.processDispatcher.init(this.world, process);
+                }
+            }
         }
     }
 }

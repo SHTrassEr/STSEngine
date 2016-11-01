@@ -1,6 +1,13 @@
 ﻿/// <reference path="./node_modules/stsEngine/server.d.ts" />
+/// <reference path="./node_modules/stsEngine.example/server.d.ts" />
 import * as http from  'http';
 import STSEngine from  'stsEngine/server';
+
+import STSEngineExample from  'stsEngine.example/server';
+
+STSEngine.Example = STSEngineExample;
+
+var w = new STSEngine.Example.ObjectPlayer();
 
 
 //var c = new STSEngine.AttributeListImpl();
@@ -10,9 +17,9 @@ import STSEngine from  'stsEngine/server';
 
 var WebSocketServer = require('ws').Server;
 var server = new WebSocketServer({ port: 62785 });
-var webSocketGameServer = new STSEngine.WebSocketGameServer(server);
+//var webSocketGameServer = new STSEngine.WebSocketGameServer(server);
 
-webSocketGameServer.start();
+//webSocketGameServer.start();
 
 /*
 

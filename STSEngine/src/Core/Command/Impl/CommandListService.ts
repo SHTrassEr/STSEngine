@@ -12,24 +12,20 @@
             return this.commandList;
         }
 
-        public createCommand(attributeList: IKeyValuePair[]): ICommand {
-            let commandAttributeList = new AttributeList();
-            commandAttributeList.setList(attributeList);
-            let command = new Command(commandAttributeList);
+        public add(command: ICommand): void {
             this.commandList.push(command);
-            return command;
         }
 
-        public setCommandList(commandList: IKeyValuePair[][]): void {
-            for (let attributeList of commandList) {
-                this.createCommand(attributeList);
+        public setCommandList(commandList: Iterable<ICommand>): void {
+            for (let command of commandList) {
+                this.add(command);
             }
         }
 
-        public getCommandKeyValuePairList(): IKeyValuePair[][] {
-            let list: IKeyValuePair[][] = [];
+        public getCommandKeyValuePairList(): [number, any][][] {
+            let list: [number, any][][] = [];
             for (let command of this.commandList) {
-                list.push(command.getKeyValuePairList());
+                list.push(command.getList());
             }
 
             return list;

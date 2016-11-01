@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{B164A357-DA6C-4ECC-B955-07BD851C7008}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="gulpfile.js" />
+    <Content Include="index.html" />
+    <Content Include="lib\qunit-2.0.1\qunit-2.0.1.css" />
+    <Content Include="lib\qunit-2.0.1\qunit-2.0.1.js" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="lib\stsEngine\client.d.ts" />
+    <TypeScriptCompile Include="lib\typings\node.d.ts" />
+    <TypeScriptCompile Include="lib\typings\qunit.d.ts" />
+    <TypeScriptCompile Include="src\Client\Action\Impl\PlayerAction.ts" />
+    <TypeScriptCompile Include="src\Client\Action\IPlayerAction.ts" />
+    <TypeScriptCompile Include="src\Core\Command\CommandAttributeType.ts" />
+    <TypeScriptCompile Include="src\Core\Command\CommandType.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandMoveObjectStop.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandRegisterPlayer.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandMoveObjectStart.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandCreatePlayerObject.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandCreatePlayerObjectHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandRegisterPlayerHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandMoveObjectStartHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandMoveObjectStopHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\MoveDirection.ts" />
+    <TypeScriptCompile Include="src\Core\Object\Impl\ObjectInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\Point.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\IPoint.ts" />
+    <TypeScriptCompile Include="src\Core\Object\Impl\ObjectPlayer.ts" />
+    <TypeScriptCompile Include="src\Core\Object\ObjectAttributeType.ts" />
+    <TypeScriptCompile Include="src\Core\Object\ObjectType.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessCreatePlayerObjectHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessCreatePlayerObject.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveObjectHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Process\ProcessAttributeType.ts" />
+    <TypeScriptCompile Include="src\Core\Process\ProcessType.ts" />
+    <TypeScriptCompile Include="src\Core\World\Impl\ExampleWorldServiceList.ts" />
+    <TypeScriptCompile Include="src\Server\Export.ts" />
+    <TypeScriptCompile Include="src\Server\Service\Impl\ExampleWebSocketGameServer.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tsconfig.json" />
+    <Content Include="package.json" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>STSEngine.Example</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>62850</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:62850/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

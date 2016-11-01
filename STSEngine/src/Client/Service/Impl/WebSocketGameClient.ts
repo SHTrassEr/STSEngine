@@ -2,19 +2,28 @@
 
     export class WebSocketGameClient {
 
-        protected commandListService: ICommandListService
+        protected commandListService: ICommandListService;
         protected socket: WebSocket;
         protected sid: string;
         protected engine: IEngine;
         protected playerAction: IPlayerAction;
 
-        constructor(socket: WebSocket, playerAction: IPlayerAction) {
+        protected worldSettings: IWorldServiceList;
+        protected worldAttributeList: IWorldAttributeList;
+
+        constructor(socket: WebSocket, playerAction: IPlayerAction, worldSettings: IWorldServiceList, worldAttributeList: IWorldAttributeList) {
+            this.worldSettings = worldSettings;
+            this.worldAttributeList = worldAttributeList;
             this.commandListService = new CommandListService();
             this.socket = socket;
             this.playerAction = playerAction;
             this.sid = playerAction.getPlayerId().toString();
             this.playerAction.setOnAction(this.onPlayerAction.bind(this));
             this.init();
+        }
+
+        protected commandInitializator(attr: Iterable<[number, any]>): ICommand {
+            return new Command(new AttributeList(), attr);
         }
 
         protected init() {
@@ -27,6 +36,11 @@
             this.socket.onerror = this.onError.bind(this);
         }
 
+        protected createWorld(): IWorld {
+            return new World(this.worldSettings, this.worldAttributeList);
+        }
+
+
         public getWorld(): IWorld {
             return this.engine.getWorld();
         }
@@ -34,8 +48,8 @@
         protected onPlayerAction(playerAction: IPlayerAction) {
             let commandList = playerAction.getCommandKeyValuePairList();
             playerAction.clear();
-            let attributeList: IKeyValuePair[] = [];
-            attributeList.push(new KeyValuePair(AttributeType.CommandList, commandList));
+            let attributeList: [number, any][] = [];
+            attributeList.push([ClientMessageAttributeType.CommandList, commandList]);
             let message = new ClientServerMessage(ClientMessageType.CommandList, attributeList);
             this.sendMessage(message);
         }
@@ -59,28 +73,16 @@
         }
 
         protected sendAuthentication() {
-            let attributeList: IKeyValuePair[] = [];
-            attributeList.push(new KeyValuePair(AttributeType.SID, this.sid));
+            let attributeList: [number, any][] = [];
+            attributeList.push([ClientMessageAttributeType.SID, this.sid]);
             let message = new ClientServerMessage(ClientMessageType.ResponseAuthentication, attributeList);
             this.sendMessage(message);
         }
 
-        protected processTick(attributeList: IKeyValuePair[]) {
-            let commandList = <IKeyValuePair[][]>attributeList[1].value;
+        protected processTick(attributeList: [number, any][]) {
+            let commandList = <[number, any][][]>attributeList[1][1];
             this.commandListService.setCommandList(commandList);
             this.engine.step();
-        }
-
-
-        protected createWorld(): IWorld {
-            let settings = this.createWorldSettings();
-            return new World(settings);
-        }
-
-        protected createWorldSettings(): IWorldSettings {
-            let settings: IKeyValuePair[] = [];
-            settings.push(new KeyValuePair("moveStepSize", 10));
-            return new WorldSettings(settings);
         }
 
         protected onClose(ev: CloseEvent): void {

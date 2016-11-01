@@ -3,47 +3,45 @@
     export class Command implements ICommand {
         protected attributeList: IAttributeList;
 
-        constructor(attributeList: IAttributeList) {
-            this.attributeList = attributeList;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
+            if (attributeList) {
+                this.attributeList = attributeList;
+            } else {
+                this.attributeList = new AttributeList();
+            }
+
+            if (kvpList) {
+                this.attributeList.setList(kvpList);
+            }
         }
 
         public getCommandType(): number {
-            return this.attributeList.get(AttributeType.CommandType);
+            return this.attributeList.get(CommandAttributeType.Type);
         }
 
-        public getPlayerId(): number {
-            return this.attributeList.get(AttributeType.PlayerId);
+        public setCommandType(commandType: number): void {
+            this.attributeList.set(CommandAttributeType.Type, commandType);
+        }
+
+        public getInitiatorId(): number {
+            return this.attributeList.get(CommandAttributeType.InitiatorId);
+        }
+
+        public setInitiatorId(id: number): void {
+            this.attributeList.set(CommandAttributeType.InitiatorId, id);
+        }
+
+        public getList(): [number, any][] {
+            return this.attributeList.getList();
+        }
+
+        [Symbol.iterator]
+        public getIterator(): IterableIterator<[number, any]> {
+            return this.attributeList.getIterator();
         }
 
         public getAttributeList(): IAttributeList {
             return this.attributeList;
         }
-
-        //IAttributeList
-
-        public get(attribute: string, defaultValue?: any): any {
-            return this.attributeList.get(attribute, defaultValue);
-        }
-
-        public set(attribute: string, value: any): void {
-            this.attributeList.set(attribute, value);
-        }
-
-        public setList(attributeList: Map<string, any> | IKeyValuePair[]): void {
-            this.attributeList.setList(attributeList);
-        }
-
-        public has(attribute: string): boolean {
-            return this.attributeList.has(attribute);
-        }
-
-        public delete(attribute: string): void {
-            this.attributeList.delete(attribute);
-        }
-
-        public getKeyValuePairList(): IKeyValuePair[] {
-            return this.attributeList.getKeyValuePairList();
-        }
     }
-
 }

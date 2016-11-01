@@ -2,9 +2,9 @@
 
     export interface ICommandListService extends IFilterable<ICommand>  {
         getCommandList(): ICommand[];
-        createCommand(attributeList: IKeyValuePair[]): ICommand;
-        setCommandList(commandList: IKeyValuePair[][]): void;
-        getCommandKeyValuePairList(): IKeyValuePair[][];
+        add(commahd: ICommand): void;
+        setCommandList(commandList: Iterable<Iterable<[number, any]>>): void;
+        getCommandKeyValuePairList(): [number, any][][];
         clear(): void;
     }
 }

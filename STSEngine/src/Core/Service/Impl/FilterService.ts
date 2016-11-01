@@ -1,4 +1,5 @@
-﻿namespace STSEngine {
+﻿
+namespace STSEngine {
 
     export class FilterService<T> implements IFilterService<T> {
 

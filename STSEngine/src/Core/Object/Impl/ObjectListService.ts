@@ -1,46 +1,23 @@
 ﻿
 namespace STSEngine {
 
-    export class ObjectListService<T extends IObject> implements IObjectListService<T> {
-        protected lastId: number;
-        protected objectList: Map<number, T>;
-        protected filterService: IFilterService<T>;
-        protected objectGenerator: (attributeList: IKeyValuePair[]) => T;
+    export class ObjectListService implements IObjectListService {
+        protected objectList: Map<number, IObject>;
+        protected filterService: IFilterService<IObject>;
 
-        constructor(objectGenerator: (attributeList: IKeyValuePair[]) => T) {
-            this.objectGenerator = objectGenerator;
-            this.objectList = new Map<number, T>();
-            this.filterService = new FilterService<T>();
-            this.setLastId(0);
+        constructor() {
+            this.objectList = new Map<number, IObject>();
+            this.filterService = new FilterService<IObject>();
         }
 
-        public init(objectList: IKeyValuePair[][], lastId: number): void {
+        public init(objectList: Iterable<IObject>): void {
             this.objectList.clear();
-            for (let attributeList of objectList) {
-                let object = this.objectGenerator(attributeList);
-                this.set(object);
+            for (let object of objectList) {
+                this.add(object);
             }
-
-            this.lastId = lastId;
         }
 
-
-        protected getNewObjectId(): number {
-            let lastObjectId = this.getLastId();
-            let newObjectId = lastObjectId + 1;
-            this.setLastId(newObjectId);
-            return newObjectId;
-        }
-
-        public getLastId(): number {
-            return this.lastId;
-        }
-
-        protected setLastId(id: number): void {
-            this.lastId = id;
-        }
-
-        public get(objectId: number): T {
+        public get(objectId: number): IObject {
             return this.objectList.get(objectId);
         }
 
@@ -48,24 +25,14 @@ namespace STSEngine {
             return this.objectList.size;
         }
 
-        public set(object: T): void {
+        public add(object: IObject): void {
             let objectId: number = object.getId();
             this.objectList.set(objectId, object);
-        }
-
-        public create(attributeList: IKeyValuePair[]): T {
-            let objectId = this.getNewObjectId();
-            attributeList.push(new KeyValuePair(AttributeType.Id, objectId));
-            let object = this.objectGenerator(attributeList);
-            this.set(object);
-            return object;
         }
 
         public has(id: number): boolean {
             return this.objectList.has(id);
         }
-
-
 
         public remove(id: number): void {
             this.objectList.delete(id);
@@ -75,15 +42,15 @@ namespace STSEngine {
             this.objectList.clear();
         }
 
-        public getIterator(): IterableIterator<T> {
+        public getIterator(): IterableIterator<IObject> {
             return this.objectList.values();
         }
 
-        public getAll(condition: (item: IObject) => boolean): IterableIterator<T> {
+        public getAll(condition: (item: IObject) => boolean): IterableIterator<IObject> {
             return this.filterService.getAll(this.objectList.values(), condition);
         }
 
-        public getFirst(condition: (item: IObject) => boolean): T {
+        public getFirst(condition: (item: IObject) => boolean): IObject {
             return this.filterService.getFirst(this.objectList.values(), condition);
         }
     }

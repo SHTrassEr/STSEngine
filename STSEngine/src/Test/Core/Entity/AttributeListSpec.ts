@@ -3,9 +3,10 @@
 QUnit.module("Core." + STSEngine.AttributeList.name);
 
 
+
 QUnit.test("all", function (assert) {
     let attributeList = new STSEngine.AttributeList();
-    let keyStrList = getRandomStringArray();
+    let keyStrList = getRandomIntArray();
     var valueStrList = getRandomStringArray();
     var valueIntList = getRandomIntArray();
 

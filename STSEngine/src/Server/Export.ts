@@ -1,2 +1,3 @@
-﻿module.exports = { 'default': STSEngine };
+﻿module.exports = STSEngine;
+module.exports['default'] = STSEngine;
 

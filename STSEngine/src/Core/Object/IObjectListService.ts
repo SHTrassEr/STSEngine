@@ -1,14 +1,14 @@
 ﻿namespace STSEngine {
 
-    export interface IObjectListService<T extends IObject> extends IFilterable<T> {
-        init(objectList: IKeyValuePair[][], lastId: number): void;
-        get(id: number): T;
+    export interface IObjectListService extends IFilterable<IObject> {
+        init(objectList: Iterable<IObject>): void;
+        get(id: number): IObject;
         has(id: number): boolean;
         getSize(): number;
-        create(attributeList: IKeyValuePair[]): T;
+        add(object: IObject): void;
         
         remove(id: number): void;
         clear(): void;
-        getIterator(): IterableIterator<T>;
+        getIterator(): IterableIterator<IObject>;
     }
 }

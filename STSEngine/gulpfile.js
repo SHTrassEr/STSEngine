@@ -28,6 +28,21 @@ gulp.task('build-server', function () {
     ]);
 });
 
+gulp.task('build-full', function () {
+    var tsResult = gulp.src([srcCorePath, srcServerPath, srcClientPath])
+        .pipe(ts({
+            declaration: true,
+            removeComments: true,
+            target: 'es6',
+            outFile: 'full.js'
+        }));
+
+    return merge([
+        tsResult.js.pipe(insert.prepend(useStrict)).pipe(gulp.dest('out')),
+        tsResult.dts.pipe(gulp.dest('out'))
+    ]);
+});
+
 
 gulp.task('build-client', function () {
     var tsResult = gulp.src([srcCorePath, srcClientPath])
@@ -59,5 +74,5 @@ gulp.task('build-test', function () {
     ]);
 });
 
-gulp.task('build-all', ['build-server', 'build-client', 'build-test']);
+gulp.task('build-all', ['build-server', 'build-client', 'build-full', 'build-test']);
 

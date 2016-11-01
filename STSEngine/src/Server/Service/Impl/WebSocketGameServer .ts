@@ -4,11 +4,19 @@
 
         protected webSocketServer: IWebSocketServer;
         protected world: IWorld;
-        protected commandListService: ICommandListService
+        protected commandListService: ICommandListService;
         protected gameServer: IGameServer;
+        protected worldSettings: IWorldServiceList;
+        protected worldAttributeList: IWorldAttributeList;
 
-        constructor(server: any) {
+        protected commandInitializer: IItemInitializer<ICommand>;
+
+        constructor(server: any, worldServiceList: IWorldServiceList, worldAttributeList: IWorldAttributeList) {
             this.webSocketServer = new WebSocketServer(server);
+
+            this.worldSettings = worldServiceList;
+            this.commandInitializer = worldServiceList.getCommandInitializer();
+            this.worldAttributeList = worldAttributeList;
             this.commandListService = new CommandListService();
             this.init();
         }
@@ -23,14 +31,7 @@
         }
 
         protected createWorld(): IWorld {
-            let settings = this.createWorldSettings();
-            return new World(settings);
-        }
-
-        protected createWorldSettings(): IWorldSettings {
-            let settings: IKeyValuePair[] = [];
-            settings.push(new KeyValuePair("moveStepSize", 10));
-            return new WorldSettings(settings);
+            return new World(this.worldSettings, this.worldAttributeList);
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
@@ -43,27 +44,19 @@
             return new ClientServerMessage(ServerMessageType.Tick, attributeList);
         }
 
-        protected createTickAttributeList(currentStepNumber: number, commandList: ICommand[]): IKeyValuePair[] {
-            let attributeList: IKeyValuePair[] = [];
-            attributeList.push(new KeyValuePair(AttributeType.StepNumber, currentStepNumber));
+        protected createTickAttributeList(currentStepNumber: number, commandList: ICommand[]): [number, any][] {
+            let attributeList: [number, any][] = [];
+            attributeList.push([ServerMessageAttributeType.StepNumber, currentStepNumber]);
 
-            let commandAttributeList: IKeyValuePair[][] = []
+            let commandAttributeList: [number, any][][] = []
             if (commandList) {
                 for (let command of commandList) {
-                    commandAttributeList.push(command.getKeyValuePairList());
+                    commandAttributeList.push(command.getList());
                 }
             }
 
-            attributeList.push(new KeyValuePair(AttributeType.CommandList, commandAttributeList));
+            attributeList.push([ServerMessageAttributeType.CommandList, commandAttributeList]);
             return attributeList;
-        }
-
-        protected registerNewPlayer(newPlayerId: number) {
-            let registerPlayerAttributeList: IKeyValuePair[] = [];
-            registerPlayerAttributeList.push(new KeyValuePair(STSEngine.AttributeType.CommandType, STSEngine.CommandType.RegisterPlayer));
-            registerPlayerAttributeList.push(new KeyValuePair(STSEngine.AttributeType.PlayerId, 0));
-            registerPlayerAttributeList.push(new KeyValuePair(STSEngine.AttributeType.NewPlayerId, newPlayerId));
-            this.commandListService.createCommand(registerPlayerAttributeList);
         }
 
         protected onClientConnected(client: IWebSocketClient): void {
@@ -76,10 +69,14 @@
             }
         }
 
+        protected registerNewPlayer(newPlayerId: number) {
+
+        }
+
 
         protected onClientMessage(webSocketClient: IWebSocketClient, message: IClientServerMessage): void {
             if (message.messageType == ClientMessageType.CommandList) {
-                this.commandListService.setCommandList(<IKeyValuePair[][]>message.attributeList[0].value);
+                this.commandListService.setCommandList(this.commandInitializer.createList(<[number, any][][]> message.attributeList[0][1]));
             }
         }
 

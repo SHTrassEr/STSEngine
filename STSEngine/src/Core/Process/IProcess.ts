@@ -1,12 +1,15 @@
 ﻿namespace STSEngine {
 
-    export interface IProcess extends ICommitableAttributeList {
+    export interface IProcess extends IterableKeyValuePair { 
         getId(): number;
-        getProcessType(): ProcessType;
+        setId(id: number): void;
+
+        getProcessType(): number;
+        setProcessType(processType: number): void
+
         getProcessStatus(): ProcessStatus;
         setProcessStatus(processStatus: ProcessStatus): void;
 
-        getObjectId(): number;
-
+        getAttributeList(): IAttributeList;
     }
 }

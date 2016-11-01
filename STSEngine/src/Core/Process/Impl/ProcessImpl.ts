@@ -2,86 +2,57 @@
 
     export class ProcessImpl implements IProcess {
 
-        protected attributeList: ICommitableAttributeList;
+        protected attributeList: IAttributeList;
 
-        constructor(attributeList: IKeyValuePair[]) {
-            this.attributeList = new AttributeListCommitable();
-            this.setProcessStatus(ProcessStatus.Init);
-
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             if (attributeList) {
-                this.setList(attributeList);
+                this.attributeList = attributeList;
+            } else {
+                this.attributeList = new AttributeList();
             }
+
+            if (kvpList) {
+                this.attributeList.setList(kvpList);
+            }
+
+            this.setProcessStatus(ProcessStatus.Init);
         }
 
         public getId(): number {
-            return this.get(AttributeType.Id);
+            return this.attributeList.get(ProcessAttributeType.Id);
         }
 
-        protected setId(processId: number): void {
-            this.set(AttributeType.Id, processId);
+        public setId(id: number): void {
+            this.attributeList.set(ProcessAttributeType.Id, id);
         }
 
-        public getProcessType(): ProcessType {
-            return this.get(AttributeType.ProcessType);
+        public getProcessType(): number {
+            return this.attributeList.get(ProcessAttributeType.Type);
         }
 
-        protected setProcessType(processType: ProcessType): void {
-            this.set(AttributeType.ProcessType, processType);
+        public setProcessType(processType: number): void {
+            this.attributeList.set(ProcessAttributeType.Type, processType);
         }
 
         public getProcessStatus(): ProcessStatus {
-            return this.get(AttributeType.ProcessStatus);
+            return this.attributeList.get(ProcessAttributeType.Status);
         }
 
         public setProcessStatus(processStatus: ProcessStatus): void {
-            this.set(AttributeType.ProcessStatus, processStatus);
+            this.attributeList.set(ProcessAttributeType.Status, processStatus);
         }
 
-        public getObjectId(): number {
-            return this.get(AttributeType.ObjectId);
+        public getList(): [number, any][] {
+            return this.attributeList.getList();
         }
 
-        public setObjectId(objectId: number): void {
-            this.set(AttributeType.ObjectId, objectId);
+        [Symbol.iterator]
+        public getIterator(): IterableIterator<[number, any]> {
+            return this.attributeList.getIterator();
         }
 
-        //IAttributeList
-
-        public get(attribute: string, defaultValue?: any): any {
-            return this.attributeList.get(attribute, defaultValue);
-        }
-
-        public set(attribute: string, value: any): void {
-            this.attributeList.set(attribute, value);
-        }
-
-        public setList(attributeList: Map<string, any> | IKeyValuePair[]): void {
-            this.attributeList.setList(attributeList);
-        }
-
-        public has(attribute: string): boolean {
-            return this.attributeList.has(attribute);
-        }
-
-        public rollback(): void {
-            this.attributeList.rollback();
-        }
-
-        public commit(): void {
-            this.attributeList.commit();
-        }
-
-        public isDirty(): boolean {
-            return this.attributeList.isDirty();
-        }
-
-        public delete(attribute: string): void {
-            this.attributeList.delete(attribute);
-        }
-
-        public getKeyValuePairList(): IKeyValuePair[] {
-            return this.attributeList.getKeyValuePairList();
+        public getAttributeList(): IAttributeList {
+            return this.attributeList;
         }
     }
-
 }

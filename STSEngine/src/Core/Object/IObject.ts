@@ -1,14 +1,12 @@
 ﻿namespace STSEngine {
 
-    export interface IObject extends IAttributeList{
+    export interface IObject extends IterableKeyValuePair {
         getId(): number;
-        getObjectType(): ObjectType;
-        setObjectType(objectType: ObjectType): void;
+        setId(id: number): void;
 
-        getPosition(): IPoint;
-        setPosition(position: IPoint): void;
+        getObjectType(): number;
+        setObjectType(objectType: number): void;
 
-        getPlayerId(): number;
-        setPlayerId(playerId: number): void;
+        getAttributeList(): IAttributeList;
     }
 }

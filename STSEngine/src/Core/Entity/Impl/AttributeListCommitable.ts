@@ -1,17 +1,17 @@
 ﻿namespace STSEngine {
 
-    export class AttributeListCommitable implements ICommitableAttributeList {
-        protected deletedAttributeList: Set<string>;
-        protected commitedAttributeList: Map<string, any>;
-        protected attributeList: Map<string, any>;
+    export class AttributeListCommitable implements IAttributeList {
+        protected deletedAttributeList: Set<number>;
+        protected commitedAttributeList: Map<number, any>;
+        protected attributeList: Map<number, any>;
 
         constructor() {
-            this.commitedAttributeList = new Map<string, any>();
-            this.attributeList = new Map<string, any>();
-            this.deletedAttributeList = new Set<string>();
+            this.commitedAttributeList = new Map<number, any>();
+            this.attributeList = new Map<number, any>();
+            this.deletedAttributeList = new Set<number>();
         }
 
-        public get(attribute: string, defaultValue?: any): any {
+        public get(attribute: number, defaultValue?: any): any {
             if (!this.deletedAttributeList.has(attribute)) {
                 if (this.attributeList.has(attribute)) {
                     return this.attributeList.get(attribute);
@@ -25,35 +25,18 @@
             return defaultValue;
         }
 
-        public set(attribute: string, value: any): void {
+        public set(attribute: number, value: any): void {
             this.attributeList.set(attribute, value);
             this.deletedAttributeList.delete(attribute);
         }
 
-        public setList(attributeList: Map<string, any> | IKeyValuePair[]): void {
-            if (attributeList instanceof Array) {
-                this.setAttributeListArray(attributeList);
-            }
-            else {
-                this.setAttributeListMap(attributeList);
-            }
-        }
-
-        protected setAttributeListMap(attributeList: Map<string, any>): void {
+        public setList(attributeList: Iterable<[number, any]>): void {
             for (let kvp of attributeList) {
-                let key: string = kvp[0];
-                let value: any = kvp[1];
-                this.attributeList.set(key, value);
+                this.attributeList.set(kvp[0], kvp[1]);
             }
         }
 
-        protected setAttributeListArray(attributeList: IKeyValuePair[]): void {
-            for (let kvp of attributeList) {
-                this.attributeList.set(kvp.key, kvp.value);
-            }
-        }
-
-        public has(attribute: string): boolean {
+        public has(attribute: number): boolean {
             if (!this.deletedAttributeList.has(attribute)) {
                 if (this.attributeList.has(attribute)) {
                     return true;
@@ -91,24 +74,30 @@
             return (this.attributeList.size > 0) || (this.deletedAttributeList.size > 0);
         }
 
-        public delete(attribute: string): void {
+        public delete(attribute: number): void {
             this.attributeList.delete(attribute);
             if (this.commitedAttributeList.has(attribute)) {
                 this.deletedAttributeList.add(attribute);
             }
         }
 
-        public getKeyValuePairList(): IKeyValuePair[] {
-            let list: IKeyValuePair[] = [];
+
+        [Symbol.iterator]
+        public getIterator(): IterableIterator<[number, any]> {
+            return this.attributeList.entries();
+        }
+
+        public getList(): [number, any][] {
+            let list: [number, any][] = [];
             for (let kvp of this.attributeList) {
-                list.push(new KeyValuePair(kvp[0], kvp[1]));
+                list.push(kvp);
             }
 
             for (let kvp of this.commitedAttributeList) {
-                let attribute: string = kvp[0];
+                let attribute: number = kvp[0];
                 let value: any = kvp[1];
                 if (!this.attributeList.has(attribute) && !this.deletedAttributeList.has(attribute)) {
-                    list.push(new KeyValuePair(attribute, value));
+                    list.push(kvp);
                 }
             }
 

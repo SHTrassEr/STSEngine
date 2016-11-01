@@ -1,27 +1,24 @@
 ﻿
 namespace STSEngine {
 
-    export class ObjectListServiceCommitable<T extends IObject & ICommitable> implements IObjectListServiceCommitable<T> {
-        protected objectListService: IObjectListService<T>;
+    export class ObjectListServiceCommitable implements IObjectListService, ICommitable {
+        protected objectListService: IObjectListService;
         protected deletedObjectIdList: Set<number>;
         protected newObjectIdList: Set<number>;
-        protected filterService: IFilterService<T>;
+        protected filterService: IFilterService<IObject>;
 
-        protected objectGenerator: (attributeList: IKeyValuePair[]) => T;
-
-        constructor(objectGenerator: (attributeList: IKeyValuePair[]) => T) {
-            this.objectGenerator = objectGenerator;
+        constructor() {
             this.deletedObjectIdList = new Set<number>();
-            this.objectListService = new ObjectListService(this.objectGenerator);
-            this.filterService = new FilterService<T>();
+            this.objectListService = new ObjectListService();
+            this.filterService = new FilterService<IObject>();
         }
 
-        public init(objectList: IKeyValuePair[][], lastId: number): void {
+        public init(objectList: Iterable<IObject>): void {
             this.clear();
-            this.objectListService.init(objectList, lastId);
+            this.objectListService.init(objectList);
         }
 
-        public get(id: number): T {
+        public get(id: number): IObject {
             if (!this.deletedObjectIdList.has(id)) {
                 return this.objectListService.get(id);
             }
@@ -41,17 +38,16 @@ namespace STSEngine {
             return (this.objectListService.getSize() - this.deletedObjectIdList.size);
         }
 
-        public create(attributeList: IKeyValuePair[]): T {
-            let object = this.objectListService.create(attributeList);
+        public add(object: IObject): void {
+            this.objectListService.add(object);
             this.newObjectIdList.add(object.getId());
-            return object;
         }
 
-        protected isObjectNotDeleted(object: T): boolean {
+        protected isObjectNotDeleted(object: IObject): boolean {
             return !this.deletedObjectIdList.has(object.getId());
         }
 
-        public getIterator(): IterableIterator<T> {
+        public getIterator(): IterableIterator<IObject> {
             return this.filterService.getAll(this.objectListService.getIterator(), this.isObjectNotDeleted.bind(this));
         }
 
@@ -76,7 +72,7 @@ namespace STSEngine {
             this.deletedObjectIdList.clear();
 
             for (let o of this.objectListService.getIterator()) {
-                o.commit();
+                o.getAttributeList().commit();
             }
         }
 
@@ -88,7 +84,7 @@ namespace STSEngine {
             this.newObjectIdList.clear();
             this.deletedObjectIdList.clear();
             for (let o of this.objectListService.getIterator()) {
-                o.rollback();
+                o.getAttributeList().rollback();
             }
         }
 
@@ -102,7 +98,7 @@ namespace STSEngine {
             }
 
             for (let o of this.objectListService.getIterator()) {
-                if (o.isDirty()) {
+                if (o.getAttributeList().isDirty()) {
                     return true;
                 }
             }
@@ -110,11 +106,11 @@ namespace STSEngine {
             return false;
         }
 
-        public getAll(condition: (item: T) => boolean): IterableIterator<T> {
+        public getAll(condition: (item: IObject) => boolean): IterableIterator<IObject> {
             return this.filterService.getAll(this.getIterator(), condition);
         }
 
-        public getFirst(condition: (item: T) => boolean): T {
+        public getFirst(condition: (item: IObject) => boolean): IObject {
             return this.filterService.getFirst(this.getIterator(), condition);
         }
     }

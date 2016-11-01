@@ -63,8 +63,8 @@
         }
 
         protected doAuthentication(webSocketClient: IWebSocketClient, message: IClientServerMessage) {
-            if (message.attributeList && message.attributeList.length == 1 && message.attributeList[0].key == AttributeType.SID) {
-                let sid = message.attributeList[0].value;
+            if (message.attributeList && message.attributeList.length == 1 && message.attributeList[0][0] == ClientMessageAttributeType.SID) {
+                let sid = message.attributeList[0][1];
                 console.log("Client connected. SID:" + sid);
                 webSocketClient.setSID(sid);
                 this.onClientConnected(webSocketClient);

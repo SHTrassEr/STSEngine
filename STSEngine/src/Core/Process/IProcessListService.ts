@@ -1,9 +1,11 @@
-﻿namespace STSEngine {
+﻿namespace STSEngine {
 
-    export interface IProcessListService extends ICommitable, IFilterable<IProcess> {
+    export interface IProcessListService extends IFilterable<IProcess> {
+
+        init(objectList: Iterable<Iterable<[number, any]>>): void;
         getProcessList(): IProcess[];
-        createProcess(processType: IKeyValuePair[]): IProcess;
-        setProcessList(processList: IKeyValuePair[][]): void;
+        add(process: IProcess): void;
         removeFinished(): void;
+        getIterator(): IterableIterator<IProcess>;
     }
 }

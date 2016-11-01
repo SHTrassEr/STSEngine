@@ -4,19 +4,6 @@
 
         protected processHandlerList: IProcessHandler[];
 
-        constructor() {
-            this.initProcessHandlerList();
-        }
-
-        protected initProcessHandlerList() {
-            this.processHandlerList = [];
-            this.processHandlerList[ProcessType.CreateObject] = new ProcessCreateObject();
-            this.processHandlerList[ProcessType.MoveDown] = new ProcessMoveDownObject();
-            this.processHandlerList[ProcessType.MoveLeft] = new ProcessMoveLeftObject();
-            this.processHandlerList[ProcessType.MoveRight] = new ProcessMoveRightObject();
-            this.processHandlerList[ProcessType.MoveUp] = new ProcessMoveUpObject();
-        }
-
         public execute(world: IWorld, process: IProcess): void {
             let processStatus = process.getProcessStatus();
             if (processStatus === ProcessStatus.Executing) {
@@ -44,7 +31,5 @@
         protected getProcessHandler(process: IProcess): IProcessHandler {
             return this.processHandlerList[process.getProcessType()];
         }
-
     }
-
 }

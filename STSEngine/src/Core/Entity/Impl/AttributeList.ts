@@ -1,62 +1,59 @@
 ﻿namespace STSEngine {
 
     export class AttributeList implements IAttributeList {
-        protected attributeList: Map<string, any>;
+        protected attributeList: Map<number, any>;
 
         constructor() {
-            this.attributeList = new Map<string, any>();
+            this.attributeList = new Map<number, any>();
         }
 
-        public get(attribute: string, defaultValue?: any): any {
+        public get(attribute: number, defaultValue?: any): any {
             if (this.attributeList.has(attribute)) {
                 return this.attributeList.get(attribute);
             }
-
+            
             return defaultValue;
         }
 
-        public set(attribute: string, value: any): void {
+
+        public set(attribute: number, value: any): void {
             this.attributeList.set(attribute, value);
         }
 
-        public setList(attributeList: Map<string, any> | IKeyValuePair[]): void {
-            if (attributeList instanceof Array) {
-                this.setAttributeListArray(attributeList);
-            }
-            else {
-                this.setAttributeListMap(attributeList);
-            }
-        }
-
-        protected setAttributeListMap(attributeList: Map<string, any>): void {
+        public setList(attributeList: Iterable<[number, any]>): void {
             for (let kvp of attributeList) {
-                let key: string = kvp[0];
-                let value: any = kvp[1];
-                this.attributeList.set(key, value);
+                this.attributeList.set(kvp[0], kvp[1]);
             }
         }
 
-        protected setAttributeListArray(attributeList: IKeyValuePair[]): void {
-            for (let kvp of attributeList) {
-                this.attributeList.set(kvp.key, kvp.value);
-            }
+        public rollback(): void {
         }
 
-        public has(attribute: string): boolean {
+        public commit(): void {
+        }
+
+        public isDirty(): boolean {
+            return false;
+        }
+
+        [Symbol.iterator]
+        public getIterator(): IterableIterator<[number, any]> {
+            return this.attributeList.entries();
+        }
+
+        public has(attribute: number): boolean {
             return this.attributeList.has(attribute);
         }
 
-        public delete(attribute: string): void {
+        public delete(attribute: number): void {
             this.attributeList.delete(attribute);
         }
 
-        public getKeyValuePairList(): IKeyValuePair[] {
-            let list: IKeyValuePair[] = [];
+        public getList(): [number, any][] {
+            let list: [number, any][] = [];
             for (let kvp of this.attributeList) {
-                let key: string = kvp[0];
-                let value: any = kvp[1];
-                if (value !== null && value !== undefined) {
-                    list.push(new KeyValuePair(key, value));
+                if (kvp[1] !== null && kvp[1] !== undefined) {
+                    list.push(kvp);
                 }
             }
 

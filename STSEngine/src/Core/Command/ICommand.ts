@@ -1,8 +1,12 @@
 ﻿namespace STSEngine {
 
-    export interface ICommand extends IAttributeList{
+    export interface ICommand extends IterableKeyValuePair {
         getCommandType(): number;
-        getPlayerId(): number;
-    }
+        setCommandType(commandType: number): void 
 
+        getInitiatorId(): number;
+        setInitiatorId(id: number): void 
+
+        getAttributeList(): IAttributeList;
+    }
 }
