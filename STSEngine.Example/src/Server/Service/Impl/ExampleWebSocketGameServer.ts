@@ -3,13 +3,11 @@
     export class ExampleWebSocketGameServer extends WebSocketGameServer {
     
         protected registerNewPlayer(newPlayerId: number) {
-            let registerPlayerAttributeList: [number, any][] = [];
-            registerPlayerAttributeList.push([CommandAttributeType.Type, CommandType.RegisterPlayer]);
-            registerPlayerAttributeList.push([CommandAttributeType.InitiatorId, 0]);
-            registerPlayerAttributeList.push([CommandAttributeType.NewPlayerId, newPlayerId]);
-            var command = this.commandListService.add(registerPlayerAttributeList); 
+
+            var command = new CommandRegisterPlayer();
+            command.setInitiatorId(0);
+            command.setPlayerId(newPlayerId);
+            this.commandListService.add(command); 
         }
-
-
     }
 }
