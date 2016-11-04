@@ -7,8 +7,8 @@ QUnit.module("Core." + STSEngine.AttributeList.name);
 QUnit.test("all", function (assert) {
     let attributeList = new STSEngine.AttributeList();
     let keyStrList = getRandomIntArray();
-    var valueStrList = getRandomStringArray();
-    var valueIntList = getRandomIntArray();
+    let valueStrList = getRandomStringArray();
+    let valueIntList = getRandomIntArray();
 
     for (let i = 0; i < keyStrList.length; i++) {
         attributeList.set(keyStrList[i], valueStrList[i]);

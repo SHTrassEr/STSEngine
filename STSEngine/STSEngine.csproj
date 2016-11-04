@@ -106,6 +106,7 @@
     <TypeScriptCompile Include="src\Server\Service\IWebSocketClientListService.ts" />
     <TypeScriptCompile Include="src\Server\Service\IWebSocketGameServer .ts" />
     <TypeScriptCompile Include="src\Server\Service\IWebSocketServer.ts" />
+    <TypeScriptCompile Include="src\Test\Core\Object\ObjectSpec.ts" />
     <TypeScriptCompile Include="src\Test\Util\RandomGenerator.ts" />
   </ItemGroup>
   <ItemGroup>
