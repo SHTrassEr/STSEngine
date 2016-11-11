@@ -28,6 +28,25 @@ gulp.task('build-server', function () {
     ]);
 });
 
+gulp.task('copy-example', function () {
+    return merge([
+        gulp.src('out/full.d.ts').pipe(gulp.dest('../STSEngine.Example/lib/stsEngine/'))
+    ]);
+});
+
+gulp.task('copy-server', function () {
+    return merge([
+        gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine/')),
+        gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine.example/node_modules/stsEngine/'))
+    ]);
+});
+
+gulp.task('copy-client', function () {
+    return merge([
+        gulp.src('out/client.*').pipe(gulp.dest('../STSEngine.Site/wwwroot/js/stsEngineClient'))
+    ]);
+});
+
 gulp.task('build-full', function () {
     var tsResult = gulp.src([srcCorePath, srcServerPath, srcClientPath])
         .pipe(ts({
@@ -74,5 +93,5 @@ gulp.task('build-test', function () {
     ]);
 });
 
-gulp.task('build-all', ['build-server', 'build-client', 'build-full', 'build-test']);
+gulp.task('build-all', ['build-server', 'build-client', 'build-full', 'build-test', 'copy-example', 'copy-server', 'copy-client']);
 

@@ -6,8 +6,8 @@
         protected stepNumber: number;
         protected attributeList: IWorldAttributeList;
 
-        constructor(worldSettings: IWorldServiceList, attributeList: IWorldAttributeList) {
-            this.attributeList = attributeList;
+        constructor(worldSettings: IWorldServiceList) {
+            this.attributeList = worldSettings.getWorldAttributeList();
             this.worldServiceList = worldSettings;
             this.setStepNumber(0);
         }

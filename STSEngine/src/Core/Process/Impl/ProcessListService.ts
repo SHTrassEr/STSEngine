@@ -39,11 +39,11 @@
         }
 
         public getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess> {
-            return this.filterService.getAll(this.processList.values(), condition);
+            return this.filterService.getAll(this.processList, condition);
         }
 
         public getFirst(condition: (item: IProcess) => boolean): IProcess {
-            return this.filterService.getFirst(this.processList.values(), condition);
+            return this.filterService.getFirst(this.processList, condition);
         }
     }
 }

@@ -1,12 +1,18 @@
 ﻿namespace STSEngine.Example {
 
-    export class ProcessInitializer implements IItemInitializer<IProcess> {
+    export class ProcessInitializer extends ItemInitializer<IProcess> {
         public create(attr: Iterable<[number, any]> | number): IProcess {
             if (attr instanceof Number) {
                 return this.createByType(attr);
             }
 
             return this.createByArray(<Iterable<[number, any]>>attr);
+        }
+
+        public * createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<IProcess> {
+            for (let attr of attrList) {
+                yield this.create(attr);
+            }
         }
 
         public createByArray(attr: Iterable<[number, any]>): IProcess {
@@ -31,12 +37,20 @@
             return 0;
         }
 
+        protected setProcessId(process: IProcess) {
+            process.setId(this.getId());
+        }
+
         public createMove(attr?: Iterable<[number, any]>): ProcessMoveObject {
-            return new ProcessMoveObject(this.createAttributeList(), attr);
+            var process = new ProcessMoveObject(this.createAttributeList(), attr);
+            this.setProcessId(process);
+            return process;
         }
 
         public createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject {
-            return new ProcessCreatePlayerObject(this.createAttributeList(), attr);
+            var process = new ProcessCreatePlayerObject(this.createAttributeList(), attr);
+            this.setProcessId(process);
+            return process;
         }
 
         protected createAttributeList(): IAttributeList {

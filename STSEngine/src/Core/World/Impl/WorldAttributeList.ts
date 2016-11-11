@@ -36,5 +36,21 @@
         public getAttributeList(): IAttributeList {
             return this.attributeList;
         }
+
+        public getLastProcessId(): number {
+            return this.attributeList.get(WorldAttributeType.LastProcessId, 0);
+        }
+
+        public setLastProcessId(id: number) {
+            this.attributeList.set(WorldAttributeType.LastProcessId, id);
+        }
+
+        public getLastObjectId(): number {
+            return this.attributeList.get(WorldAttributeType.LastObjectId, 0);
+        }
+
+        public setLastObjectId(id: number) {
+            this.attributeList.set(WorldAttributeType.LastObjectId, id);
+        }
     }
 }

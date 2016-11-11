@@ -8,6 +8,7 @@
         protected commandInitializer: CommandInitializer;
 
         constructor(playerId: number) {
+            this.commandInitializer = new CommandInitializer();
             this.commandListService = new CommandListService();
             this.playerId = playerId;
         }
@@ -29,48 +30,56 @@
         public startMoveRight(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStart();
             command.setMoveDirection(MoveDirection.Right);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public startMoveLeft(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStart();
             command.setMoveDirection(MoveDirection.Left);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public startMoveUp(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStart();
             command.setMoveDirection(MoveDirection.Up);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public startMoveDown(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStart();
             command.setMoveDirection(MoveDirection.Down);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public stopMoveRight(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStop();
             command.setMoveDirection(MoveDirection.Right);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public stopMoveLeft(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStop();
             command.setMoveDirection(MoveDirection.Left);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public stopMoveUp(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStop();
             command.setMoveDirection(MoveDirection.Up);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 
         public stopMoveDown(objectId: number): void {
             var command = this.commandInitializer.createMoveObjectStop();
             command.setMoveDirection(MoveDirection.Down);
+            command.setObjectId(objectId);
             this.addCommand(command);
         }
 

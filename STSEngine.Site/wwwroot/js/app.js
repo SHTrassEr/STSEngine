@@ -2,19 +2,17 @@ function ready() {
     var playerId = Math.floor(Math.random() * (100000));
     var loc = window.location;
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
-    var playerAction = new STSEngine.PlayerAction(playerId);
-    var client = new STSEngine.WebSocketGameClient(socket, playerAction);
+    var playerAction = new STSEngine.Example.PlayerAction(playerId);
+    var client = new STSEngine.Example.ExampleWebSocketGameClient(socket, playerAction);
     var world = client.getWorld();
-    var objectListService = world.getObjectListService();
+    var objectListService = world.getServiceList().getObjectListService();
     var content = document.getElementById("content");
     setInterval(() => {
-        var lastId = objectListService.getLastId();
+        var iterator = objectListService.getIterator();
         var objectStatusStr = "";
-        for (var id = 1; id <= lastId; id++) {
-            var o = objectListService.getObject(id);
-            if (o) {
-                objectStatusStr += "<br/>x: " + o.getPosition().getX() + " y:" + o.getPosition().getY();
-            }
+        for (let o of iterator) {
+            let oo = o;
+            objectStatusStr += "<br/>x: " + oo.getPosition().x + " y:" + oo.getPosition().y;
         }
         var stepNumber = world.getStepNumber();
         content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);

@@ -6,36 +6,32 @@ function ready() {
     var loc = window.location;
 
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
-    var playerAction = new STSEngine.PlayerAction(playerId);
-    var client = new STSEngine.WebSocketGameClient(socket, playerAction);
+    var playerAction = new STSEngine.Example.PlayerAction(playerId);
+    var client = new STSEngine.Example.ExampleWebSocketGameClient(socket, playerAction);
 
+    
 
-
-    var world: STSEngine.IWorld = client.getWorld();
-    var objectListService = world.getObjectListService();
+    var world = client.getWorld();
+    var objectListService = world.getServiceList().getObjectListService();
     var content = document.getElementById("content");
     setInterval(() => {
 
-        var lastId = objectListService.getLastId();
+        var iterator = objectListService.getIterator();
         var objectStatusStr = "";
-        for (var id = 1; id <= lastId; id++) {
-            var o = objectListService.getObject(id);
-            if (o) {
-                
-                objectStatusStr += "<br/>x: " + o.getPosition().getX() + " y:" + o.getPosition().getY();
-            }
+        for (let o of iterator) {
+            let oo = <STSEngine.Example.ObjectPlayer>(<any>o);
+            objectStatusStr += "<br/>x: " + oo.getPosition().x + " y:" + oo.getPosition().y;
         }
 
         var stepNumber = world.getStepNumber();
         content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);
-
     }, 50);
 
 
     var up: boolean, down: boolean, left: boolean, right: boolean;
 
     function getPlayerObjectId() {
-        var o = objectListService.getFirst(o => o.getPlayerId() == playerId);
+        var o = objectListService.getFirst(o => (<STSEngine.Example.ObjectPlayer>(<any>o)).getPlayerId() == playerId);
         return o.getId();
     }
 

@@ -34,6 +34,7 @@
     <TypeScriptCompile Include="lib\typings\qunit.d.ts" />
     <TypeScriptCompile Include="src\Client\Action\Impl\PlayerAction.ts" />
     <TypeScriptCompile Include="src\Client\Action\IPlayerAction.ts" />
+    <TypeScriptCompile Include="src\Client\Service\Impl\ExampleWebSocketGameClient.ts" />
     <TypeScriptCompile Include="src\Core\Command\CommandAttributeType.ts" />
     <TypeScriptCompile Include="src\Core\Command\CommandType.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandMoveObjectStop.ts" />
@@ -111,4 +112,7 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>gulp build-all</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -1,12 +1,18 @@
 ﻿namespace STSEngine.Example {
 
-    export class ObjectInitializer implements IItemInitializer<IObject> {
+    export class ObjectInitializer extends ItemInitializer<IObject> {
         public create(attr: Iterable<[number, any]> | number): IObject {
             if (attr instanceof Number) {
                 return this.createByType(attr);
             }
 
             return this.createByArray(<Iterable<[number, any]>>attr);
+        }
+
+        public * createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<IObject> {
+            for (let attr of attrList) {
+                yield this.create(attr);
+            }
         }
 
         public createByArray(attr: Iterable<[number, any]>): IObject {
@@ -32,7 +38,13 @@
         }
 
         public createPlayer(attr?: Iterable<[number, any]>): ObjectPlayer {
-            return new ObjectPlayer(this.createAttributeList(), attr);
+            var object = new ObjectPlayer(this.createAttributeList(), attr);
+            this.setObjectId(object);
+            return object;
+        }
+
+        protected setObjectId(object: IObject) {
+            object.setId(this.getId());
         }
 
         protected createAttributeList(): IAttributeList {

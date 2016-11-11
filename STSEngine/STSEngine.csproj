@@ -47,6 +47,8 @@
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessListService.ts" />
     <TypeScriptCompile Include="src\Core\Process\ProcessAttributeType.ts" />
     <TypeScriptCompile Include="src\Core\Service\IItemInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\ItemInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\World\Impl\WorldAttributeType.ts" />
     <TypeScriptCompile Include="src\Core\World\Impl\WorldAttributeList.ts" />
     <TypeScriptCompile Include="src\Core\World\IWorldAttributeList.ts" />
     <TypeScriptCompile Include="src\Test\Core\Entity\AttributeListSpec.ts" />

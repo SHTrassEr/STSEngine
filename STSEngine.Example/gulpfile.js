@@ -31,6 +31,18 @@ gulp.task('build-server', function () {
     ]);
 });
 
+gulp.task('copy-server', function () {
+    return merge([
+        gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine.example/'))
+    ]);
+});
+
+gulp.task('copy-client', function () {
+    return merge([
+        gulp.src('out/client.*').pipe(gulp.dest('../STSEngine.Site/wwwroot/js/stsEngineExample/'))
+    ]);
+});
+
 
 gulp.task('build-client', function () {
     var tsResult = gulp.src([libPath, srcCorePath, srcClientPath])
@@ -62,5 +74,5 @@ gulp.task('build-test', function () {
     ]);
 });
 
-gulp.task('build-all', ['build-server', 'build-client', 'build-test']);
+gulp.task('build-all', ['build-server', 'build-client', 'build-test', 'copy-server', 'copy-client']);
 

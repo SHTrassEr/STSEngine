@@ -8,12 +8,10 @@
         protected engine: IEngine;
         protected playerAction: IPlayerAction;
 
-        protected worldSettings: IWorldServiceList;
-        protected worldAttributeList: IWorldAttributeList;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(socket: WebSocket, playerAction: IPlayerAction, worldSettings: IWorldServiceList, worldAttributeList: IWorldAttributeList) {
-            this.worldSettings = worldSettings;
-            this.worldAttributeList = worldAttributeList;
+        constructor(socket: WebSocket, playerAction: IPlayerAction, worldServiceList: IWorldServiceList) {
+            this.worldServiceList = worldServiceList;
             this.commandListService = new CommandListService();
             this.socket = socket;
             this.playerAction = playerAction;
@@ -37,7 +35,7 @@
         }
 
         protected createWorld(): IWorld {
-            return new World(this.worldSettings, this.worldAttributeList);
+            return new World(this.worldServiceList);
         }
 
 
@@ -80,7 +78,8 @@
         }
 
         protected processTick(attributeList: [number, any][]) {
-            let commandList = <[number, any][][]>attributeList[1][1];
+            let commandListAttr = <[number, any][][]>attributeList[1][1];
+            let commandList = this.worldServiceList.getCommandInitializer().createList(commandListAttr);
             this.commandListService.setCommandList(commandList);
             this.engine.step();
         }

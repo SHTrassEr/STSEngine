@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class CommandInitializer implements IItemInitializer<ICommand> {
+    export class CommandInitializer extends ItemInitializer<ICommand> {
 
         public create(attr: Iterable<[number, any]> | number): ICommand {
             if (attr instanceof Number) {
@@ -8,6 +8,12 @@
             }
 
             return this.createByArray(<Iterable<[number, any]>>attr);
+        }
+
+        public * createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<ICommand> {
+            for (let attr of attrList) {
+                yield this.create(attr);
+            }
         }
 
         public createByArray(attr: Iterable<[number, any]>): ICommand {
@@ -26,6 +32,8 @@
                 case CommandType.CreatePlayerObject: 
                     return this.createPlayerObjectStop(attr);
             }
+
+            throw 'Unexpected command type: ' + type;
         }
          
         protected getProcessType(attr: Iterable<[number, any]>): number {

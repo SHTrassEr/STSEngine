@@ -7,16 +7,14 @@
         protected commandListService: ICommandListService;
         protected gameServer: IGameServer;
         protected worldSettings: IWorldServiceList;
-        protected worldAttributeList: IWorldAttributeList;
 
         protected commandInitializer: IItemInitializer<ICommand>;
 
-        constructor(server: any, worldServiceList: IWorldServiceList, worldAttributeList: IWorldAttributeList) {
+        constructor(server: any, worldServiceList: IWorldServiceList) {
             this.webSocketServer = new WebSocketServer(server);
 
             this.worldSettings = worldServiceList;
             this.commandInitializer = worldServiceList.getCommandInitializer();
-            this.worldAttributeList = worldAttributeList;
             this.commandListService = new CommandListService();
             this.init();
         }
@@ -31,7 +29,7 @@
         }
 
         protected createWorld(): IWorld {
-            return new World(this.worldSettings, this.worldAttributeList);
+            return new World(this.worldSettings);
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
@@ -76,7 +74,7 @@
 
         protected onClientMessage(webSocketClient: IWebSocketClient, message: IClientServerMessage): void {
             if (message.messageType == ClientMessageType.CommandList) {
-                this.commandListService.setCommandList(this.commandInitializer.createList(<[number, any][][]> message.attributeList[0][1]));
+                this.commandListService.setCommandList(this.commandInitializer.createList(message.attributeList[0][1]));
             }
         }
 
