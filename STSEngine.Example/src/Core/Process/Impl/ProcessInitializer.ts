@@ -47,6 +47,12 @@
             return process;
         }
 
+        public createFire(attr?: Iterable<[number, any]>): ProcessFire {
+            var process = new ProcessFire(this.createAttributeList(), attr);
+            this.setProcessId(process);
+            return process;
+        }
+
         public createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject {
             var process = new ProcessCreatePlayerObject(this.createAttributeList(), attr);
             this.setProcessId(process);

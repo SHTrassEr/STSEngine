@@ -7,6 +7,9 @@
         getProcessType(): number;
         setProcessType(processType: number): void
 
+        getProcessExecCount(): number;
+        setProcessExecCount(execCount: number): void
+
         getProcessStatus(): ProcessStatus;
         setProcessStatus(processStatus: ProcessStatus): void;
 

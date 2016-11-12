@@ -15,7 +15,9 @@
             objectInitializator: IItemInitializer<IObject>,
             processInitializator: IItemInitializer<IProcess>,
             processDispatcher: IProcessDispatcher,
-            commandDispatcher: ICommandDispatcher) {
+            commandDispatcher: ICommandDispatcher,
+            objectListService: IObjectListService,
+            processListService: IProcessListService) {
 
             this.worldAttributeList = worldAttributeList;
             this.commandInitializer = commandInitializator;
@@ -25,8 +27,8 @@
             this.processInitializer.setGetIdHandler(this.getProcessId.bind(this));
             this.processDispatcher = processDispatcher;
             this.commandDispatcher = commandDispatcher;
-            this.objectListService = new ObjectListService();
-            this.processListService = new ProcessListService();
+            this.objectListService = objectListService;
+            this.processListService = processListService;
         }
 
         public getWorldAttributeList(): IWorldAttributeList {

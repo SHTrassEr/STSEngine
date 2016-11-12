@@ -11,6 +11,7 @@
         public execute(world: IWorld, process: IProcess): void {
             if (this.isValidProcessType(world, process)) {
                 this.executeProcess(world, process);
+                process.setProcessExecCount(process.getProcessExecCount() + 1);
             }
         }
 
@@ -47,6 +48,11 @@
             }
 
             return undefined;
+        }
+
+        protected startProcess(world: IWorld, process: IProcess): void {
+            world.getServiceList().getProcessListService().add(process);
+            world.getServiceList().getProcessDispatcher().init(world, process);
         }
     }
 }

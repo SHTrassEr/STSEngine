@@ -3,13 +3,115 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Point {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
+        class ObjectRectangle extends STSEngine.ObjectImpl {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setObjectType(Example.ObjectType.Player);
+            }
+            getPosition() {
+                return this.attributeList.get(Example.ObjectAttributeType.Position);
+            }
+            setPosition(position) {
+                this.attributeList.set(Example.ObjectAttributeType.Position, position);
+            }
+            getPlayerId() {
+                return this.attributeList.get(Example.ObjectAttributeType.PlayerId);
+            }
+            setPlayerId(playerId) {
+                this.attributeList.set(Example.ObjectAttributeType.PlayerId, playerId);
+            }
+            getMaxSpeed() {
+                return this.attributeList.get(Example.ObjectAttributeType.MaxSpeed);
+            }
+            setMaxSpeed(speed) {
+                this.attributeList.set(Example.ObjectAttributeType.MaxSpeed, speed);
+            }
+            getSize() {
+                return this.attributeList.get(Example.ObjectAttributeType.Size);
+            }
+            setSize(size) {
+                this.attributeList.set(Example.ObjectAttributeType.Size, size);
+            }
+            getMoveDirection() {
+                return this.attributeList.get(Example.ObjectAttributeType.MoveDirection);
+            }
+            setMoveDirection(direction) {
+                this.attributeList.set(Example.ObjectAttributeType.MoveDirection, direction);
             }
         }
-        Example.Point = Point;
+        Example.ObjectRectangle = ObjectRectangle;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ObjectBullet extends Example.ObjectRectangle {
+        }
+        Example.ObjectBullet = ObjectBullet;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ObjectInitializer extends STSEngine.ItemInitializer {
+            create(attr) {
+                if (attr instanceof Number) {
+                    return this.createByType(attr);
+                }
+                return this.createByArray(attr);
+            }
+            *createList(attrList) {
+                for (let attr of attrList) {
+                    yield this.create(attr);
+                }
+            }
+            createByArray(attr) {
+                var processType = this.getProcessType(attr);
+                return this.createByType(processType, attr);
+            }
+            createByType(type, attr) {
+                switch (type) {
+                    case Example.ObjectType.Player:
+                        return this.createPlayer(attr);
+                }
+            }
+            getProcessType(attr) {
+                for (var kvp of attr) {
+                    if (kvp[0] == STSEngine.ProcessAttributeType.Type) {
+                        return kvp[1];
+                    }
+                }
+                return 0;
+            }
+            createPlayer(attr) {
+                var object = new Example.ObjectPlayer(this.createAttributeList(), attr);
+                this.setObjectId(object);
+                return object;
+            }
+            createBullet(attr) {
+                var object = new Example.ObjectBullet(this.createAttributeList(), attr);
+                this.setObjectId(object);
+                return object;
+            }
+            setObjectId(object) {
+                object.setId(this.getId());
+            }
+            createAttributeList() {
+                return new STSEngine.AttributeList();
+            }
+        }
+        Example.ObjectInitializer = ObjectInitializer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ObjectPlayer extends Example.ObjectRectangle {
+        }
+        Example.ObjectPlayer = ObjectPlayer;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -69,9 +171,61 @@ var STSEngine;
                 this.commandHandlerList[Example.CommandType.CreatePlayerObject] = new Example.CommandCreatePlayerObjectHandler(processInitializer);
                 this.commandHandlerList[Example.CommandType.MoveStart] = new Example.CommandMoveObjectStartHandler(processInitializer);
                 this.commandHandlerList[Example.CommandType.MoveStop] = new Example.CommandMoveObjectStopHandler(processInitializer);
+                this.commandHandlerList[Example.CommandType.Fire] = new Example.CommandFireHandler(processInitializer);
             }
         }
         Example.CommandDispatcher = CommandDispatcher;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandFire extends STSEngine.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setCommandType(Example.CommandType.Fire);
+            }
+            getObjectId() {
+                return this.attributeList.get(Example.CommandAttributeType.ObjectId);
+            }
+            setObjectId(id) {
+                this.attributeList.set(Example.CommandAttributeType.ObjectId, id);
+            }
+        }
+        Example.CommandFire = CommandFire;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandFireHandler extends STSEngine.CommandHandler {
+            constructor(processInitializer) {
+                super();
+                this.processInitializer = processInitializer;
+            }
+            executeCommand(world, command) {
+                var process = this.processInitializer.createFire();
+                process.setObjectId(command.getObjectId());
+                this.startProcess(world, process);
+            }
+            isValidCommand(world, command) {
+                let playerId = command.getInitiatorId();
+                if (playerId > 0) {
+                    let objectId = command.getObjectId();
+                    let object = this.getObject(world, objectId, Example.ObjectPlayer);
+                    if (object) {
+                        return (object).getPlayerId() == playerId;
+                    }
+                }
+                return command.getInitiatorId() === 0;
+            }
+            isValidCommandType(world, command) {
+                return command instanceof Example.CommandFire;
+            }
+        }
+        Example.CommandFireHandler = CommandFireHandler;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -104,6 +258,8 @@ var STSEngine;
                         return this.createMoveObjectStop(attr);
                     case Example.CommandType.CreatePlayerObject:
                         return this.createPlayerObjectStop(attr);
+                    case Example.CommandType.Fire:
+                        return this.createFire(attr);
                 }
                 throw 'Unexpected command type: ' + type;
             }
@@ -126,6 +282,9 @@ var STSEngine;
             }
             createPlayerObjectStop(attr) {
                 return new Example.CommandCreatePlayerObject(this.createAttributeList(), attr);
+            }
+            createFire(attr) {
+                return new Example.CommandFire(this.createAttributeList(), attr);
             }
             createAttributeList() {
                 return new STSEngine.AttributeList();
@@ -301,74 +460,13 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class ObjectInitializer extends STSEngine.ItemInitializer {
-            create(attr) {
-                if (attr instanceof Number) {
-                    return this.createByType(attr);
-                }
-                return this.createByArray(attr);
-            }
-            *createList(attrList) {
-                for (let attr of attrList) {
-                    yield this.create(attr);
-                }
-            }
-            createByArray(attr) {
-                var processType = this.getProcessType(attr);
-                return this.createByType(processType, attr);
-            }
-            createByType(type, attr) {
-                switch (type) {
-                    case Example.ObjectType.Player:
-                        return this.createPlayer(attr);
-                }
-            }
-            getProcessType(attr) {
-                for (var kvp of attr) {
-                    if (kvp[0] == STSEngine.ProcessAttributeType.Type) {
-                        return kvp[1];
-                    }
-                }
-                return 0;
-            }
-            createPlayer(attr) {
-                var object = new Example.ObjectPlayer(this.createAttributeList(), attr);
-                this.setObjectId(object);
-                return object;
-            }
-            setObjectId(object) {
-                object.setId(this.getId());
-            }
-            createAttributeList() {
-                return new STSEngine.AttributeList();
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
             }
         }
-        Example.ObjectInitializer = ObjectInitializer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ObjectPlayer extends STSEngine.ObjectImpl {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setObjectType(Example.ObjectType.Player);
-            }
-            getPosition() {
-                return this.attributeList.get(Example.ObjectAttributeType.Position);
-            }
-            setPosition(position) {
-                this.attributeList.set(Example.ObjectAttributeType.Position, position);
-            }
-            getPlayerId() {
-                return this.attributeList.get(Example.ObjectAttributeType.PlayerId);
-            }
-            setPlayerId(playerId) {
-                this.attributeList.set(Example.ObjectAttributeType.PlayerId, playerId);
-            }
-        }
-        Example.ObjectPlayer = ObjectPlayer;
+        Example.Point = Point;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -403,7 +501,9 @@ var STSEngine;
             initProcess(world, process) {
                 var object = this.objectInitializer.createPlayer();
                 object.setPlayerId(process.getPlayerId());
-                object.setPosition(new Example.Point(0, 0));
+                object.setPosition([40 * 100, 40 * 100]);
+                object.setMaxSpeed(100);
+                object.setSize([4 * 100, 4 * 100]);
                 this.addObject(world, object);
                 process.setProcessStatus(STSEngine.ProcessStatus.Finished);
             }
@@ -416,17 +516,78 @@ var STSEngine;
     var Example;
     (function (Example) {
         class ProcessDispatcher extends STSEngine.ProcessDispatcher {
-            constructor(processInitializer, objectInitializer) {
+            constructor(worldAttributeList, collisionService, processInitializer, objectInitializer) {
                 super();
-                this.initProcessHandlerList(processInitializer, objectInitializer);
+                this.initProcessHandlerList(worldAttributeList, collisionService, processInitializer, objectInitializer);
             }
-            initProcessHandlerList(processInitializer, objectInitializer) {
+            initProcessHandlerList(worldAttributeList, collisionService, processInitializer, objectInitializer) {
                 this.processHandlerList = [];
                 this.processHandlerList[Example.ProcessType.CreatePlayerObject] = new Example.ProcessCreatePlayerObjectHandler(processInitializer, objectInitializer);
-                this.processHandlerList[Example.ProcessType.Move] = new Example.ProcessMoveObjectHandler(processInitializer, objectInitializer);
+                this.processHandlerList[Example.ProcessType.Move] = new Example.ProcessMoveObjectHandler(worldAttributeList, processInitializer, objectInitializer, collisionService);
+                this.processHandlerList[Example.ProcessType.Fire] = new Example.ProcessFireHandler(worldAttributeList, processInitializer, objectInitializer, collisionService);
             }
         }
         Example.ProcessDispatcher = ProcessDispatcher;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ProcessFire extends STSEngine.ProcessImpl {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setProcessType(Example.ProcessType.Fire);
+            }
+            getObjectId() {
+                return this.attributeList.get(Example.ProcessAttributeType.ObjectId);
+            }
+            setObjectId(id) {
+                this.attributeList.set(Example.ProcessAttributeType.ObjectId, id);
+            }
+        }
+        Example.ProcessFire = ProcessFire;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ProcessFireHandler extends STSEngine.ProcessHandler {
+            constructor(worldAttributeList, processInitializer, objectInitializer, collisionService) {
+                super();
+                this.worldAttributeList = worldAttributeList;
+                this.processInitializer = processInitializer;
+                this.objectInitializer = objectInitializer;
+                this.collisionService = collisionService;
+            }
+            initProcess(world, process) {
+                process.setProcessStatus(STSEngine.ProcessStatus.Executing);
+            }
+            executeProcess(world, process) {
+                let object = this.getObject(world, process.getObjectId(), Example.ObjectPlayer);
+                if (object) {
+                    this.fire(world, object, world.getServiceList());
+                }
+                process.setProcessStatus(STSEngine.ProcessStatus.Finished);
+            }
+            fire(world, object, worldServiceList) {
+                var bullet = this.objectInitializer.createBullet();
+                bullet.setPosition([object.getPosition()[0], object.getPosition()[1]]);
+                bullet.setSize([100, 100]);
+                bullet.setMaxSpeed(100);
+                bullet.setMoveDirection(object.getMoveDirection());
+                worldServiceList.getObjectListService().add(bullet);
+                var moveProcess = this.processInitializer.createMove();
+                moveProcess.setMoveDirection(object.getMoveDirection());
+                moveProcess.setObjectId(bullet.getId());
+                this.startProcess(world, moveProcess);
+            }
+            finish(world, process) {
+                process.setProcessStatus(STSEngine.ProcessStatus.Finished);
+            }
+        }
+        Example.ProcessFireHandler = ProcessFireHandler;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -468,6 +629,11 @@ var STSEngine;
             }
             createMove(attr) {
                 var process = new Example.ProcessMoveObject(this.createAttributeList(), attr);
+                this.setProcessId(process);
+                return process;
+            }
+            createFire(attr) {
+                var process = new Example.ProcessFire(this.createAttributeList(), attr);
                 this.setProcessId(process);
                 return process;
             }
@@ -513,36 +679,53 @@ var STSEngine;
     var Example;
     (function (Example) {
         class ProcessMoveObjectHandler extends STSEngine.ProcessHandler {
-            constructor(processInitializer, objectInitializer) {
+            constructor(worldAttributeList, processInitializer, objectInitializer, collisionService) {
                 super();
+                this.worldAttributeList = worldAttributeList;
                 this.processInitializer = processInitializer;
                 this.objectInitializer = objectInitializer;
+                this.collisionService = collisionService;
             }
             initProcess(world, process) {
                 process.setProcessStatus(STSEngine.ProcessStatus.Executing);
+                if (!process.getMoveDirection()) {
+                    throw new Error('Init process invalid state: move direction is not defined ' + process.getId() + ' ' + process.getObjectId());
+                }
             }
             executeProcess(world, process) {
-                let object = this.getObject(world, process.getObjectId(), Example.ObjectPlayer);
+                var object = world.getServiceList().getObjectListService().get(process.getObjectId());
                 if (object) {
-                    this.moveObject(object, process.getMoveDirection());
+                    this.moveObject(object, process.getMoveDirection(), process.getProcessExecCount());
                 }
             }
-            moveObject(object, direction) {
+            moveObject(object, direction, execCount) {
                 let position = object.getPosition();
+                var speed = object.getMaxSpeed();
+                if (execCount < 50) {
+                    speed = Math.floor(speed * (execCount + 10) / 20);
+                }
+                else if (execCount >= 50) {
+                    speed = speed * 3;
+                }
+                let newPosition = null;
                 switch (direction) {
                     case Example.MoveDirection.Down:
-                        object.setPosition(new Example.Point(position.x, position.y - 1));
+                        newPosition = [position[0], position[1] + speed];
                         break;
                     case Example.MoveDirection.Up:
-                        object.setPosition(new Example.Point(position.x, position.y + 1));
+                        newPosition = [position[0], position[1] - speed];
                         break;
                     case Example.MoveDirection.Left:
-                        object.setPosition(new Example.Point(position.x - 1, position.y));
+                        newPosition = [position[0] - speed, position[1]];
                         break;
                     case Example.MoveDirection.Right:
-                        object.setPosition(new Example.Point(position.x + 1, position.y));
+                        newPosition = [position[0] + speed, position[1]];
                         break;
+                    default:
+                        throw 'Invalid move direction: ' + direction;
                 }
+                object.setMoveDirection(direction);
+                this.collisionService.processCollision(object, newPosition);
             }
             finish(world, process) {
                 process.setProcessStatus(STSEngine.ProcessStatus.Finished);
@@ -555,31 +738,161 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class ExampleWorldServiceList extends STSEngine.WorldServiceList {
-            constructor(worldAttributeList) {
-                let commandInitializer = new Example.CommandInitializer();
-                let objectInitializer = new Example.ObjectInitializer();
-                let processInitializer = new Example.ProcessInitializer();
-                let commandDispatcher = new Example.CommandDispatcher(processInitializer);
-                let processDispatcher = new Example.ProcessDispatcher(processInitializer, objectInitializer);
-                super(worldAttributeList, commandInitializer, objectInitializer, processInitializer, processDispatcher, commandDispatcher);
+        class WorldAttributeList extends STSEngine.WorldAttributeList {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setWorldSize([100 * 100, 80 * 100]);
+            }
+            getWorldSize() {
+                return this.attributeList.get(Example.WorldAttributeType.WorldSize);
+            }
+            setWorldSize(size) {
+                this.attributeList.set(Example.WorldAttributeType.WorldSize, size);
             }
         }
-        Example.ExampleWorldServiceList = ExampleWorldServiceList;
+        Example.WorldAttributeList = WorldAttributeList;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        (function (MoveDirection) {
-            MoveDirection[MoveDirection["Unknow"] = 0] = "Unknow";
-            MoveDirection[MoveDirection["Up"] = 1] = "Up";
-            MoveDirection[MoveDirection["Right"] = 2] = "Right";
-            MoveDirection[MoveDirection["Down"] = 3] = "Down";
-            MoveDirection[MoveDirection["Left"] = 4] = "Left";
-        })(Example.MoveDirection || (Example.MoveDirection = {}));
-        var MoveDirection = Example.MoveDirection;
+        (function (WorldAttributeType) {
+            WorldAttributeType[WorldAttributeType["WorldSize"] = 50] = "WorldSize";
+            WorldAttributeType[WorldAttributeType["LastProcessId"] = 51] = "LastProcessId";
+            WorldAttributeType[WorldAttributeType["LastObjectId"] = 52] = "LastObjectId";
+        })(Example.WorldAttributeType || (Example.WorldAttributeType = {}));
+        var WorldAttributeType = Example.WorldAttributeType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class WorldServiceList extends STSEngine.WorldServiceList {
+            constructor(worldAttributeList) {
+                let objectListService = new STSEngine.ObjectListService();
+                let processListService = new STSEngine.ProcessListService();
+                let collisionService = new Example.CollisionService(worldAttributeList, objectListService);
+                let commandInitializer = new Example.CommandInitializer();
+                let objectInitializer = new Example.ObjectInitializer();
+                let processInitializer = new Example.ProcessInitializer();
+                let commandDispatcher = new Example.CommandDispatcher(processInitializer);
+                let processDispatcher = new Example.ProcessDispatcher(worldAttributeList, collisionService, processInitializer, objectInitializer);
+                super(worldAttributeList, commandInitializer, objectInitializer, processInitializer, processDispatcher, commandDispatcher, objectListService, processListService);
+                this.collisionService = collisionService;
+            }
+            getWorldAttributeList() {
+                return this.worldAttributeList;
+            }
+        }
+        Example.WorldServiceList = WorldServiceList;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CollisionService {
+            constructor(worldAttributeList, objectListService) {
+                this.worldAttributeList = worldAttributeList;
+                this.objectListService = objectListService;
+            }
+            processCollision(moveObject, newPosition) {
+                if (moveObject instanceof Example.ObjectPlayer) {
+                    this.processCollisionObjectPlayer(moveObject, newPosition);
+                }
+                else if (moveObject instanceof Example.ObjectBullet) {
+                    this.processCollisionObjectPlayer(moveObject, newPosition);
+                }
+            }
+            processCollisionObjectPlayer(moveObject, newPosition) {
+                this.processCollisionObjectRectangleWorld(moveObject, newPosition);
+                let objectList = this.objectListService.getIterator();
+                for (var o of objectList) {
+                    if (moveObject.getId() != o.getId()) {
+                        if (o instanceof Example.ObjectPlayer) {
+                            this.processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o);
+                        }
+                    }
+                }
+                moveObject.setPosition(newPosition);
+            }
+            processCollisionObjectBullet(moveObject, newPosition) {
+                this.processCollisionObjectRectangleWorld(moveObject, newPosition);
+                moveObject.setPosition(newPosition);
+            }
+            processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o) {
+                let position = moveObject.getPosition();
+                let oPosition = o.getPosition();
+                let moveObjectSize = moveObject.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveObjectSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveObjectSize, oPosition, oSize)) {
+                        if (position[0] < newPosition[0]) {
+                            newPosition[0] = oPosition[0] - moveObjectSize[0];
+                        }
+                        else if (position[0] > newPosition[0]) {
+                            newPosition[0] = oPosition[0] + oSize[0];
+                        }
+                        else if (position[1] < newPosition[1]) {
+                            newPosition[1] = oPosition[1] - moveObjectSize[1];
+                        }
+                        else if (position[1] > newPosition[1]) {
+                            newPosition[1] = oPosition[1] + oSize[1];
+                        }
+                    }
+                }
+            }
+            processCollisionObjectRectangleWorld(moveObject, newPosition) {
+                if (newPosition[0] < 0) {
+                    newPosition[0] = 0;
+                }
+                if (newPosition[1] < 0) {
+                    newPosition[1] = 0;
+                }
+                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0]) {
+                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0];
+                }
+                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1]) {
+                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1];
+                }
+            }
+            isRectangleObjectCollision(pos1, size1, pos2, size2) {
+                if ((pos2[0] + size2[0] <= pos1[0]) ||
+                    (pos2[1] + size2[1] <= pos1[1]) ||
+                    (pos2[0] >= pos1[0] + size1[0]) ||
+                    (pos2[1] >= pos1[1] + size1[1])) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        Example.CollisionService = CollisionService;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        (function (ObjectAttributeType) {
+            ObjectAttributeType[ObjectAttributeType["PlayerId"] = 50] = "PlayerId";
+            ObjectAttributeType[ObjectAttributeType["Position"] = 51] = "Position";
+            ObjectAttributeType[ObjectAttributeType["MaxSpeed"] = 52] = "MaxSpeed";
+            ObjectAttributeType[ObjectAttributeType["Size"] = 53] = "Size";
+            ObjectAttributeType[ObjectAttributeType["MoveDirection"] = 54] = "MoveDirection";
+        })(Example.ObjectAttributeType || (Example.ObjectAttributeType = {}));
+        var ObjectAttributeType = Example.ObjectAttributeType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        (function (ObjectType) {
+            ObjectType[ObjectType["Player"] = 0] = "Player";
+        })(Example.ObjectType || (Example.ObjectType = {}));
+        var ObjectType = Example.ObjectType;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -602,6 +915,7 @@ var STSEngine;
             CommandType[CommandType["CreatePlayerObject"] = 50] = "CreatePlayerObject";
             CommandType[CommandType["MoveStart"] = 51] = "MoveStart";
             CommandType[CommandType["MoveStop"] = 52] = "MoveStop";
+            CommandType[CommandType["Fire"] = 53] = "Fire";
         })(Example.CommandType || (Example.CommandType = {}));
         var CommandType = Example.CommandType;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
@@ -610,21 +924,14 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        (function (ObjectAttributeType) {
-            ObjectAttributeType[ObjectAttributeType["PlayerId"] = 50] = "PlayerId";
-            ObjectAttributeType[ObjectAttributeType["Position"] = 51] = "Position";
-        })(Example.ObjectAttributeType || (Example.ObjectAttributeType = {}));
-        var ObjectAttributeType = Example.ObjectAttributeType;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        (function (ObjectType) {
-            ObjectType[ObjectType["Player"] = 0] = "Player";
-        })(Example.ObjectType || (Example.ObjectType = {}));
-        var ObjectType = Example.ObjectType;
+        (function (MoveDirection) {
+            MoveDirection[MoveDirection["Unknow"] = 0] = "Unknow";
+            MoveDirection[MoveDirection["Up"] = 1] = "Up";
+            MoveDirection[MoveDirection["Right"] = 2] = "Right";
+            MoveDirection[MoveDirection["Down"] = 3] = "Down";
+            MoveDirection[MoveDirection["Left"] = 4] = "Left";
+        })(Example.MoveDirection || (Example.MoveDirection = {}));
+        var MoveDirection = Example.MoveDirection;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -648,6 +955,7 @@ var STSEngine;
             ProcessType[ProcessType["Unknown"] = 0] = "Unknown";
             ProcessType[ProcessType["CreatePlayerObject"] = 1] = "CreatePlayerObject";
             ProcessType[ProcessType["Move"] = 2] = "Move";
+            ProcessType[ProcessType["Fire"] = 3] = "Fire";
         })(Example.ProcessType || (Example.ProcessType = {}));
         var ProcessType = Example.ProcessType;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
@@ -721,6 +1029,11 @@ var STSEngine;
                 command.setObjectId(objectId);
                 this.addCommand(command);
             }
+            fire(objectId) {
+                var command = this.commandInitializer.createFire();
+                command.setObjectId(objectId);
+                this.addCommand(command);
+            }
             getCommandKeyValuePairList() {
                 return this.commandListService.getCommandKeyValuePairList();
             }
@@ -743,13 +1056,87 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class ExampleWebSocketGameClient extends STSEngine.WebSocketGameClient {
+        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
             constructor(socket, playerAction) {
-                let worldAttributeList = new STSEngine.WorldAttributeList();
-                let worldServiceList = new Example.ExampleWorldServiceList(worldAttributeList);
+                let worldAttributeList = new Example.WorldAttributeList();
+                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
                 super(socket, playerAction, worldServiceList);
             }
         }
-        Example.ExampleWebSocketGameClient = ExampleWebSocketGameClient;
+        Example.WebSocketGameClient = WebSocketGameClient;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class View extends STSEngine.View {
+            constructor(rootElement, worldServiceList) {
+                super(rootElement, worldServiceList);
+                this.cellSize = 8;
+                this.m = 100;
+            }
+            refresh() {
+                this.clearCanvas();
+                this.drawGrid();
+                var iterator = this.objectListService.getIterator();
+                for (let o of iterator) {
+                    if (o instanceof Example.ObjectRectangle) {
+                        this.drawObjectPlayer(o);
+                    }
+                }
+            }
+            getDrawPoint(p) {
+                return Math.floor(p / this.m);
+            }
+            drawObjectPlayer(o) {
+                let position = o.getPosition();
+                let size = o.getSize();
+                let cellSize = this.cellSize;
+                let objectWidth = Math.floor(size[0] / this.m);
+                let objectHeight = Math.floor(size[1] / this.m);
+                let x = this.getDrawPoint(position[0]);
+                let y = this.getDrawPoint(position[1]);
+                this.context;
+                this.context.beginPath();
+                this.context.rect((x) * cellSize, (y) * cellSize, objectWidth * cellSize, objectHeight * cellSize);
+                this.context.fillStyle = "#FF0000";
+                this.context.globalAlpha = 1;
+                this.context.fill();
+                this.context.closePath();
+            }
+            setCanvasSize() {
+                var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize / this.m;
+                var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize / this.m;
+                this.canvas.width = width;
+                this.canvas.height = height;
+            }
+            drawGrid() {
+                let cellSize = this.cellSize;
+                var x = 0;
+                var y = 0;
+                while (x < this.canvas.width) {
+                    this.context.beginPath();
+                    this.context.globalAlpha = 1;
+                    this.context.lineWidth = 0.15;
+                    this.context.moveTo(x, 0);
+                    this.context.lineTo(x, this.canvas.height);
+                    this.context.stroke();
+                    this.context.closePath();
+                    x += cellSize;
+                }
+                while (y < this.canvas.height) {
+                    this.context.beginPath();
+                    this.context.globalAlpha = 1;
+                    this.context.lineWidth = 0.1;
+                    this.context.moveTo(0, y);
+                    this.context.lineTo(this.canvas.width, y);
+                    this.context.stroke();
+                    this.context.closePath();
+                    y += cellSize;
+                }
+            }
+        }
+        Example.View = View;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));

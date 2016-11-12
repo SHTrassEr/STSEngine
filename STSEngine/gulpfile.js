@@ -28,20 +28,20 @@ gulp.task('build-server', function () {
     ]);
 });
 
-gulp.task('copy-example', function () {
+gulp.task('copy-example', ['build-full'], function () {
     return merge([
         gulp.src('out/full.d.ts').pipe(gulp.dest('../STSEngine.Example/lib/stsEngine/'))
     ]);
 });
 
-gulp.task('copy-server', function () {
+gulp.task('copy-server', ['build-server'], function () {
     return merge([
         gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine/')),
         gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine.example/node_modules/stsEngine/'))
     ]);
 });
 
-gulp.task('copy-client', function () {
+gulp.task('copy-client', ['build-client'], function () {
     return merge([
         gulp.src('out/client.*').pipe(gulp.dest('../STSEngine.Site/wwwroot/js/stsEngineClient'))
     ]);

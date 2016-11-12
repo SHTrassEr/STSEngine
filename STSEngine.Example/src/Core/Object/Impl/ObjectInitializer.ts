@@ -43,6 +43,12 @@
             return object;
         }
 
+        public createBullet(attr?: Iterable<[number, any]>): ObjectBullet {
+            var object = new ObjectBullet(this.createAttributeList(), attr);
+            this.setObjectId(object);
+            return object;
+        }
+
         protected setObjectId(object: IObject) {
             object.setId(this.getId());
         }

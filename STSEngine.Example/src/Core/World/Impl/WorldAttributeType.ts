@@ -1,8 +1,7 @@
-﻿namespace STSEngine {
+﻿namespace STSEngine.Example {
 
     export enum WorldAttributeType {
-        Unknown,
-        TickLength,
+        WorldSize = 50,
         LastProcessId,
         LastObjectId
     }

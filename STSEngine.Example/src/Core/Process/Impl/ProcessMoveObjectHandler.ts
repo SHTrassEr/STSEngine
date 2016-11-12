@@ -4,40 +4,65 @@
 
         protected processInitializer: ProcessInitializer;
         protected objectInitializer: ObjectInitializer;
+        protected collisionService: ICollisionService;
+        protected worldAttributeList: WorldAttributeList;
 
-        constructor(processInitializer: ProcessInitializer, objectInitializer: ObjectInitializer) {
+        constructor(worldAttributeList: WorldAttributeList, processInitializer: ProcessInitializer, objectInitializer: ObjectInitializer, collisionService: ICollisionService) {
             super();
+            this.worldAttributeList = worldAttributeList;
             this.processInitializer = processInitializer;
             this.objectInitializer = objectInitializer;
+            this.collisionService = collisionService;
         }
 
         public initProcess(world: IWorld, process: ProcessMoveObject): void {
             process.setProcessStatus(ProcessStatus.Executing);
+
+            if (!process.getMoveDirection()) {
+                throw new Error('Init process invalid state: move direction is not defined ' + process.getId() + ' ' + process.getObjectId());
+            }
         }
 
         public executeProcess(world: IWorld, process: ProcessMoveObject): void {
-            let object = this.getObject<ObjectPlayer>(world, process.getObjectId(), ObjectPlayer); 
+            var object = world.getServiceList().getObjectListService().get(process.getObjectId());
             if (object) {
-                this.moveObject(object, process.getMoveDirection());
+                this.moveObject((<IObjectRectangle>object), process.getMoveDirection(), process.getProcessExecCount());
             }
         }
 
-        protected moveObject(object: ObjectPlayer, direction: MoveDirection): void {
+        protected moveObject(object: IObjectRectangle, direction: MoveDirection, execCount: number): void {
             let position = object.getPosition();
+            var speed = object.getMaxSpeed();
+
+            if (execCount < 50) {
+                speed =  Math.floor(speed * (execCount + 10) / 20);
+            } else if (execCount >= 50) {
+                speed = speed * 3;
+            }
+
+            let newPosition: [number, number] = null;
+
             switch (direction) {
                 case MoveDirection.Down:
-                    object.setPosition(new Point(position.x, position.y - 1));
+                    newPosition = [position[0], position[1] + speed];
                     break;
                 case MoveDirection.Up:
-                    object.setPosition(new Point(position.x, position.y + 1));
+                    newPosition = [position[0], position[1] - speed];
                     break;
                 case MoveDirection.Left:
-                    object.setPosition(new Point(position.x - 1, position.y));
+                    newPosition = [position[0] - speed, position[1]];
                     break;
                 case MoveDirection.Right:
-                    object.setPosition(new Point(position.x + 1, position.y));
+                    newPosition = [position[0] + speed, position[1]];
                     break;
+                default:
+                    throw 'Invalid move direction: ' + direction;
             }
+
+            object.setMoveDirection(direction);
+
+            this.collisionService.processCollision(object, newPosition);
+
         }
 
         public finish(world: IWorld, process: IProcess): void {

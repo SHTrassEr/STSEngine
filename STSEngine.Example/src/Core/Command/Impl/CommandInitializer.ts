@@ -31,6 +31,8 @@
                     return this.createMoveObjectStop(attr);
                 case CommandType.CreatePlayerObject: 
                     return this.createPlayerObjectStop(attr);
+                case CommandType.Fire:
+                    return this.createFire(attr);
             }
 
             throw 'Unexpected command type: ' + type;
@@ -60,6 +62,10 @@
 
         public createPlayerObjectStop(attr?: Iterable<[number, any]>): CommandCreatePlayerObject {
             return new CommandCreatePlayerObject(this.createAttributeList(), attr);
+        }
+
+        public createFire(attr?: Iterable<[number, any]>): CommandFire {
+            return new CommandFire(this.createAttributeList(), attr);
         }
 
         protected createAttributeList(): IAttributeList {

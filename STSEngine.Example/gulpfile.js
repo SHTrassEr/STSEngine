@@ -31,13 +31,13 @@ gulp.task('build-server', function () {
     ]);
 });
 
-gulp.task('copy-server', function () {
+gulp.task('copy-server', ['build-server'], function () {
     return merge([
         gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine.example/'))
     ]);
 });
 
-gulp.task('copy-client', function () {
+gulp.task('copy-client', ['build-client'], function () {
     return merge([
         gulp.src('out/client.*').pipe(gulp.dest('../STSEngine.Site/wwwroot/js/stsEngineExample/'))
     ]);

@@ -42,6 +42,14 @@
             this.attributeList.set(ProcessAttributeType.Status, processStatus);
         }
 
+        public getProcessExecCount(): number {
+            return this.attributeList.get(ProcessAttributeType.ExecCount, 0);
+        }
+
+        public setProcessExecCount(execCount: number): void {
+            this.attributeList.set(ProcessAttributeType.ExecCount, execCount);
+        }
+
         public getList(): [number, any][] {
             return this.attributeList.getList();
         }

@@ -14,7 +14,9 @@
         public initProcess(world: IWorld, process: ProcessCreatePlayerObject): void {
             var object = this.objectInitializer.createPlayer();
             object.setPlayerId(process.getPlayerId());
-            object.setPosition(new Point(0, 0));
+            object.setPosition([40 * 100, 40 * 100]);
+            object.setMaxSpeed(100);
+            object.setSize([4 * 100, 4 * 100]);
             this.addObject(world, object);
             process.setProcessStatus(ProcessStatus.Finished);
         }

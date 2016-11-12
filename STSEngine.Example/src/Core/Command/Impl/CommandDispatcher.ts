@@ -12,6 +12,7 @@
             this.commandHandlerList[CommandType.CreatePlayerObject] = new CommandCreatePlayerObjectHandler(processInitializer);
             this.commandHandlerList[CommandType.MoveStart] = new CommandMoveObjectStartHandler(processInitializer);
             this.commandHandlerList[CommandType.MoveStop] = new CommandMoveObjectStopHandler(processInitializer);
+            this.commandHandlerList[CommandType.Fire] = new CommandFireHandler(processInitializer);
         }
 
     }

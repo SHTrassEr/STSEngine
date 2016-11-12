@@ -31,6 +31,8 @@
     <Content Include="lib\qunit-2.0.1\qunit-2.0.1.js" />
     <Content Include="tsconfig.json" />
     <TypeScriptCompile Include="lib\typings\qunit.d.ts" />
+    <TypeScriptCompile Include="src\Client\View\Impl\View.ts" />
+    <TypeScriptCompile Include="src\Client\View\IView.ts" />
     <TypeScriptCompile Include="src\Core\Command\CommandAttributeType.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandDispatcher.ts" />

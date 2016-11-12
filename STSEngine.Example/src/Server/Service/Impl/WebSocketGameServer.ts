@@ -1,10 +1,10 @@
 ﻿namespace STSEngine.Example {
 
-    export class ExampleWebSocketGameServer extends WebSocketGameServer {
+    export class WebSocketGameServer extends STSEngine.WebSocketGameServer {
 
         constructor(socket: WebSocket) {
             let worldAttributeList = new WorldAttributeList();
-            let worldServiceList = new ExampleWorldServiceList(worldAttributeList);
+            let worldServiceList = new WorldServiceList(worldAttributeList);
             
             super(socket, worldServiceList);
         }

@@ -83,6 +83,12 @@
             this.addCommand(command);
         }
 
+        public fire(objectId: number): void {
+            var command = this.commandInitializer.createFire();
+            command.setObjectId(objectId);
+            this.addCommand(command);
+        }
+
         public getCommandKeyValuePairList(): [number, any][][] {
             return this.commandListService.getCommandKeyValuePairList();
         }

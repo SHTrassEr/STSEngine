@@ -18,7 +18,7 @@ var w = new STSEngine.Example.ObjectPlayer();
 var WebSocketServer = require('ws').Server;
 var server = new WebSocketServer({ port: 62785 });
 
-var webSocketGameServer = new STSEngine.Example.ExampleWebSocketGameServer(server);
+var webSocketGameServer = new STSEngine.Example.WebSocketGameServer(server);
 
 webSocketGameServer.start();
 

@@ -11,7 +11,8 @@
 
         constructor(engine: IEngine) {
             this.engine = engine;
-            this.metronome = new Metronome(100);
+            var tickLength = engine.getWorld().getAttributeList().getTickLength();
+            this.metronome = new Metronome(tickLength);
             this.commandLog = [];
             this.emptyCommandList = [];
             this.timerId = 0;

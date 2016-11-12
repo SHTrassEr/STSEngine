@@ -2,7 +2,7 @@
 
 namespace STSEngine.Example {
 
-    export class ObjectPlayer extends ObjectRectangle  {
+    export class ObjectBullet extends ObjectRectangle  {
     
     }
 }

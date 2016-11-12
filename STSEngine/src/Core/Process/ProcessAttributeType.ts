@@ -4,6 +4,7 @@
         Unknown,
         Type,
         Id,
-        Status
+        Status,
+        ExecCount
     }
 }

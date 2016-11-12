@@ -3,21 +3,28 @@ function ready() {
     var loc = window.location;
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
     var playerAction = new STSEngine.Example.PlayerAction(playerId);
-    var client = new STSEngine.Example.ExampleWebSocketGameClient(socket, playerAction);
+    var client = new STSEngine.Example.WebSocketGameClient(socket, playerAction);
+    var content = document.getElementById("content");
+    var world = client.getWorld();
+    world.getServiceList();
+    var view = new STSEngine.Example.View(content, (world.getServiceList()));
+    view.start();
     var world = client.getWorld();
     var objectListService = world.getServiceList().getObjectListService();
-    var content = document.getElementById("content");
-    setInterval(() => {
-        var iterator = objectListService.getIterator();
-        var objectStatusStr = "";
-        for (let o of iterator) {
-            let oo = o;
-            objectStatusStr += "<br/>x: " + oo.getPosition().x + " y:" + oo.getPosition().y;
-        }
-        var stepNumber = world.getStepNumber();
-        content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);
-    }, 50);
-    var up, down, left, right;
+    /*    var content = document.getElementById("content");
+        setInterval(() => {
+    
+            var iterator = objectListService.getIterator();
+            var objectStatusStr = "";
+            for (let o of iterator) {
+                let oo = <STSEngine.Example.ObjectPlayer>(<any>o);
+                objectStatusStr += "<br/>x: " + oo.getPosition().x + " y:" + oo.getPosition().y;
+            }
+    
+            var stepNumber = world.getStepNumber();
+            content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);
+        }, 50);*/
+    var up, down, left, right, fire;
     function getPlayerObjectId() {
         var o = objectListService.getFirst(o => o.getPlayerId() == playerId);
         return o.getId();
@@ -48,6 +55,12 @@ function ready() {
                 left = true;
             }
         }
+        else if (e.keyCode == 32) {
+            if (!fire) {
+                playerAction.fire(playerObjectId);
+                fire = true;
+            }
+        }
     }
     function keyUpHandler(e) {
         var playerObjectId = getPlayerObjectId();
@@ -75,6 +88,9 @@ function ready() {
                 playerAction.stopMoveLeft(playerObjectId);
                 left = false;
             }
+        }
+        else if (e.keyCode == 32) {
+            fire = false;
         }
     }
     document.addEventListener("keydown", keyDownHandler, false);

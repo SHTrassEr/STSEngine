@@ -3,6 +3,7 @@
     export enum ProcessType {
         Unknown,
         CreatePlayerObject,
-        Move
+        Move,
+        Fire
     }
 }

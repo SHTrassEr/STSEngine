@@ -14,7 +14,7 @@
     //var c = new STSEngine.AttributeListImpl();
     var WebSocketServer = require('ws').Server;
     var server = new WebSocketServer({ port: 62785 });
-    var webSocketGameServer = new server_1.default.Example.ExampleWebSocketGameServer(server);
+    var webSocketGameServer = new server_1.default.Example.WebSocketGameServer(server);
     webSocketGameServer.start();
 });
 /*

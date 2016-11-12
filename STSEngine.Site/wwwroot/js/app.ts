@@ -7,13 +7,20 @@ function ready() {
 
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
     var playerAction = new STSEngine.Example.PlayerAction(playerId);
-    var client = new STSEngine.Example.ExampleWebSocketGameClient(socket, playerAction);
+    var client = new STSEngine.Example.WebSocketGameClient(socket, playerAction);
 
+    var content = document.getElementById("content");
+
+    var world = client.getWorld();
+    world.getServiceList();
+
+    var view = new STSEngine.Example.View(<HTMLDivElement>content, <any>(world.getServiceList()));
+    view.start();
     
 
     var world = client.getWorld();
     var objectListService = world.getServiceList().getObjectListService();
-    var content = document.getElementById("content");
+/*    var content = document.getElementById("content");
     setInterval(() => {
 
         var iterator = objectListService.getIterator();
@@ -25,10 +32,10 @@ function ready() {
 
         var stepNumber = world.getStepNumber();
         content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);
-    }, 50);
+    }, 50);*/
 
 
-    var up: boolean, down: boolean, left: boolean, right: boolean;
+    var up: boolean, down: boolean, left: boolean, right: boolean, fire: boolean;
 
     function getPlayerObjectId() {
         var o = objectListService.getFirst(o => (<STSEngine.Example.ObjectPlayer>(<any>o)).getPlayerId() == playerId);
@@ -62,6 +69,12 @@ function ready() {
                 left = true;
             }
         }
+        else if (e.keyCode == 32) {
+            if (!fire) {
+                playerAction.fire(playerObjectId);
+                fire = true;
+            }
+        }
     }
     function keyUpHandler(e: any) {
         var playerObjectId = getPlayerObjectId();
@@ -89,6 +102,9 @@ function ready() {
                 playerAction.stopMoveLeft(playerObjectId);
                 left = false;
             }
+        }
+        else if (e.keyCode == 32) {
+            fire = false;
         }
     }
 

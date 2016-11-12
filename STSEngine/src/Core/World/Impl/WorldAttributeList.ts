@@ -16,12 +16,8 @@
             }
         }
 
-        public getMoveStepSize(): number {
-            return 1;
-        }
-
         public getTickLength(): number {
-            return 1;
+            return this.attributeList.get(WorldAttributeType.TickLength, 50);
         }
 
         public getList(): [number, any][] {
