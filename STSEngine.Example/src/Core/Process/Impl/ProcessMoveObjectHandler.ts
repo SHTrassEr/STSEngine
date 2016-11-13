@@ -27,15 +27,17 @@
             var object = world.getServiceList().getObjectListService().get(process.getObjectId());
             if (object) {
                 this.moveObject((<IObjectRectangle>object), process.getMoveDirection(), process.getProcessExecCount());
+            } else {
+                process.setProcessStatus(ProcessStatus.Finished);
             }
         }
 
         protected moveObject(object: IObjectRectangle, direction: MoveDirection, execCount: number): void {
-            let position = object.getPosition();
+            let position = object.getPositionPrecise();
             var speed = object.getMaxSpeed();
 
             if (execCount < 50) {
-                speed =  Math.floor(speed * (execCount + 10) / 20);
+                speed =  Math.floor((speed * (execCount + 10) / 20) * 100) / 100;
             } else if (execCount >= 50) {
                 speed = speed * 3;
             }

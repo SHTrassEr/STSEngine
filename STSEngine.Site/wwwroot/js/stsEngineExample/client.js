@@ -3,121 +3,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class ObjectRectangle extends STSEngine.ObjectImpl {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setObjectType(Example.ObjectType.Player);
-            }
-            getPosition() {
-                return this.attributeList.get(Example.ObjectAttributeType.Position);
-            }
-            setPosition(position) {
-                this.attributeList.set(Example.ObjectAttributeType.Position, position);
-            }
-            getPlayerId() {
-                return this.attributeList.get(Example.ObjectAttributeType.PlayerId);
-            }
-            setPlayerId(playerId) {
-                this.attributeList.set(Example.ObjectAttributeType.PlayerId, playerId);
-            }
-            getMaxSpeed() {
-                return this.attributeList.get(Example.ObjectAttributeType.MaxSpeed);
-            }
-            setMaxSpeed(speed) {
-                this.attributeList.set(Example.ObjectAttributeType.MaxSpeed, speed);
-            }
-            getSize() {
-                return this.attributeList.get(Example.ObjectAttributeType.Size);
-            }
-            setSize(size) {
-                this.attributeList.set(Example.ObjectAttributeType.Size, size);
-            }
-            getMoveDirection() {
-                return this.attributeList.get(Example.ObjectAttributeType.MoveDirection);
-            }
-            setMoveDirection(direction) {
-                this.attributeList.set(Example.ObjectAttributeType.MoveDirection, direction);
-            }
-        }
-        Example.ObjectRectangle = ObjectRectangle;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ObjectBullet extends Example.ObjectRectangle {
-        }
-        Example.ObjectBullet = ObjectBullet;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ObjectInitializer extends STSEngine.ItemInitializer {
-            create(attr) {
-                if (attr instanceof Number) {
-                    return this.createByType(attr);
-                }
-                return this.createByArray(attr);
-            }
-            *createList(attrList) {
-                for (let attr of attrList) {
-                    yield this.create(attr);
-                }
-            }
-            createByArray(attr) {
-                var processType = this.getProcessType(attr);
-                return this.createByType(processType, attr);
-            }
-            createByType(type, attr) {
-                switch (type) {
-                    case Example.ObjectType.Player:
-                        return this.createPlayer(attr);
-                }
-            }
-            getProcessType(attr) {
-                for (var kvp of attr) {
-                    if (kvp[0] == STSEngine.ProcessAttributeType.Type) {
-                        return kvp[1];
-                    }
-                }
-                return 0;
-            }
-            createPlayer(attr) {
-                var object = new Example.ObjectPlayer(this.createAttributeList(), attr);
-                this.setObjectId(object);
-                return object;
-            }
-            createBullet(attr) {
-                var object = new Example.ObjectBullet(this.createAttributeList(), attr);
-                this.setObjectId(object);
-                return object;
-            }
-            setObjectId(object) {
-                object.setId(this.getId());
-            }
-            createAttributeList() {
-                return new STSEngine.AttributeList();
-            }
-        }
-        Example.ObjectInitializer = ObjectInitializer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ObjectPlayer extends Example.ObjectRectangle {
-        }
-        Example.ObjectPlayer = ObjectPlayer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class CommandCreatePlayerObject extends STSEngine.Command {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -460,6 +345,137 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class ObjectRectangle extends STSEngine.ObjectImpl {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setObjectType(Example.ObjectType.Player);
+            }
+            getPosition(d) {
+                if (typeof d == 'number') {
+                    return this.attributeList.get(Example.ObjectAttributeType.Position)[d];
+                }
+                return this.attributeList.get(Example.ObjectAttributeType.Position);
+            }
+            getPositionPrecise(d) {
+                if (typeof d == 'number') {
+                    return this.attributeList.get(Example.ObjectAttributeType.PositionPrecise)[d];
+                }
+                return this.attributeList.get(Example.ObjectAttributeType.PositionPrecise);
+            }
+            setPositionPrecise(position) {
+                this.attributeList.set(Example.ObjectAttributeType.PositionPrecise, position);
+                this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
+            }
+            setPosition(position) {
+                this.attributeList.set(Example.ObjectAttributeType.Position, position);
+            }
+            getPlayerId() {
+                return this.attributeList.get(Example.ObjectAttributeType.PlayerId);
+            }
+            setPlayerId(playerId) {
+                this.attributeList.set(Example.ObjectAttributeType.PlayerId, playerId);
+            }
+            getMaxSpeed() {
+                return this.attributeList.get(Example.ObjectAttributeType.MaxSpeed);
+            }
+            setMaxSpeed(speed) {
+                this.attributeList.set(Example.ObjectAttributeType.MaxSpeed, speed);
+            }
+            getSize(d) {
+                if (d) {
+                    return this.attributeList.get(Example.ObjectAttributeType.Size)[d];
+                }
+                return this.attributeList.get(Example.ObjectAttributeType.Size);
+            }
+            setSize(size) {
+                this.attributeList.set(Example.ObjectAttributeType.Size, size);
+            }
+            getMoveDirection() {
+                return this.attributeList.get(Example.ObjectAttributeType.MoveDirection);
+            }
+            setMoveDirection(direction) {
+                this.attributeList.set(Example.ObjectAttributeType.MoveDirection, direction);
+            }
+        }
+        Example.ObjectRectangle = ObjectRectangle;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ObjectBullet extends Example.ObjectRectangle {
+        }
+        Example.ObjectBullet = ObjectBullet;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ObjectInitializer extends STSEngine.ItemInitializer {
+            create(attr) {
+                if (attr instanceof Number) {
+                    return this.createByType(attr);
+                }
+                return this.createByArray(attr);
+            }
+            *createList(attrList) {
+                for (let attr of attrList) {
+                    yield this.create(attr);
+                }
+            }
+            createByArray(attr) {
+                var processType = this.getProcessType(attr);
+                return this.createByType(processType, attr);
+            }
+            createByType(type, attr) {
+                switch (type) {
+                    case Example.ObjectType.Player:
+                        return this.createPlayer(attr);
+                }
+            }
+            getProcessType(attr) {
+                for (var kvp of attr) {
+                    if (kvp[0] == STSEngine.ProcessAttributeType.Type) {
+                        return kvp[1];
+                    }
+                }
+                return 0;
+            }
+            createPlayer(attr) {
+                var object = new Example.ObjectPlayer(this.createAttributeList(), attr);
+                this.setObjectId(object);
+                return object;
+            }
+            createBullet(attr) {
+                var object = new Example.ObjectBullet(this.createAttributeList(), attr);
+                this.setObjectId(object);
+                return object;
+            }
+            setObjectId(object) {
+                object.setId(this.getId());
+            }
+            createAttributeList() {
+                return new STSEngine.AttributeList();
+            }
+        }
+        Example.ObjectInitializer = ObjectInitializer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ObjectPlayer extends Example.ObjectRectangle {
+        }
+        Example.ObjectPlayer = ObjectPlayer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class Point {
             constructor(x, y) {
                 this.x = x;
@@ -501,9 +517,9 @@ var STSEngine;
             initProcess(world, process) {
                 var object = this.objectInitializer.createPlayer();
                 object.setPlayerId(process.getPlayerId());
-                object.setPosition([40 * 100, 40 * 100]);
-                object.setMaxSpeed(100);
-                object.setSize([4 * 100, 4 * 100]);
+                object.setPositionPrecise([40, 40]);
+                object.setMaxSpeed(1);
+                object.setSize([5, 5]);
                 this.addObject(world, object);
                 process.setProcessStatus(STSEngine.ProcessStatus.Finished);
             }
@@ -573,9 +589,9 @@ var STSEngine;
             }
             fire(world, object, worldServiceList) {
                 var bullet = this.objectInitializer.createBullet();
-                bullet.setPosition([object.getPosition()[0], object.getPosition()[1]]);
-                bullet.setSize([100, 100]);
-                bullet.setMaxSpeed(100);
+                bullet.setPositionPrecise([object.getPosition(0) + (object.getSize()[0] / 2), object.getPosition(1) + (object.getSize()[0] / 2)]);
+                bullet.setSize([1, 1]);
+                bullet.setMaxSpeed(4);
                 bullet.setMoveDirection(object.getMoveDirection());
                 worldServiceList.getObjectListService().add(bullet);
                 var moveProcess = this.processInitializer.createMove();
@@ -697,12 +713,15 @@ var STSEngine;
                 if (object) {
                     this.moveObject(object, process.getMoveDirection(), process.getProcessExecCount());
                 }
+                else {
+                    process.setProcessStatus(STSEngine.ProcessStatus.Finished);
+                }
             }
             moveObject(object, direction, execCount) {
-                let position = object.getPosition();
+                let position = object.getPositionPrecise();
                 var speed = object.getMaxSpeed();
                 if (execCount < 50) {
-                    speed = Math.floor(speed * (execCount + 10) / 20);
+                    speed = Math.floor((speed * (execCount + 10) / 20) * 100) / 100;
                 }
                 else if (execCount >= 50) {
                     speed = speed * 3;
@@ -738,10 +757,125 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class CollisionService {
+            constructor(worldAttributeList, objectListService) {
+                this.worldAttributeList = worldAttributeList;
+                this.objectListService = objectListService;
+            }
+            processCollision(moveObject, newPosition) {
+                if (moveObject instanceof Example.ObjectPlayer) {
+                    this.processCollisionObjectPlayer(moveObject, newPosition);
+                }
+                else if (moveObject instanceof Example.ObjectBullet) {
+                    this.processCollisionObjectBullet(moveObject, newPosition);
+                }
+            }
+            processCollisionObjectPlayer(moveObject, newPosition) {
+                this.processCollisionObjectRectangleWorld(moveObject, newPosition);
+                let objectList = this.objectListService.getIterator();
+                for (var o of objectList) {
+                    if (moveObject.getId() != o.getId()) {
+                        if (o instanceof Example.ObjectPlayer) {
+                            this.processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o);
+                        }
+                    }
+                }
+                moveObject.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectBullet(moveObject, newPosition) {
+                if (this.processCollisionObjectRectangleWorld(moveObject, newPosition)) {
+                    this.objectListService.remove(moveObject.getId());
+                }
+                let objectList = this.objectListService.getIterator();
+                for (var o of objectList) {
+                    if (moveObject.getId() != o.getId()) {
+                        if (o instanceof Example.ObjectPlayer) {
+                            this.processCollisionObjectBulletObjectPlayer(moveObject, newPosition, o);
+                        }
+                    }
+                }
+                moveObject.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o) {
+                let position = moveObject.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveObjectSize = moveObject.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveObjectSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveObjectSize, oPosition, oSize)) {
+                        if (position[0] < newPosition[0]) {
+                            newPosition[0] = oPosition[0] - moveObjectSize[0];
+                            return true;
+                        }
+                        else if (position[0] > newPosition[0]) {
+                            newPosition[0] = oPosition[0] + oSize[0];
+                            return true;
+                        }
+                        else if (position[1] < newPosition[1]) {
+                            newPosition[1] = oPosition[1] - moveObjectSize[1];
+                            return true;
+                        }
+                        else if (position[1] > newPosition[1]) {
+                            newPosition[1] = oPosition[1] + oSize[1];
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectBulletObjectPlayer(moveObject, newPosition, o) {
+                let position = moveObject.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveObjectSize = moveObject.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveObjectSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveObjectSize, oPosition, oSize)) {
+                        this.objectListService.remove(moveObject.getId());
+                        return true;
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectRectangleWorld(moveObject, newPosition) {
+                if (newPosition[0] < 0) {
+                    newPosition[0] = 0;
+                    return true;
+                }
+                if (newPosition[1] < 0) {
+                    newPosition[1] = 0;
+                    return true;
+                }
+                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0]) {
+                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0];
+                    return true;
+                }
+                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1]) {
+                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1];
+                    return true;
+                }
+                return false;
+            }
+            isRectangleObjectCollision(pos1, size1, pos2, size2) {
+                if ((pos2[0] + size2[0] <= pos1[0]) ||
+                    (pos2[1] + size2[1] <= pos1[1]) ||
+                    (pos2[0] >= pos1[0] + size1[0]) ||
+                    (pos2[1] >= pos1[1] + size1[1])) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        Example.CollisionService = CollisionService;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class WorldAttributeList extends STSEngine.WorldAttributeList {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
-                this.setWorldSize([100 * 100, 80 * 100]);
+                this.setWorldSize([100, 80]);
             }
             getWorldSize() {
                 return this.attributeList.get(Example.WorldAttributeType.WorldSize);
@@ -793,112 +927,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class CollisionService {
-            constructor(worldAttributeList, objectListService) {
-                this.worldAttributeList = worldAttributeList;
-                this.objectListService = objectListService;
-            }
-            processCollision(moveObject, newPosition) {
-                if (moveObject instanceof Example.ObjectPlayer) {
-                    this.processCollisionObjectPlayer(moveObject, newPosition);
-                }
-                else if (moveObject instanceof Example.ObjectBullet) {
-                    this.processCollisionObjectPlayer(moveObject, newPosition);
-                }
-            }
-            processCollisionObjectPlayer(moveObject, newPosition) {
-                this.processCollisionObjectRectangleWorld(moveObject, newPosition);
-                let objectList = this.objectListService.getIterator();
-                for (var o of objectList) {
-                    if (moveObject.getId() != o.getId()) {
-                        if (o instanceof Example.ObjectPlayer) {
-                            this.processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o);
-                        }
-                    }
-                }
-                moveObject.setPosition(newPosition);
-            }
-            processCollisionObjectBullet(moveObject, newPosition) {
-                this.processCollisionObjectRectangleWorld(moveObject, newPosition);
-                moveObject.setPosition(newPosition);
-            }
-            processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o) {
-                let position = moveObject.getPosition();
-                let oPosition = o.getPosition();
-                let moveObjectSize = moveObject.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveObjectSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveObjectSize, oPosition, oSize)) {
-                        if (position[0] < newPosition[0]) {
-                            newPosition[0] = oPosition[0] - moveObjectSize[0];
-                        }
-                        else if (position[0] > newPosition[0]) {
-                            newPosition[0] = oPosition[0] + oSize[0];
-                        }
-                        else if (position[1] < newPosition[1]) {
-                            newPosition[1] = oPosition[1] - moveObjectSize[1];
-                        }
-                        else if (position[1] > newPosition[1]) {
-                            newPosition[1] = oPosition[1] + oSize[1];
-                        }
-                    }
-                }
-            }
-            processCollisionObjectRectangleWorld(moveObject, newPosition) {
-                if (newPosition[0] < 0) {
-                    newPosition[0] = 0;
-                }
-                if (newPosition[1] < 0) {
-                    newPosition[1] = 0;
-                }
-                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0]) {
-                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0];
-                }
-                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1]) {
-                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1];
-                }
-            }
-            isRectangleObjectCollision(pos1, size1, pos2, size2) {
-                if ((pos2[0] + size2[0] <= pos1[0]) ||
-                    (pos2[1] + size2[1] <= pos1[1]) ||
-                    (pos2[0] >= pos1[0] + size1[0]) ||
-                    (pos2[1] >= pos1[1] + size1[1])) {
-                    return false;
-                }
-                return true;
-            }
-        }
-        Example.CollisionService = CollisionService;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        (function (ObjectAttributeType) {
-            ObjectAttributeType[ObjectAttributeType["PlayerId"] = 50] = "PlayerId";
-            ObjectAttributeType[ObjectAttributeType["Position"] = 51] = "Position";
-            ObjectAttributeType[ObjectAttributeType["MaxSpeed"] = 52] = "MaxSpeed";
-            ObjectAttributeType[ObjectAttributeType["Size"] = 53] = "Size";
-            ObjectAttributeType[ObjectAttributeType["MoveDirection"] = 54] = "MoveDirection";
-        })(Example.ObjectAttributeType || (Example.ObjectAttributeType = {}));
-        var ObjectAttributeType = Example.ObjectAttributeType;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        (function (ObjectType) {
-            ObjectType[ObjectType["Player"] = 0] = "Player";
-        })(Example.ObjectType || (Example.ObjectType = {}));
-        var ObjectType = Example.ObjectType;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         (function (CommandAttributeType) {
             CommandAttributeType[CommandAttributeType["ObjectId"] = 50] = "ObjectId";
             CommandAttributeType[CommandAttributeType["MoveDirection"] = 51] = "MoveDirection";
@@ -918,6 +946,31 @@ var STSEngine;
             CommandType[CommandType["Fire"] = 53] = "Fire";
         })(Example.CommandType || (Example.CommandType = {}));
         var CommandType = Example.CommandType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        (function (ObjectAttributeType) {
+            ObjectAttributeType[ObjectAttributeType["PlayerId"] = 50] = "PlayerId";
+            ObjectAttributeType[ObjectAttributeType["Position"] = 51] = "Position";
+            ObjectAttributeType[ObjectAttributeType["PositionPrecise"] = 52] = "PositionPrecise";
+            ObjectAttributeType[ObjectAttributeType["MaxSpeed"] = 53] = "MaxSpeed";
+            ObjectAttributeType[ObjectAttributeType["Size"] = 54] = "Size";
+            ObjectAttributeType[ObjectAttributeType["MoveDirection"] = 55] = "MoveDirection";
+        })(Example.ObjectAttributeType || (Example.ObjectAttributeType = {}));
+        var ObjectAttributeType = Example.ObjectAttributeType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        (function (ObjectType) {
+            ObjectType[ObjectType["Player"] = 0] = "Player";
+        })(Example.ObjectType || (Example.ObjectType = {}));
+        var ObjectType = Example.ObjectType;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -1074,7 +1127,6 @@ var STSEngine;
             constructor(rootElement, worldServiceList) {
                 super(rootElement, worldServiceList);
                 this.cellSize = 8;
-                this.m = 100;
             }
             refresh() {
                 this.clearCanvas();
@@ -1087,14 +1139,14 @@ var STSEngine;
                 }
             }
             getDrawPoint(p) {
-                return Math.floor(p / this.m);
+                return Math.floor(p);
             }
             drawObjectPlayer(o) {
                 let position = o.getPosition();
                 let size = o.getSize();
                 let cellSize = this.cellSize;
-                let objectWidth = Math.floor(size[0] / this.m);
-                let objectHeight = Math.floor(size[1] / this.m);
+                let objectWidth = Math.floor(size[0]);
+                let objectHeight = Math.floor(size[1]);
                 let x = this.getDrawPoint(position[0]);
                 let y = this.getDrawPoint(position[1]);
                 this.context;
@@ -1106,8 +1158,8 @@ var STSEngine;
                 this.context.closePath();
             }
             setCanvasSize() {
-                var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize / this.m;
-                var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize / this.m;
+                var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize;
+                var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize;
                 this.canvas.width = width;
                 this.canvas.height = height;
             }

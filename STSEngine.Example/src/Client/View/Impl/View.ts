@@ -5,12 +5,10 @@
         protected worldAttributeList: WorldAttributeList;
 
         protected cellSize: number;
-        protected m: number;
 
         constructor(rootElement: HTMLDivElement, worldServiceList: IWorldServiceList) {
             super(rootElement, worldServiceList);
             this.cellSize = 8;
-            this.m = 100;
         }
 
 
@@ -27,7 +25,7 @@
         }
 
         protected getDrawPoint(p: number): number {
-            return Math.floor(p / this.m);
+            return Math.floor(p);
         }
 
 
@@ -35,8 +33,8 @@
             let position = o.getPosition();
             let size = o.getSize();
             let cellSize = this.cellSize;
-            let objectWidth = Math.floor(size[0] / this.m);
-            let objectHeight = Math.floor(size[1] / this.m);
+            let objectWidth = Math.floor(size[0]);
+            let objectHeight = Math.floor(size[1]);
             let x = this.getDrawPoint(position[0]);
             let y = this.getDrawPoint(position[1]);
 
@@ -51,8 +49,8 @@
         }
 
         protected setCanvasSize(): void {
-            var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize / this.m;
-            var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize / this.m;
+            var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize;
+            var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize;
             this.canvas.width = width;
             this.canvas.height = height;
         }

@@ -32,10 +32,10 @@
 
 
             var bullet = this.objectInitializer.createBullet();
-            bullet.setPosition([object.getPosition()[0], object.getPosition()[1]]);
+            bullet.setPositionPrecise([object.getPosition(0) + (object.getSize()[0] / 2), object.getPosition(1) + (object.getSize()[0] / 2)]);
 
-            bullet.setSize([100, 100]);
-            bullet.setMaxSpeed(100);
+            bullet.setSize([1, 1]);
+            bullet.setMaxSpeed(4);
             bullet.setMoveDirection(object.getMoveDirection());
 
             worldServiceList.getObjectListService().add(bullet);

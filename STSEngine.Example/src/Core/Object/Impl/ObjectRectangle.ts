@@ -7,11 +7,32 @@
             this.setObjectType(ObjectType.Player);
         }
 
-        public getPosition(): [number, number] {
+        public getPosition(): [number, number];
+        public getPosition(d: number): number;
+        public getPosition(d?: number): [number, number] | number {
+            if (typeof d == 'number') {
+                return this.attributeList.get(ObjectAttributeType.Position)[d];
+            }
+
             return this.attributeList.get(ObjectAttributeType.Position);
         }
 
-        public setPosition(position: [number, number]): void {
+        public getPositionPrecise(): [number, number];
+        public getPositionPrecise(d: number): number;
+        public getPositionPrecise(d?: number): [number, number] | number {
+            if (typeof d == 'number') {
+                return this.attributeList.get(ObjectAttributeType.PositionPrecise)[d];
+            }
+
+            return this.attributeList.get(ObjectAttributeType.PositionPrecise);
+        }
+
+        public setPositionPrecise(position: [number, number]): void {
+            this.attributeList.set(ObjectAttributeType.PositionPrecise, position);
+            this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
+        }
+
+        protected setPosition(position: [number, number]): void {
             this.attributeList.set(ObjectAttributeType.Position, position);
         }
 
@@ -32,7 +53,13 @@
             this.attributeList.set(ObjectAttributeType.MaxSpeed, speed);
         }
 
-        public getSize(): [number, number] {
+        public getSize(): [number, number];
+        public getSize(d: number): number;
+        public getSize(d?: number): [number, number] | number {
+
+            if (d) {
+                return this.attributeList.get(ObjectAttributeType.Size)[d];
+            }
             return this.attributeList.get(ObjectAttributeType.Size);
         }
 
