@@ -31,19 +31,6 @@ gulp.task('build-server', function () {
     ]);
 });
 
-gulp.task('copy-server', ['build-server'], function () {
-    return merge([
-        gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine.example/'))
-    ]);
-});
-
-gulp.task('copy-client', ['build-client'], function () {
-    return merge([
-        gulp.src('out/client.*').pipe(gulp.dest('../STSEngine.Site/wwwroot/js/stsEngineExample/'))
-    ]);
-});
-
-
 gulp.task('build-client', function () {
     var tsResult = gulp.src([libPath, srcCorePath, srcClientPath])
         .pipe(ts({
@@ -59,7 +46,6 @@ gulp.task('build-client', function () {
     ]);
 });
 
-
 gulp.task('build-test', function () {
     var tsResult = gulp.src([srcTestPath])
         .pipe(ts({
@@ -71,6 +57,20 @@ gulp.task('build-test', function () {
 
     return merge([
         tsResult.js.pipe(insert.prepend(useStrict)).pipe(gulp.dest('out/test'))
+    ]);
+});
+
+gulp.task('copy-server', ['build-server'], function () {
+    return merge([
+        gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine.example/')),
+        gulp.src('out/server.d.ts').pipe(gulp.dest('../STSEngine.ExampleServer/Scripts/typings/STSEngine.Example/'))
+    ]);
+});
+
+gulp.task('copy-client', ['build-client'], function () {
+    return merge([
+        gulp.src('out/client.js').pipe(gulp.dest('../STSEngine.ExampleServer/public/javascripts/STSEngine.Example/')),
+        gulp.src('out/client.d.ts').pipe(gulp.dest('../STSEngine.ExampleServer/Scripts/typings/STSEngine.Example/'))
     ]);
 });
 

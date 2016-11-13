@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "module": "umd",
+    "target": "es6"
+  },
+
+  "files": [
+    "Scripts/typings/express/express.d.ts",
+    "Scripts/typings/node/node.d.ts",
+    "Scripts/typings/stylus/stylus.d.ts",
+    "Scripts/typings/STSEngine/server.d.ts",
+    "Scripts/typings/STSEngine.Example/server.d.ts",
+    "app.ts"
+  ]
+
+
+}

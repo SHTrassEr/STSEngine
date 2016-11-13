@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "module": "umd",
+    "target": "es6",
+    "outDir": "../../public/javascripts/Game/"
+  },
+
+  "files": [
+    "../typings/pixi.js/pixi.js.d.ts",
+    "../typings/STSEngine/client.d.ts",
+    "../typings/STSEngine.Example/client.d.ts",
+    "app.ts"
+  ]
+
+
+}

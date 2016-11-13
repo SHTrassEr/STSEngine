@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "module": "umd",
+    "target": "es6"
+  },
+  "exclude": [
+    "STSEngine/",
+    "STSEngine.Example/"
+  ],
+  "files": [ "STSEngine/Game" ]
+}

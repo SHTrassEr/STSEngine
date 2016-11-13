@@ -36,14 +36,16 @@ gulp.task('copy-example', ['build-full'], function () {
 
 gulp.task('copy-server', ['build-server'], function () {
     return merge([
-        gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine/')),
-        gulp.src('out/server.*').pipe(gulp.dest('../STSEngine.Server/node_modules/stsEngine.example/node_modules/stsEngine/'))
+        gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine/')),
+        gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine.example/node_modules/stsEngine/')),
+        gulp.src('out/server.d.ts').pipe(gulp.dest('../STSEngine.ExampleServer/Scripts/typings/STSEngine')),
     ]);
 });
 
 gulp.task('copy-client', ['build-client'], function () {
     return merge([
-        gulp.src('out/client.*').pipe(gulp.dest('../STSEngine.Site/wwwroot/js/stsEngineClient'))
+        gulp.src('out/client.js').pipe(gulp.dest('../STSEngine.ExampleServer/public/javascripts/STSEngine/')),
+        gulp.src('out/client.d.ts').pipe(gulp.dest('../STSEngine.ExampleServer/Scripts/typings/STSEngine/'))
     ]);
 });
 

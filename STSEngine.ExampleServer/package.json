@@ -1,0 +1,15 @@
+{
+  "name": "stsengine.example-server",
+  "version": "0.0.0",
+  "description": "STSEngine.ExampleServer",
+  "main": "app.js",
+  "author": {
+    "name": "User"
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "jade": "*",
+    "stylus": "*",
+    "ws": "^1.1.1"
+  }
+}
