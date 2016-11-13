@@ -229,6 +229,20 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    class CollisionService implements ICollisionService {
+        protected objectListService: IObjectListService;
+        protected worldAttributeList: IWorldAttributeList;
+        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService);
+        processCollision(moveObject: IObject, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]): void;
+        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean;
+        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean;
+        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean;
+        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
+    }
+}
+declare namespace STSEngine.Example {
     class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getWorldSize(): [number, number];
@@ -248,20 +262,6 @@ declare namespace STSEngine.Example {
         protected collisionService: ICollisionService;
         constructor(worldAttributeList: WorldAttributeList);
         getWorldAttributeList(): WorldAttributeList;
-    }
-}
-declare namespace STSEngine.Example {
-    class CollisionService implements ICollisionService {
-        protected objectListService: IObjectListService;
-        protected worldAttributeList: IWorldAttributeList;
-        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService);
-        processCollision(moveObject: IObject, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]): void;
-        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean;
-        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean;
-        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean;
-        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
     }
 }
 declare namespace STSEngine.Example {
@@ -342,6 +342,11 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    interface ICollisionService {
+        processCollision(moveObject: IObject, newPosition: [number, number]): void;
+    }
+}
+declare namespace STSEngine.Example {
     interface IWorld extends STSEngine.IWorld {
         getServiceList(): IWorldServiceList;
         getAttributeList(): IWorldAttributeList;
@@ -366,11 +371,6 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    interface ICollisionService {
-        processCollision(moveObject: IObject, newPosition: [number, number]): void;
-    }
-}
-declare namespace STSEngine.Example {
     interface IPlayerAction {
         getPlayerId(): number;
         setOnAction(handler: () => void): any;
@@ -384,11 +384,6 @@ declare namespace STSEngine.Example {
         stopMoveLeft(objectId: number): void;
         stopMoveUp(objectId: number): void;
         stopMoveDown(objectId: number): void;
-    }
-}
-declare namespace STSEngine.Example {
-    class WebSocketGameClient extends STSEngine.WebSocketGameClient {
-        constructor(socket: WebSocket, playerAction: IPlayerAction);
     }
 }
 declare namespace STSEngine.Example {
@@ -414,6 +409,11 @@ declare namespace STSEngine.Example {
         clear(): void;
         setOnAction(handler: (playerAction: IPlayerAction) => void): void;
         protected onAction(): void;
+    }
+}
+declare namespace STSEngine.Example {
+    class WebSocketGameClient extends STSEngine.WebSocketGameClient {
+        constructor(socket: WebSocket, playerAction: IPlayerAction);
     }
 }
 declare namespace STSEngine.Example {

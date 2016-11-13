@@ -48,6 +48,8 @@
             graphics.lineStyle(2, 0x770000);
             graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
 
+            graphics.filters = [new PIXI.filters. BlurFilter()];
+
             return graphics;
         }
 
@@ -91,23 +93,16 @@
                     let objectSprite = this.getObjectSprite(o);
                     let x = this.getDrawPoint(o.getPosition(0));
                     let y = this.getDrawPoint(o.getPosition(1));
+
+                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurX = Math.abs(objectSprite.position.x - x) / 8;
+                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurY = Math.abs(objectSprite.position.y - y) / 8;
+
                     objectSprite.position.x = x;
                     objectSprite.position.y = y;
                 }
             }
 
-            
             this.renderer.render(this.stage);
-
-            /*this.clearCanvas();
-            this.drawGrid();
-
-            var iterator = this.objectListService.getIterator();
-            for (let o of iterator) {
-                if (o instanceof ObjectRectangle) {
-                    this.drawObjectPlayer(o);
-                }
-            }*/
         }
 
         protected getDrawPoint(p: number): number {
@@ -116,7 +111,12 @@
 
         protected drawGrid(): PIXI.Graphics {
             var graphics = new PIXI.Graphics();
-            graphics.lineStyle(1, 0x333333, 0.5);
+
+            graphics.beginFill(0xFFFFFF);
+            graphics.lineStyle(0);
+            graphics.drawRect(0, 0, this.width, this.height);
+
+            graphics.lineStyle(1, 0xCCCCCC, 0.5);
             let cellSize = this.cellSize;
             var x = 0;
             var y = 0;
@@ -131,37 +131,13 @@
                 y += cellSize;
             }
 
+            var noiseFilter = new PIXI.filters.NoiseFilter();
+            noiseFilter.noise = 0.1;
+
+            graphics.filters = [noiseFilter];
+
             return graphics;
         }
-
-
-        /*protected drawObjectPlayer(o: ObjectRectangle): void {
-            let position = o.getPosition();
-            let size = o.getSize();
-            let cellSize = this.cellSize;
-            let objectWidth = Math.floor(size[0]);
-            let objectHeight = Math.floor(size[1]);
-            let x = this.getDrawPoint(position[0]);
-            let y = this.getDrawPoint(position[1]);
-
-            this.context
-
-            this.context.beginPath();
-            this.context.rect((x) * cellSize, (y) * cellSize, objectWidth * cellSize, objectHeight * cellSize);
-            this.context.fillStyle = "#FF0000";
-            this.context.globalAlpha = 1;
-            this.context.fill();
-            this.context.closePath();
-        }
-
-        protected setCanvasSize(): void {
-            var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize;
-            var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize;
-            this.canvas.width = width;
-            this.canvas.height = height;
-        }
-
-
-            */
+       
     }
 }
