@@ -14,6 +14,9 @@
         getSize(d: number): number;
         setSize(size: [number, number]);
 
+        getMinSpeed(): number;
+        setMinSpeed(speed: number): void;
+
         getMaxSpeed(): number;
         setMaxSpeed(speed: number): void;
 

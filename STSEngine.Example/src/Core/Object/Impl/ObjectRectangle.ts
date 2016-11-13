@@ -1,10 +1,9 @@
 ﻿namespace STSEngine.Example {
 
-    export class ObjectRectangle extends STSEngine.ObjectImpl implements IObjectRectangle {
+    export abstract class ObjectRectangle extends STSEngine.ObjectImpl implements IObjectRectangle {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setObjectType(ObjectType.Player);
         }
 
         public getPosition(): [number, number];
@@ -43,6 +42,14 @@
 
         public setPlayerId(playerId: number): void {
             this.attributeList.set(ObjectAttributeType.PlayerId, playerId);
+        }
+
+        public getMinSpeed(): number {
+            return this.attributeList.get(ObjectAttributeType.MinSpeed);
+        }
+
+        public setMinSpeed(speed: number): void {
+            this.attributeList.set(ObjectAttributeType.MinSpeed, speed);
         }
 
         public getMaxSpeed(): number {

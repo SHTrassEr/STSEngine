@@ -14,7 +14,7 @@ function ready() {
     var world = client.getWorld();
     world.getServiceList();
 
-    var view = new STSEngine.Example.View(<HTMLDivElement>content, <any>(world));
+    var view = new STSEngine.Example.View(<HTMLDivElement>content, <any>(world), playerId);
     view.start();
     
 

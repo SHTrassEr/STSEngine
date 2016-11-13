@@ -5,7 +5,7 @@
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setWorldSize([140, 80]);
+            this.setWorldSize([1000, 1000]);
         }
     
         public getWorldSize(): [number, number] {

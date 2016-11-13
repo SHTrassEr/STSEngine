@@ -3,6 +3,7 @@
     export class View extends STSEngine.View {
 
         protected worldAttributeList: WorldAttributeList;
+        protected playerId: number;
 
         protected width: number;
         protected height: number;
@@ -10,17 +11,21 @@
         protected renderer: PIXI.SystemRenderer;
         protected stage: PIXI.Container;
         protected playerObjectSprite: PIXI.Graphics;
+        protected grid: PIXI.Graphics;
+        protected worldLimit: PIXI.Graphics;
+
         protected objectMap: Map<number, PIXI.Graphics>;
         protected cellSize: number;
 
         protected stepNumber: number;
 
-        constructor(rootElement: HTMLDivElement, world: IWorld) {
+        constructor(rootElement: HTMLDivElement, world: IWorld, playerId: number) {
             super(rootElement, world);
 
+            this.playerId = playerId;
             this.cellSize = 8;
-            this.width = this.worldAttributeList.getWorldSize()[0] * this.cellSize;
-            this.height = this.worldAttributeList.getWorldSize()[1] * this.cellSize;
+            this.width = 59 * this.cellSize;
+            this.height = 59 * this.cellSize;
             
             this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
             this.renderer.roundPixels = true;
@@ -30,8 +35,10 @@
 
             this.stage = new PIXI.Container();
 
-            var grid = this.drawGrid();
-            this.stage.addChild(grid);
+            this.grid = this.drawGrid();
+            this.worldLimit = this.drawWordLimit();
+            this.stage.addChild(this.grid);
+            this.stage.addChild(this.worldLimit);
             this.stepNumber = -1;
         }
 
@@ -44,11 +51,29 @@
             let objectHeight = Math.floor(size[1]);
 
             var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFFFF00);
-            graphics.lineStyle(2, 0x770000);
+
+            if (o.getPlayerId() == this.playerId) {
+                graphics.beginFill(0xFFFF00);
+                graphics.lineStyle(1, 0x0000AA);
+            } else {
+                graphics.beginFill(0xFFFF00);
+                graphics.lineStyle(1, 0x770000);
+            }
+
+
+            graphics.pivot.x = objectWidth * cellSize / 2;
+            graphics.pivot.y = objectHeight * cellSize / 2;
+
+
             graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
 
-            graphics.filters = [new PIXI.filters. BlurFilter()];
+            graphics.drawRect((objectWidth - 1) * cellSize / 2, 0, 1 * cellSize, 1 * cellSize);
+
+            graphics.pivot.x = objectWidth * cellSize / 2;
+            graphics.pivot.y = objectHeight * cellSize / 2;
+
+            
+            graphics.filters = [new PIXI.filters.BlurFilter()];
 
             return graphics;
         }
@@ -91,14 +116,39 @@
             for (let o of iterator) {
                 if (o instanceof ObjectRectangle) {
                     let objectSprite = this.getObjectSprite(o);
-                    let x = this.getDrawPoint(o.getPosition(0));
-                    let y = this.getDrawPoint(o.getPosition(1));
+                    let x = this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x;
+                    let y = this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y;
 
-                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurX = Math.abs(objectSprite.position.x - x) / 8;
-                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurY = Math.abs(objectSprite.position.y - y) / 8;
+                    if (o.getPlayerId() == this.playerId) {
+                        this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
+
+                        this.grid.position.set(x - this.width / 2, y - this.height / 2);
+
+                    }
+
+                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurX = Math.abs(objectSprite.position.x - x) / 10;
+                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurY = Math.abs(objectSprite.position.y - y) / 10;
 
                     objectSprite.position.x = x;
                     objectSprite.position.y = y;
+
+                    switch (o.getMoveDirection()) {
+                        case MoveDirection.Up:
+                            objectSprite.rotation = 0;
+                            break;
+                        case MoveDirection.Right:
+                            objectSprite.rotation = Math.PI / 2;
+                            break;
+                        case MoveDirection.Down:
+                            objectSprite.rotation = Math.PI;
+                            break;
+                        case MoveDirection.Left:
+                            objectSprite.rotation = Math.PI / 2 * 3;
+                            break;
+
+                    }
+
+                    objectSprite.rotation
                 }
             }
 
@@ -107,6 +157,17 @@
 
         protected getDrawPoint(p: number): number {
             return Math.floor(p) * this.cellSize;
+        }
+
+        protected drawWordLimit(): PIXI.Graphics {
+            var graphics = new PIXI.Graphics();
+
+            var size = this.worldAttributeList.getWorldSize();
+
+            graphics.lineStyle(2, 0x000000);
+            graphics.drawRect(0, 0, size[0] * this.cellSize, size[1] * this.cellSize);
+
+            return graphics;
         }
 
         protected drawGrid(): PIXI.Graphics {

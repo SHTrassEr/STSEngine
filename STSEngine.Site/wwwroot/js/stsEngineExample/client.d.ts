@@ -111,7 +111,43 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class ObjectRectangle extends STSEngine.ObjectImpl implements IObjectRectangle {
+    class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getWorldSize(): [number, number];
+        setWorldSize(size: [number, number]): void;
+    }
+}
+declare namespace STSEngine.Example {
+    enum WorldAttributeType {
+        WorldSize = 50,
+        LastProcessId = 51,
+        LastObjectId = 52,
+    }
+}
+declare namespace STSEngine.Example {
+    class WorldServiceList extends STSEngine.WorldServiceList {
+        protected worldAttributeList: WorldAttributeList;
+        protected collisionService: ICollisionService;
+        constructor(worldAttributeList: WorldAttributeList);
+        getWorldAttributeList(): WorldAttributeList;
+    }
+}
+declare namespace STSEngine.Example {
+    class CollisionService implements ICollisionService {
+        protected objectListService: IObjectListService;
+        protected worldAttributeList: IWorldAttributeList;
+        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService);
+        processCollision(moveObject: IObject, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]): void;
+        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean;
+        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean;
+        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean;
+        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
+    }
+}
+declare namespace STSEngine.Example {
+    abstract class ObjectRectangle extends STSEngine.ObjectImpl implements IObjectRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getPosition(): [number, number];
         getPosition(d: number): number;
@@ -121,6 +157,8 @@ declare namespace STSEngine.Example {
         protected setPosition(position: [number, number]): void;
         getPlayerId(): number;
         setPlayerId(playerId: number): void;
+        getMinSpeed(): number;
+        setMinSpeed(speed: number): void;
         getMaxSpeed(): number;
         setMaxSpeed(speed: number): void;
         getSize(): [number, number];
@@ -132,6 +170,7 @@ declare namespace STSEngine.Example {
 }
 declare namespace STSEngine.Example {
     class ObjectBullet extends ObjectRectangle {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
     }
 }
 declare namespace STSEngine.Example {
@@ -149,6 +188,7 @@ declare namespace STSEngine.Example {
 }
 declare namespace STSEngine.Example {
     class ObjectPlayer extends ObjectRectangle {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
     }
 }
 declare namespace STSEngine.Example {
@@ -229,42 +269,6 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class CollisionService implements ICollisionService {
-        protected objectListService: IObjectListService;
-        protected worldAttributeList: IWorldAttributeList;
-        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService);
-        processCollision(moveObject: IObject, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]): void;
-        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean;
-        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean;
-        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean;
-        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
-    }
-}
-declare namespace STSEngine.Example {
-    class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        getWorldSize(): [number, number];
-        setWorldSize(size: [number, number]): void;
-    }
-}
-declare namespace STSEngine.Example {
-    enum WorldAttributeType {
-        WorldSize = 50,
-        LastProcessId = 51,
-        LastObjectId = 52,
-    }
-}
-declare namespace STSEngine.Example {
-    class WorldServiceList extends STSEngine.WorldServiceList {
-        protected worldAttributeList: WorldAttributeList;
-        protected collisionService: ICollisionService;
-        constructor(worldAttributeList: WorldAttributeList);
-        getWorldAttributeList(): WorldAttributeList;
-    }
-}
-declare namespace STSEngine.Example {
     enum CommandAttributeType {
         ObjectId = 50,
         MoveDirection = 51,
@@ -295,58 +299,6 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    interface IObjectRectangle extends IObject {
-        getPosition(): [number, number];
-        getPosition(d: number): number;
-        getPositionPrecise(): [number, number];
-        getPositionPrecise(d: number): number;
-        setPositionPrecise(position: [number, number]): any;
-        getSize(): [number, number];
-        getSize(d: number): number;
-        setSize(size: [number, number]): any;
-        getMaxSpeed(): number;
-        setMaxSpeed(speed: number): void;
-        getMoveDirection(): MoveDirection;
-        setMoveDirection(direction: MoveDirection): void;
-    }
-}
-declare namespace STSEngine.Example {
-    enum ObjectAttributeType {
-        PlayerId = 50,
-        Position = 51,
-        PositionPrecise = 52,
-        MaxSpeed = 53,
-        Size = 54,
-        MoveDirection = 55,
-    }
-}
-declare namespace STSEngine.Example {
-    enum ObjectType {
-        Player = 0,
-    }
-}
-declare namespace STSEngine.Example {
-    enum ProcessAttributeType {
-        ObjectId = 50,
-        Status = 51,
-        PlayerId = 52,
-        ObjectAttributeList = 53,
-    }
-}
-declare namespace STSEngine.Example {
-    enum ProcessType {
-        Unknown = 0,
-        CreatePlayerObject = 1,
-        Move = 2,
-        Fire = 3,
-    }
-}
-declare namespace STSEngine.Example {
-    interface ICollisionService {
-        processCollision(moveObject: IObject, newPosition: [number, number]): void;
-    }
-}
-declare namespace STSEngine.Example {
     interface IWorld extends STSEngine.IWorld {
         getServiceList(): IWorldServiceList;
         getAttributeList(): IWorldAttributeList;
@@ -368,6 +320,62 @@ declare namespace STSEngine.Example {
         getCommandDispatcher(): ICommandDispatcher;
         getObjectListService(): IObjectListService;
         getProcessListService(): IProcessListService;
+    }
+}
+declare namespace STSEngine.Example {
+    interface ICollisionService {
+        processCollision(moveObject: IObject, newPosition: [number, number]): void;
+    }
+}
+declare namespace STSEngine.Example {
+    interface IObjectRectangle extends IObject {
+        getPosition(): [number, number];
+        getPosition(d: number): number;
+        getPositionPrecise(): [number, number];
+        getPositionPrecise(d: number): number;
+        setPositionPrecise(position: [number, number]): any;
+        getSize(): [number, number];
+        getSize(d: number): number;
+        setSize(size: [number, number]): any;
+        getMinSpeed(): number;
+        setMinSpeed(speed: number): void;
+        getMaxSpeed(): number;
+        setMaxSpeed(speed: number): void;
+        getMoveDirection(): MoveDirection;
+        setMoveDirection(direction: MoveDirection): void;
+    }
+}
+declare namespace STSEngine.Example {
+    enum ObjectAttributeType {
+        PlayerId = 50,
+        Position = 51,
+        PositionPrecise = 52,
+        MinSpeed = 53,
+        MaxSpeed = 54,
+        Size = 55,
+        MoveDirection = 56,
+    }
+}
+declare namespace STSEngine.Example {
+    enum ObjectType {
+        Player = 0,
+        Bullet = 1,
+    }
+}
+declare namespace STSEngine.Example {
+    enum ProcessAttributeType {
+        ObjectId = 50,
+        Status = 51,
+        PlayerId = 52,
+        ObjectAttributeList = 53,
+    }
+}
+declare namespace STSEngine.Example {
+    enum ProcessType {
+        Unknown = 0,
+        CreatePlayerObject = 1,
+        Move = 2,
+        Fire = 3,
     }
 }
 declare namespace STSEngine.Example {
@@ -419,20 +427,24 @@ declare namespace STSEngine.Example {
 declare namespace STSEngine.Example {
     class View extends STSEngine.View {
         protected worldAttributeList: WorldAttributeList;
+        protected playerId: number;
         protected width: number;
         protected height: number;
         protected renderer: PIXI.SystemRenderer;
         protected stage: PIXI.Container;
         protected playerObjectSprite: PIXI.Graphics;
+        protected grid: PIXI.Graphics;
+        protected worldLimit: PIXI.Graphics;
         protected objectMap: Map<number, PIXI.Graphics>;
         protected cellSize: number;
         protected stepNumber: number;
-        constructor(rootElement: HTMLDivElement, world: IWorld);
+        constructor(rootElement: HTMLDivElement, world: IWorld, playerId: number);
         protected drawObjectRectangle(o: ObjectRectangle): PIXI.Graphics;
         protected getObjectSprite(o: ObjectRectangle): PIXI.Graphics;
         protected clearStage(): void;
         protected refresh(): void;
         protected getDrawPoint(p: number): number;
+        protected drawWordLimit(): PIXI.Graphics;
         protected drawGrid(): PIXI.Graphics;
     }
 }

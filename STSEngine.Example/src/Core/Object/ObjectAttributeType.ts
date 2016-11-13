@@ -4,6 +4,7 @@
         PlayerId = 50,
         Position,
         PositionPrecise,
+        MinSpeed,
         MaxSpeed,
         Size,
         MoveDirection
