@@ -36,6 +36,8 @@
             let position = object.getPositionPrecise();
             var speed = object.getMaxSpeed();
 
+            
+
             if (execCount < 50) {
                 speed =  Math.floor((speed * (execCount + 10) / 20) * 100) / 100;
             } else if (execCount >= 50) {

@@ -7,7 +7,7 @@ function ready() {
     var content = document.getElementById("content");
     var world = client.getWorld();
     world.getServiceList();
-    var view = new STSEngine.Example.View(content, (world.getServiceList()));
+    var view = new STSEngine.Example.View(content, (world));
     view.start();
     var world = client.getWorld();
     var objectListService = world.getServiceList().getObjectListService();

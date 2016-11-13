@@ -16,6 +16,7 @@
             object.setPlayerId(process.getPlayerId());
             object.setPositionPrecise([40, 40]);
             object.setMaxSpeed(1);
+            object.setMoveDirection(MoveDirection.Up);
             object.setSize([5, 5]);
             this.addObject(world, object);
             process.setProcessStatus(ProcessStatus.Finished);

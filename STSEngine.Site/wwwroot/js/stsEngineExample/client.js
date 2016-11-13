@@ -345,6 +345,19 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        Example.Point = Point;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class ObjectRectangle extends STSEngine.ObjectImpl {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -476,19 +489,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Point {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-            }
-        }
-        Example.Point = Point;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class ProcessCreatePlayerObject extends STSEngine.ProcessImpl {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -519,6 +519,7 @@ var STSEngine;
                 object.setPlayerId(process.getPlayerId());
                 object.setPositionPrecise([40, 40]);
                 object.setMaxSpeed(1);
+                object.setMoveDirection(Example.MoveDirection.Up);
                 object.setSize([5, 5]);
                 this.addObject(world, object);
                 process.setProcessStatus(STSEngine.ProcessStatus.Finished);
@@ -757,6 +758,61 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class WorldAttributeList extends STSEngine.WorldAttributeList {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setWorldSize([140, 80]);
+            }
+            getWorldSize() {
+                return this.attributeList.get(Example.WorldAttributeType.WorldSize);
+            }
+            setWorldSize(size) {
+                this.attributeList.set(Example.WorldAttributeType.WorldSize, size);
+            }
+        }
+        Example.WorldAttributeList = WorldAttributeList;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        (function (WorldAttributeType) {
+            WorldAttributeType[WorldAttributeType["WorldSize"] = 50] = "WorldSize";
+            WorldAttributeType[WorldAttributeType["LastProcessId"] = 51] = "LastProcessId";
+            WorldAttributeType[WorldAttributeType["LastObjectId"] = 52] = "LastObjectId";
+        })(Example.WorldAttributeType || (Example.WorldAttributeType = {}));
+        var WorldAttributeType = Example.WorldAttributeType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class WorldServiceList extends STSEngine.WorldServiceList {
+            constructor(worldAttributeList) {
+                let objectListService = new STSEngine.ObjectListService();
+                let processListService = new STSEngine.ProcessListService();
+                let collisionService = new Example.CollisionService(worldAttributeList, objectListService);
+                let commandInitializer = new Example.CommandInitializer();
+                let objectInitializer = new Example.ObjectInitializer();
+                let processInitializer = new Example.ProcessInitializer();
+                let commandDispatcher = new Example.CommandDispatcher(processInitializer);
+                let processDispatcher = new Example.ProcessDispatcher(worldAttributeList, collisionService, processInitializer, objectInitializer);
+                super(worldAttributeList, commandInitializer, objectInitializer, processInitializer, processDispatcher, commandDispatcher, objectListService, processListService);
+                this.collisionService = collisionService;
+            }
+            getWorldAttributeList() {
+                return this.worldAttributeList;
+            }
+        }
+        Example.WorldServiceList = WorldServiceList;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class CollisionService {
             constructor(worldAttributeList, objectListService) {
                 this.worldAttributeList = worldAttributeList;
@@ -872,61 +928,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class WorldAttributeList extends STSEngine.WorldAttributeList {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setWorldSize([100, 80]);
-            }
-            getWorldSize() {
-                return this.attributeList.get(Example.WorldAttributeType.WorldSize);
-            }
-            setWorldSize(size) {
-                this.attributeList.set(Example.WorldAttributeType.WorldSize, size);
-            }
-        }
-        Example.WorldAttributeList = WorldAttributeList;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        (function (WorldAttributeType) {
-            WorldAttributeType[WorldAttributeType["WorldSize"] = 50] = "WorldSize";
-            WorldAttributeType[WorldAttributeType["LastProcessId"] = 51] = "LastProcessId";
-            WorldAttributeType[WorldAttributeType["LastObjectId"] = 52] = "LastObjectId";
-        })(Example.WorldAttributeType || (Example.WorldAttributeType = {}));
-        var WorldAttributeType = Example.WorldAttributeType;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class WorldServiceList extends STSEngine.WorldServiceList {
-            constructor(worldAttributeList) {
-                let objectListService = new STSEngine.ObjectListService();
-                let processListService = new STSEngine.ProcessListService();
-                let collisionService = new Example.CollisionService(worldAttributeList, objectListService);
-                let commandInitializer = new Example.CommandInitializer();
-                let objectInitializer = new Example.ObjectInitializer();
-                let processInitializer = new Example.ProcessInitializer();
-                let commandDispatcher = new Example.CommandDispatcher(processInitializer);
-                let processDispatcher = new Example.ProcessDispatcher(worldAttributeList, collisionService, processInitializer, objectInitializer);
-                super(worldAttributeList, commandInitializer, objectInitializer, processInitializer, processDispatcher, commandDispatcher, objectListService, processListService);
-                this.collisionService = collisionService;
-            }
-            getWorldAttributeList() {
-                return this.worldAttributeList;
-            }
-        }
-        Example.WorldServiceList = WorldServiceList;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         (function (CommandAttributeType) {
             CommandAttributeType[CommandAttributeType["ObjectId"] = 50] = "ObjectId";
             CommandAttributeType[CommandAttributeType["MoveDirection"] = 51] = "MoveDirection";
@@ -946,6 +947,20 @@ var STSEngine;
             CommandType[CommandType["Fire"] = 53] = "Fire";
         })(Example.CommandType || (Example.CommandType = {}));
         var CommandType = Example.CommandType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        (function (MoveDirection) {
+            MoveDirection[MoveDirection["Unknow"] = 0] = "Unknow";
+            MoveDirection[MoveDirection["Up"] = 1] = "Up";
+            MoveDirection[MoveDirection["Right"] = 2] = "Right";
+            MoveDirection[MoveDirection["Down"] = 3] = "Down";
+            MoveDirection[MoveDirection["Left"] = 4] = "Left";
+        })(Example.MoveDirection || (Example.MoveDirection = {}));
+        var MoveDirection = Example.MoveDirection;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -977,20 +992,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        (function (MoveDirection) {
-            MoveDirection[MoveDirection["Unknow"] = 0] = "Unknow";
-            MoveDirection[MoveDirection["Up"] = 1] = "Up";
-            MoveDirection[MoveDirection["Right"] = 2] = "Right";
-            MoveDirection[MoveDirection["Down"] = 3] = "Down";
-            MoveDirection[MoveDirection["Left"] = 4] = "Left";
-        })(Example.MoveDirection || (Example.MoveDirection = {}));
-        var MoveDirection = Example.MoveDirection;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         (function (ProcessAttributeType) {
             ProcessAttributeType[ProcessAttributeType["ObjectId"] = 50] = "ObjectId";
             ProcessAttributeType[ProcessAttributeType["Status"] = 51] = "Status";
@@ -1011,6 +1012,20 @@ var STSEngine;
             ProcessType[ProcessType["Fire"] = 3] = "Fire";
         })(Example.ProcessType || (Example.ProcessType = {}));
         var ProcessType = Example.ProcessType;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
+            constructor(socket, playerAction) {
+                let worldAttributeList = new Example.WorldAttributeList();
+                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
+                super(socket, playerAction, worldServiceList);
+            }
+        }
+        Example.WebSocketGameClient = WebSocketGameClient;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -1109,84 +1124,90 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
-            constructor(socket, playerAction) {
-                let worldAttributeList = new Example.WorldAttributeList();
-                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
-                super(socket, playerAction, worldServiceList);
-            }
-        }
-        Example.WebSocketGameClient = WebSocketGameClient;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class View extends STSEngine.View {
-            constructor(rootElement, worldServiceList) {
-                super(rootElement, worldServiceList);
+            constructor(rootElement, world) {
+                super(rootElement, world);
                 this.cellSize = 8;
+                this.width = this.worldAttributeList.getWorldSize()[0] * this.cellSize;
+                this.height = this.worldAttributeList.getWorldSize()[1] * this.cellSize;
+                this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+                this.renderer.roundPixels = true;
+                this.rootElement.appendChild(this.renderer.view);
+                this.objectMap = new Map();
+                this.stage = new PIXI.Container();
+                var grid = this.drawGrid();
+                this.stage.addChild(grid);
+                this.stepNumber = -1;
             }
-            refresh() {
-                this.clearCanvas();
-                this.drawGrid();
-                var iterator = this.objectListService.getIterator();
-                for (let o of iterator) {
-                    if (o instanceof Example.ObjectRectangle) {
-                        this.drawObjectPlayer(o);
-                    }
-                }
-            }
-            getDrawPoint(p) {
-                return Math.floor(p);
-            }
-            drawObjectPlayer(o) {
+            drawObjectRectangle(o) {
                 let position = o.getPosition();
                 let size = o.getSize();
                 let cellSize = this.cellSize;
                 let objectWidth = Math.floor(size[0]);
                 let objectHeight = Math.floor(size[1]);
-                let x = this.getDrawPoint(position[0]);
-                let y = this.getDrawPoint(position[1]);
-                this.context;
-                this.context.beginPath();
-                this.context.rect((x) * cellSize, (y) * cellSize, objectWidth * cellSize, objectHeight * cellSize);
-                this.context.fillStyle = "#FF0000";
-                this.context.globalAlpha = 1;
-                this.context.fill();
-                this.context.closePath();
+                var graphics = new PIXI.Graphics();
+                graphics.beginFill(0xFFFF00);
+                graphics.lineStyle(2, 0x770000);
+                graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
+                return graphics;
             }
-            setCanvasSize() {
-                var width = this.worldAttributeList.getWorldSize()[0] * this.cellSize;
-                var height = this.worldAttributeList.getWorldSize()[1] * this.cellSize;
-                this.canvas.width = width;
-                this.canvas.height = height;
+            getObjectSprite(o) {
+                var objectSprite = this.objectMap.get(o.getId());
+                if (!objectSprite) {
+                    objectSprite = this.drawObjectRectangle(o);
+                    this.objectMap.set(o.getId(), objectSprite);
+                    this.stage.addChild(objectSprite);
+                }
+                return objectSprite;
+            }
+            clearStage() {
+                for (var id of this.objectMap.keys()) {
+                    if (!this.objectListService.has(id)) {
+                        var child = this.objectMap.get(id);
+                        this.stage.removeChild(child);
+                        child.destroy();
+                        this.objectMap.delete(id);
+                    }
+                }
+            }
+            refresh() {
+                let iterator = this.objectListService.getIterator();
+                if (this.world.getStepNumber() == this.stepNumber) {
+                    return;
+                }
+                this.stepNumber = this.world.getStepNumber();
+                this.clearStage();
+                for (let o of iterator) {
+                    if (o instanceof Example.ObjectRectangle) {
+                        let objectSprite = this.getObjectSprite(o);
+                        let x = this.getDrawPoint(o.getPosition(0));
+                        let y = this.getDrawPoint(o.getPosition(1));
+                        objectSprite.position.x = x;
+                        objectSprite.position.y = y;
+                    }
+                }
+                this.renderer.render(this.stage);
+            }
+            getDrawPoint(p) {
+                return Math.floor(p) * this.cellSize;
             }
             drawGrid() {
+                var graphics = new PIXI.Graphics();
+                graphics.lineStyle(1, 0x333333, 0.5);
                 let cellSize = this.cellSize;
                 var x = 0;
                 var y = 0;
-                while (x < this.canvas.width) {
-                    this.context.beginPath();
-                    this.context.globalAlpha = 1;
-                    this.context.lineWidth = 0.15;
-                    this.context.moveTo(x, 0);
-                    this.context.lineTo(x, this.canvas.height);
-                    this.context.stroke();
-                    this.context.closePath();
+                while (x < this.width) {
+                    graphics.moveTo(x, 0);
+                    graphics.lineTo(x, this.height);
                     x += cellSize;
                 }
-                while (y < this.canvas.height) {
-                    this.context.beginPath();
-                    this.context.globalAlpha = 1;
-                    this.context.lineWidth = 0.1;
-                    this.context.moveTo(0, y);
-                    this.context.lineTo(this.canvas.width, y);
-                    this.context.stroke();
-                    this.context.closePath();
+                while (y < this.height) {
+                    graphics.moveTo(0, y);
+                    graphics.lineTo(this.width, y);
                     y += cellSize;
                 }
+                return graphics;
             }
         }
         Example.View = View;

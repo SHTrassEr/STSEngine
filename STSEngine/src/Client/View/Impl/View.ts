@@ -3,8 +3,6 @@
     export abstract class View {
 
         protected rootElement: HTMLDivElement;
-        protected canvas: HTMLCanvasElement;
-        protected context: CanvasRenderingContext2D;
 
         protected worldAttributeList: IWorldAttributeList;
         protected objectListService: IObjectListService;
@@ -12,12 +10,14 @@
 
         protected isStarted: boolean;
 
-        constructor(rootElement: HTMLDivElement, worldServiceList: IWorldServiceList) {
+        protected world: IWorld;
+
+        constructor(rootElement: HTMLDivElement, world: IWorld) {
+            this.world = world;
+            let worldServiceList  = world.getServiceList();
+
             this.rootElement = rootElement;
-            this.canvas = this.createCanvas();
-            this.context = this.canvas.getContext("2d");
-            this.clearHtmlElement(rootElement);
-            this.rootElement.appendChild(this.canvas);
+            this.clearHtmlElement(this.rootElement);
 
             this.worldAttributeList = worldServiceList.getWorldAttributeList();
             this.objectListService = worldServiceList.getObjectListService();
@@ -32,15 +32,6 @@
             }
         }
 
-        protected createCanvas(): HTMLCanvasElement {
-            var canvas = document.createElement("canvas");
-            canvas.width = 640;
-            canvas.height = 480;
-            return canvas;
-        }
-
-        protected abstract setCanvasSize(): void;
-
         protected draw(): void {
             if (this.isStarted) {
                 this.refresh();
@@ -48,14 +39,9 @@
             }
         }
 
-        protected clearCanvas() {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        }
-
         protected abstract refresh(): void 
 
         public start(): void {
-            this.setCanvasSize();
             this.isStarted = true;
             this.draw();
         }

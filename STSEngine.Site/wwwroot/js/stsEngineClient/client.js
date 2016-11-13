@@ -384,6 +384,16 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
+    class ClientServerMessage {
+        constructor(messageType, attributeList) {
+            this.messageType = messageType;
+            this.attributeList = attributeList;
+        }
+    }
+    STSEngine.ClientServerMessage = ClientServerMessage;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
     class ObjectImpl {
         constructor(attributeList, kvpList) {
             if (attributeList) {
@@ -553,16 +563,6 @@ var STSEngine;
         }
     }
     STSEngine.ObjectListServiceCommitable = ObjectListServiceCommitable;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessage {
-        constructor(messageType, attributeList) {
-            this.messageType = messageType;
-            this.attributeList = attributeList;
-        }
-    }
-    STSEngine.ClientServerMessage = ClientServerMessage;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -1097,6 +1097,33 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
+    class PlayerAction {
+        constructor(playerId) {
+            this.commandListService = new STSEngine.CommandListService();
+            this.playerId = playerId;
+        }
+        getPlayerId() {
+            return this.playerId;
+        }
+        getCommandKeyValuePairList() {
+            return this.commandListService.getCommandKeyValuePairList();
+        }
+        clear() {
+            this.commandListService.clear();
+        }
+        setOnAction(handler) {
+            this.onActionHandler = handler;
+        }
+        onAction() {
+            if (this.onActionHandler) {
+                this.onActionHandler(this);
+            }
+        }
+    }
+    STSEngine.PlayerAction = PlayerAction;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
     class WebSocketGameClient {
         constructor(socket, playerAction, worldServiceList) {
             this.worldServiceList = worldServiceList;
@@ -1171,40 +1198,12 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class PlayerAction {
-        constructor(playerId) {
-            this.commandListService = new STSEngine.CommandListService();
-            this.playerId = playerId;
-        }
-        getPlayerId() {
-            return this.playerId;
-        }
-        getCommandKeyValuePairList() {
-            return this.commandListService.getCommandKeyValuePairList();
-        }
-        clear() {
-            this.commandListService.clear();
-        }
-        setOnAction(handler) {
-            this.onActionHandler = handler;
-        }
-        onAction() {
-            if (this.onActionHandler) {
-                this.onActionHandler(this);
-            }
-        }
-    }
-    STSEngine.PlayerAction = PlayerAction;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
     class View {
-        constructor(rootElement, worldServiceList) {
+        constructor(rootElement, world) {
+            this.world = world;
+            let worldServiceList = world.getServiceList();
             this.rootElement = rootElement;
-            this.canvas = this.createCanvas();
-            this.context = this.canvas.getContext("2d");
-            this.clearHtmlElement(rootElement);
-            this.rootElement.appendChild(this.canvas);
+            this.clearHtmlElement(this.rootElement);
             this.worldAttributeList = worldServiceList.getWorldAttributeList();
             this.objectListService = worldServiceList.getObjectListService();
             this.processListService = worldServiceList.getProcessListService();
@@ -1215,23 +1214,13 @@ var STSEngine;
                 element.removeChild(element.firstChild);
             }
         }
-        createCanvas() {
-            var canvas = document.createElement("canvas");
-            canvas.width = 640;
-            canvas.height = 480;
-            return canvas;
-        }
         draw() {
             if (this.isStarted) {
                 this.refresh();
                 requestAnimationFrame(this.draw.bind(this));
             }
         }
-        clearCanvas() {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        }
         start() {
-            this.setCanvasSize();
             this.isStarted = true;
             this.draw();
         }

@@ -364,6 +364,13 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    class ClientServerMessage implements IClientServerMessage {
+        messageType: number;
+        attributeList: [number, any][];
+        constructor(messageType: number, attributeList: [number, any][]);
+    }
+}
+declare namespace STSEngine {
     class ObjectImpl implements IObject {
         protected attributeList: IAttributeList;
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
@@ -415,13 +422,6 @@ declare namespace STSEngine {
         isDirty(): boolean;
         getAll(condition: (item: IObject) => boolean): IterableIterator<IObject>;
         getFirst(condition: (item: IObject) => boolean): IObject;
-    }
-}
-declare namespace STSEngine {
-    class ClientServerMessage implements IClientServerMessage {
-        messageType: number;
-        attributeList: [number, any][];
-        constructor(messageType: number, attributeList: [number, any][]);
     }
 }
 declare namespace STSEngine {
@@ -621,12 +621,6 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    interface IWebSocketGameClient {
-        start(): void;
-        getWorld(): IWorld;
-    }
-}
-declare namespace STSEngine {
     interface IPlayerAction {
         getPlayerId(): number;
         setOnAction(handler: () => void): any;
@@ -635,9 +629,28 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    interface IWebSocketGameClient {
+        start(): void;
+        getWorld(): IWorld;
+    }
+}
+declare namespace STSEngine {
     interface IView {
         start(): void;
         stop(): void;
+    }
+}
+declare namespace STSEngine {
+    class PlayerAction implements IPlayerAction {
+        protected commandListService: ICommandListService;
+        protected playerId: number;
+        protected onActionHandler: (playerAction: IPlayerAction) => void;
+        constructor(playerId: number);
+        getPlayerId(): number;
+        getCommandKeyValuePairList(): [number, any][][];
+        clear(): void;
+        setOnAction(handler: (playerAction: IPlayerAction) => void): void;
+        protected onAction(): void;
     }
 }
 declare namespace STSEngine {
@@ -665,33 +678,16 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    class PlayerAction implements IPlayerAction {
-        protected commandListService: ICommandListService;
-        protected playerId: number;
-        protected onActionHandler: (playerAction: IPlayerAction) => void;
-        constructor(playerId: number);
-        getPlayerId(): number;
-        getCommandKeyValuePairList(): [number, any][][];
-        clear(): void;
-        setOnAction(handler: (playerAction: IPlayerAction) => void): void;
-        protected onAction(): void;
-    }
-}
-declare namespace STSEngine {
     abstract class View {
         protected rootElement: HTMLDivElement;
-        protected canvas: HTMLCanvasElement;
-        protected context: CanvasRenderingContext2D;
         protected worldAttributeList: IWorldAttributeList;
         protected objectListService: IObjectListService;
         protected processListService: IProcessListService;
         protected isStarted: boolean;
-        constructor(rootElement: HTMLDivElement, worldServiceList: IWorldServiceList);
+        protected world: IWorld;
+        constructor(rootElement: HTMLDivElement, world: IWorld);
         protected clearHtmlElement(element: HTMLElement): void;
-        protected createCanvas(): HTMLCanvasElement;
-        protected abstract setCanvasSize(): void;
         protected draw(): void;
-        protected clearCanvas(): void;
         protected abstract refresh(): void;
         start(): void;
         stop(): void;

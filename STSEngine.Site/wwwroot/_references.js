@@ -1,5 +1,6 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="js/app.js" />
+/// <reference path="js/lib/pixi.js" />
 /// <reference path="js/site.js" />
 /// <reference path="js/stsengineclient/client.js" />
 /// <reference path="js/stsengineexample/client.js" />
