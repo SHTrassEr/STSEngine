@@ -8,8 +8,8 @@
         protected onClientDisconnectedHandler: (webSocketClient: IWebSocketClient) => void;
         protected onClientMessageHandler: (webSocketClient: IWebSocketClient, message: IClientServerMessage) => void;
 
-        constructor(server: any) {
-            this.webSocketClientListService = new WebSocketClientListService();
+        constructor(server: any, clientSeverMessageInitializer: IClientServerMessageInitializer) {
+            this.webSocketClientListService = new WebSocketClientListService(clientSeverMessageInitializer);
             this.server = server;
             this.init();
         }
@@ -47,11 +47,12 @@
         protected initWebSocketClient(webSocketClient: IWebSocketClient) {
             webSocketClient.setOnMessage(this.onClientMessage.bind(this));
             webSocketClient.setOnClose(this.onClientDisconnected.bind(this));
-            webSocketClient.sendMessage(new ClientServerMessage(ServerMessageType.RequestAuthentication, null));
+            let message = new ClientServerMessageRequestAuthentication();
+            webSocketClient.sendMessage(message);
         }
 
         protected onClientMessage(webSocketClient: IWebSocketClient, message: IClientServerMessage) {
-            if (webSocketClient.getStatus() === WebSocketClientStatus.Initialization && message.messageType === ClientMessageType.ResponseAuthentication) {
+            if (webSocketClient.getStatus() === WebSocketClientStatus.Initialization && message instanceof ClientServerMessageResponseAuthentication) {
                 this.doAuthentication(webSocketClient, message);
             } else if (this.onClientMessageHandler) {
                 this.onClientMessageHandler(webSocketClient, message);
@@ -62,15 +63,11 @@
             webSocketClient.setStatus(WebSocketClientStatus.Disconnected);
         }
 
-        protected doAuthentication(webSocketClient: IWebSocketClient, message: IClientServerMessage) {
-            if (message.attributeList && message.attributeList.length == 1 && message.attributeList[0][0] == ClientMessageAttributeType.SID) {
-                let sid = message.attributeList[0][1];
-                console.log("Client connected. SID:" + sid);
-                webSocketClient.setSID(sid);
-                this.onClientConnected(webSocketClient);
-            }
-
-            //invalid authentication
+        protected doAuthentication(webSocketClient: IWebSocketClient, message: ClientServerMessageResponseAuthentication) {
+            let sid = message.getSID();
+            console.log("Client connected. SID:" + sid);
+            webSocketClient.setSID(sid);
+            this.onClientConnected(webSocketClient);
         }
 
         protected onClientConnected(webSocketClient: IWebSocketClient) {

@@ -1,23 +1,23 @@
 ﻿
 namespace STSEngine {
 
-    export class ObjectListService implements IObjectListService {
-        protected objectList: Map<number, IObject>;
-        protected filterService: IFilterService<IObject>;
+    export class ObjectListService<T extends IObject> implements IObjectListService<T> {
+        protected objectList: Map<number, T>;
+        protected filterService: IFilterService<T>;
 
         constructor() {
-            this.objectList = new Map<number, IObject>();
-            this.filterService = new FilterService<IObject>();
+            this.objectList = new Map<number, T>();
+            this.filterService = new FilterService<T>();
         }
 
-        public init(objectList: Iterable<IObject>): void {
+        public init(objectList: Iterable<T>): void {
             this.objectList.clear();
             for (let object of objectList) {
                 this.add(object);
             }
         }
 
-        public get(objectId: number): IObject {
+        public get(objectId: number): T {
             return this.objectList.get(objectId);
         }
 
@@ -25,7 +25,7 @@ namespace STSEngine {
             return this.objectList.size;
         }
 
-        public add(object: IObject): void {
+        public add(object: T): void {
             let objectId: number = object.getId();
             this.objectList.set(objectId, object);
         }
@@ -42,15 +42,15 @@ namespace STSEngine {
             this.objectList.clear();
         }
 
-        public getIterator(): IterableIterator<IObject> {
+        public getIterator(): IterableIterator<T> {
             return this.objectList.values();
         }
 
-        public getAll(condition: (item: IObject) => boolean): IterableIterator<IObject> {
+        public getAll(condition: (item: IObject) => boolean): IterableIterator<T> {
             return this.filterService.getAll(this.objectList.values(), condition);
         }
 
-        public getFirst(condition: (item: IObject) => boolean): IObject {
+        public getFirst(condition: (item: IObject) => boolean): T {
             return this.filterService.getFirst(this.objectList.values(), condition);
         }
     }

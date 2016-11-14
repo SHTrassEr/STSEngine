@@ -5,7 +5,7 @@
         protected rootElement: HTMLDivElement;
 
         protected worldAttributeList: IWorldAttributeList;
-        protected objectListService: IObjectListService;
+        protected objectListService: IObjectListService<IObject>;
         protected processListService: IProcessListService;
 
         protected isStarted: boolean;

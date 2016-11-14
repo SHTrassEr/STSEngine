@@ -11,19 +11,6 @@ function ready() {
     view.start();
     var world = client.getWorld();
     var objectListService = world.getServiceList().getObjectListService();
-    /*    var content = document.getElementById("content");
-        setInterval(() => {
-    
-            var iterator = objectListService.getIterator();
-            var objectStatusStr = "";
-            for (let o of iterator) {
-                let oo = <STSEngine.Example.ObjectPlayer>(<any>o);
-                objectStatusStr += "<br/>x: " + oo.getPosition().x + " y:" + oo.getPosition().y;
-            }
-    
-            var stepNumber = world.getStepNumber();
-            content.innerHTML = ("stepNumber: " + stepNumber + objectStatusStr);
-        }, 50);*/
     var up, down, left, right, fire;
     function getPlayerObjectId() {
         var o = objectListService.getFirst(o => o.getPlayerId() == playerId);

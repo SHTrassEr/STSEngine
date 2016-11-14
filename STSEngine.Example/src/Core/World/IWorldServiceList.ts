@@ -7,7 +7,7 @@
         getProcessInitializer(): IItemInitializer<IProcess>;
         getProcessDispatcher(): IProcessDispatcher;
         getCommandDispatcher(): ICommandDispatcher;
-        getObjectListService(): IObjectListService;
+        getObjectListService(): IObjectListService<IObject>;
         getProcessListService(): IProcessListService;
     }
 }

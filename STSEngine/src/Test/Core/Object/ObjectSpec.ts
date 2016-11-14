@@ -10,9 +10,9 @@ QUnit.test("all", function (assert) {
     let objectType = getRandomInt();
 
     o.setId(id);
-    o.setObjectType(objectType);
+    o.setType(objectType);
     assert.strictEqual(o.getId(), id);
-    assert.strictEqual(o.getObjectType(), objectType);
+    assert.strictEqual(o.getType(), objectType);
 
     let iterator = o.getIterator();
     assert.strictEqual(iterator.next().done, false);

@@ -1,6 +1,7 @@
 ﻿namespace STSEngine {
 
     export enum ObjectType {
-        Square
+        Square,
+        Player
     }
 }

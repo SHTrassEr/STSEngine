@@ -7,8 +7,9 @@
         protected processInitializer: IItemInitializer<IProcess>;
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
-        protected objectListService: IObjectListService;
+        protected objectListService: IObjectListService<IObject>;
         protected processListService: IProcessListService;
+        protected playerListService: IObjectListService<IPlayer>;
 
         constructor(worldAttributeList: IWorldAttributeList,
             commandInitializator: IItemInitializer<ICommand>,
@@ -16,8 +17,9 @@
             processInitializator: IItemInitializer<IProcess>,
             processDispatcher: IProcessDispatcher,
             commandDispatcher: ICommandDispatcher,
-            objectListService: IObjectListService,
-            processListService: IProcessListService) {
+            objectListService: IObjectListService<IObject>,
+            processListService: IProcessListService,
+            playerListService: IObjectListService<IPlayer>) {
 
             this.worldAttributeList = worldAttributeList;
             this.commandInitializer = commandInitializator;
@@ -29,6 +31,7 @@
             this.commandDispatcher = commandDispatcher;
             this.objectListService = objectListService;
             this.processListService = processListService;
+            this.playerListService = playerListService;
         }
 
         public getWorldAttributeList(): IWorldAttributeList {
@@ -55,12 +58,16 @@
             return this.commandDispatcher;
         }
 
-        public getObjectListService(): IObjectListService {
+        public getObjectListService(): IObjectListService<IObject> {
             return this.objectListService;
         }
 
         public getProcessListService(): IProcessListService {
             return this.processListService;
+        }
+
+        public getPlayerListService(): IObjectListService<IPlayer> {
+            return this.playerListService;
         }
 
         protected getObjectId(): number {

@@ -2,23 +2,8 @@
 
     export class CommandInitializer extends ItemInitializer<ICommand> {
 
-        public create(attr: Iterable<[number, any]> | number): ICommand {
-            if (attr instanceof Number) {
-                return this.createByType(attr);
-            }
-
-            return this.createByArray(<Iterable<[number, any]>>attr);
-        }
-
-        public * createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<ICommand> {
-            for (let attr of attrList) {
-                yield this.create(attr);
-            }
-        }
-
-        public createByArray(attr: Iterable<[number, any]>): ICommand {
-            var processType = this.getProcessType(attr);
-            return this.createByType(processType, attr);
+        constructor() {
+            super(STSEngine.CommandAttributeType.Type);
         }
 
         public createByType(type: number, attr?: Iterable<[number, any]>): ICommand {
@@ -37,16 +22,7 @@
 
             throw 'Unexpected command type: ' + type;
         }
-         
-        protected getProcessType(attr: Iterable<[number, any]>): number {
-            for (var kvp of attr) {
-                if (kvp[0] == STSEngine.ProcessAttributeType.Type) {
-                    return kvp[1];
-                }
-            }
-
-            return 0;
-        }
+        
 
         public createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer {
             return new CommandRegisterPlayer(this.createAttributeList(), attr);

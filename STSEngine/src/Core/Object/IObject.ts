@@ -4,8 +4,8 @@
         getId(): number;
         setId(id: number): void;
 
-        getObjectType(): number;
-        setObjectType(objectType: number): void;
+        getType(): number;
+        setType(type: number): void;
 
         getAttributeList(): IAttributeList;
     }

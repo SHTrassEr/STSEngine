@@ -3,6 +3,8 @@
     export enum ObjectAttributeType {
         Unknown,
         Type,
-        Id
+        Id,
+        Name,
+        Score
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace STSEngine.Example {
 
     export class CollisionService implements ICollisionService {
-        protected objectListService: IObjectListService;
+        protected objectListService: IObjectListService<IObject>;
         protected worldAttributeList: IWorldAttributeList;
 
-        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService) {
+        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService<IObject>) {
             this.worldAttributeList = worldAttributeList;
             this.objectListService = objectListService;
         }

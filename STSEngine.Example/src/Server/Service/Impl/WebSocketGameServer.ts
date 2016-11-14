@@ -3,10 +3,12 @@
     export class WebSocketGameServer extends STSEngine.WebSocketGameServer {
 
         constructor(socket: WebSocket) {
+
+            let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
             let worldServiceList = new WorldServiceList(worldAttributeList);
             
-            super(socket, worldServiceList);
+            super(socket, worldServiceList, clientServerMessageInitializer);
         }
 
             

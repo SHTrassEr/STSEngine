@@ -1,12 +1,8 @@
-﻿namespace STSEngine {
+﻿/// <reference path="../../Object/Impl/ObjectImpl.ts" />
 
-    export class ClientServerMessage implements IClientServerMessage {
-        public messageType: number;
-        public attributeList: [number, any][];
+namespace STSEngine {
 
-        constructor(messageType: number, attributeList: [number, any][]) {
-            this.messageType = messageType;
-            this.attributeList = attributeList;
-        }
+    export abstract class ClientServerMessage extends ObjectImpl implements IClientServerMessage {
+
     }
 }

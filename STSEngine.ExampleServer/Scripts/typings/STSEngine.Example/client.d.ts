@@ -1,11 +1,4 @@
 declare namespace STSEngine.Example {
-    class Point implements IPoint {
-        x: number;
-        y: number;
-        constructor(x: number, y: number);
-    }
-}
-declare namespace STSEngine.Example {
     class CommandCreatePlayerObject extends STSEngine.Command {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getPlayerId(): number;
@@ -45,11 +38,8 @@ declare namespace STSEngine.Example {
 }
 declare namespace STSEngine.Example {
     class CommandInitializer extends ItemInitializer<ICommand> {
-        create(attr: Iterable<[number, any]> | number): ICommand;
-        createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<ICommand>;
-        createByArray(attr: Iterable<[number, any]>): ICommand;
+        constructor();
         createByType(type: number, attr?: Iterable<[number, any]>): ICommand;
-        protected getProcessType(attr: Iterable<[number, any]>): number;
         createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
         createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
         createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
@@ -139,11 +129,8 @@ declare namespace STSEngine.Example {
 }
 declare namespace STSEngine.Example {
     class ObjectInitializer extends ItemInitializer<IObject> {
-        create(attr: Iterable<[number, any]> | number): IObject;
-        createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<IObject>;
-        createByArray(attr: Iterable<[number, any]>): IObject;
-        createByType(type: number, attr?: Iterable<[number, any]>): IObject;
-        protected getProcessType(attr: Iterable<[number, any]>): number;
+        constructor();
+        protected createByType(type: number, attr?: Iterable<[number, any]>): IObject;
         createPlayer(attr?: Iterable<[number, any]>): ObjectPlayer;
         createBullet(attr?: Iterable<[number, any]>): ObjectBullet;
         protected setObjectId(object: IObject): void;
@@ -153,6 +140,13 @@ declare namespace STSEngine.Example {
 declare namespace STSEngine.Example {
     class ObjectPlayer extends ObjectRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+    }
+}
+declare namespace STSEngine.Example {
+    class Point implements IPoint {
+        x: number;
+        y: number;
+        constructor(x: number, y: number);
     }
 }
 declare namespace STSEngine.Example {
@@ -198,11 +192,8 @@ declare namespace STSEngine.Example {
 }
 declare namespace STSEngine.Example {
     class ProcessInitializer extends ItemInitializer<IProcess> {
-        create(attr: Iterable<[number, any]> | number): IProcess;
-        createList(attrList: Iterable<Iterable<[number, any]>>): Iterable<IProcess>;
-        createByArray(attr: Iterable<[number, any]>): IProcess;
-        createByType(type: number, attr?: Iterable<[number, any]>): IProcess;
-        protected getProcessType(attr: Iterable<[number, any]>): number;
+        constructor();
+        protected createByType(type: number, attr?: Iterable<[number, any]>): IProcess;
         protected setProcessId(process: IProcess): void;
         createMove(attr?: Iterable<[number, any]>): ProcessMoveObject;
         createFire(attr?: Iterable<[number, any]>): ProcessFire;
@@ -233,6 +224,20 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    class CollisionService implements ICollisionService {
+        protected objectListService: IObjectListService<IObject>;
+        protected worldAttributeList: IWorldAttributeList;
+        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService<IObject>);
+        processCollision(moveObject: IObject, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]): void;
+        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean;
+        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean;
+        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean;
+        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
+    }
+}
+declare namespace STSEngine.Example {
     class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getWorldSize(): [number, number];
@@ -255,20 +260,6 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class CollisionService implements ICollisionService {
-        protected objectListService: IObjectListService;
-        protected worldAttributeList: IWorldAttributeList;
-        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService);
-        processCollision(moveObject: IObject, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]): void;
-        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean;
-        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean;
-        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean;
-        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
-    }
-}
-declare namespace STSEngine.Example {
     enum CommandAttributeType {
         ObjectId = 50,
         MoveDirection = 51,
@@ -281,21 +272,6 @@ declare namespace STSEngine.Example {
         MoveStart = 51,
         MoveStop = 52,
         Fire = 53,
-    }
-}
-declare namespace STSEngine.Example {
-    interface IPoint {
-        x: number;
-        y: number;
-    }
-}
-declare namespace STSEngine.Example {
-    enum MoveDirection {
-        Unknow = 0,
-        Up = 1,
-        Right = 2,
-        Down = 3,
-        Left = 4,
     }
 }
 declare namespace STSEngine.Example {
@@ -331,6 +307,21 @@ declare namespace STSEngine.Example {
     enum ObjectType {
         Player = 0,
         Bullet = 1,
+    }
+}
+declare namespace STSEngine.Example {
+    interface IPoint {
+        x: number;
+        y: number;
+    }
+}
+declare namespace STSEngine.Example {
+    enum MoveDirection {
+        Unknow = 0,
+        Up = 1,
+        Right = 2,
+        Down = 3,
+        Left = 4,
     }
 }
 declare namespace STSEngine.Example {
@@ -374,7 +365,7 @@ declare namespace STSEngine.Example {
         getProcessInitializer(): IItemInitializer<IProcess>;
         getProcessDispatcher(): IProcessDispatcher;
         getCommandDispatcher(): ICommandDispatcher;
-        getObjectListService(): IObjectListService;
+        getObjectListService(): IObjectListService<IObject>;
         getProcessListService(): IProcessListService;
     }
 }

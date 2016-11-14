@@ -24,7 +24,7 @@
 
             this.playerId = playerId;
             this.cellSize = 8;
-            this.width = 59 * this.cellSize;
+            this.width = rootElement.clientWidth;
             this.height = 59 * this.cellSize;
             
             this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
@@ -179,8 +179,18 @@
 
             graphics.lineStyle(1, 0xCCCCCC, 0.5);
             let cellSize = this.cellSize;
-            var x = 0;
-            var y = 0;
+
+            var x = ((this.width) % this.cellSize) / 2;
+            var y = ((this.height) % this.cellSize) / 2;
+
+            if (Math.floor(this.width / this.cellSize) % 2 == 0) {
+                x = x - this.cellSize / 2;
+            }
+
+            if (Math.floor(this.height / this.cellSize) % 2 == 0) {
+                y = y - this.cellSize / 2;
+            }           
+
             while (x < this.width) {
                 graphics.moveTo(x, 0);
                 graphics.lineTo(x, this.height);

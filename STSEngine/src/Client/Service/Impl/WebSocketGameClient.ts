@@ -7,10 +7,13 @@
         protected sid: string;
         protected engine: IEngine;
         protected playerAction: IPlayerAction;
+        protected playerId: number;
+        protected clientSeverMessageInitializer: IClientServerMessageInitializer;
 
         protected worldServiceList: IWorldServiceList;
 
-        constructor(socket: WebSocket, playerAction: IPlayerAction, worldServiceList: IWorldServiceList) {
+        constructor(socket: WebSocket, playerAction: IPlayerAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
+            this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.worldServiceList = worldServiceList;
             this.commandListService = new CommandListService();
             this.socket = socket;
@@ -46,9 +49,8 @@
         protected onPlayerAction(playerAction: IPlayerAction) {
             let commandList = playerAction.getCommandKeyValuePairList();
             playerAction.clear();
-            let attributeList: [number, any][] = [];
-            attributeList.push([ClientMessageAttributeType.CommandList, commandList]);
-            let message = new ClientServerMessage(ClientMessageType.CommandList, attributeList);
+            var message = new ClientServerMessageCommandList();
+            message.setCommandList(commandList);
             this.sendMessage(message);
         }
 
@@ -60,28 +62,48 @@
             this.processServerMessage(message);
         }
 
-        protected processServerMessage(message: IClientServerMessage): void {
-            switch (message.messageType) {
-                case ServerMessageType.RequestAuthentication:
+        protected processServerMessage(attr: Iterable<[number, any]>): void {
+            let message = this.clientSeverMessageInitializer.create(attr);
+
+            switch (message.getType()) {
+                case ClientServerMessageType.RequestAuthentication:
                     this.sendAuthentication();
                     break;
-                case ServerMessageType.Tick:
-                    this.processTick(message.attributeList);
+                case ClientServerMessageType.Init:
+                    this.processInit(<ClientServerMessageInit>message);
+                    break;
+                case ClientServerMessageType.Step:
+                    this.processStep(<ClientServerMessageStep>message);
+                    break;
+                case ClientServerMessageType.StepList:
+                    this.processStepList(<ClientServerMessageStepList>message);
+                    break;
             }
         }
 
         protected sendAuthentication() {
-            let attributeList: [number, any][] = [];
-            attributeList.push([ClientMessageAttributeType.SID, this.sid]);
-            let message = new ClientServerMessage(ClientMessageType.ResponseAuthentication, attributeList);
+            let message = new ClientServerMessageResponseAuthentication();
+            message.setSID(this.sid);
             this.sendMessage(message);
         }
 
-        protected processTick(attributeList: [number, any][]) {
-            let commandListAttr = <[number, any][][]>attributeList[1][1];
+        protected processStep(message: ClientServerMessageStep) {
+            let commandListAttr = message.getCommandList();
             let commandList = this.worldServiceList.getCommandInitializer().createList(commandListAttr);
             this.commandListService.setCommandList(commandList);
             this.engine.step();
+        }
+
+        protected processStepList(message: ClientServerMessageStepList) {
+            var stepListAttr = message.getStepList();
+            var stepList = this.clientSeverMessageInitializer.createList(stepListAttr);
+            for (var step of stepList) {
+                this.processStep(<ClientServerMessageStep>step);
+            }
+        }
+
+        protected processInit(message: ClientServerMessageInit) {
+            this.playerId = message.getPlayerId();
         }
 
         protected onClose(ev: CloseEvent): void {
@@ -93,7 +115,7 @@
         }
 
         protected sendMessage(message: IClientServerMessage) {
-            this.socket.send(JSON.stringify(message));            
+            this.socket.send(JSON.stringify(message.getList()));            
         }
 
     }

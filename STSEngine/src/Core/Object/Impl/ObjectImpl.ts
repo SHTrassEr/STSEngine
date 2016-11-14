@@ -24,12 +24,12 @@
             this.attributeList.set(ObjectAttributeType.Id, id);
         }
 
-        public getObjectType(): number {
+        public getType(): number {
             return this.attributeList.get(ObjectAttributeType.Type);
         }
 
-        public setObjectType(objectType: number): void {
-            this.attributeList.set(ObjectAttributeType.Type, objectType);
+        public setType(type: number): void {
+            this.attributeList.set(ObjectAttributeType.Type, type);
         }
 
         public getList(): [number, any][] {

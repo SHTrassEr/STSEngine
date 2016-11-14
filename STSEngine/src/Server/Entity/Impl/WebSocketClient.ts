@@ -9,7 +9,10 @@
         protected onMessageHandler: (client: IWebSocketClient, message: IClientServerMessage) => void;
         protected onCloseHandler: (client: IWebSocketClient) => void;
 
-        constructor(id: number, client: any) {
+        protected clientSeverMessageInitializer: IClientServerMessageInitializer;
+
+        constructor(clientSeverMessageInitializer: IClientServerMessageInitializer, id: number, client: any) {
+            this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.id = id;
             this.client = client;
             this.setStatus(WebSocketClientStatus.Initialization);
@@ -25,8 +28,9 @@
             this.processMessage(JSON.parse(message));
         }
 
-        protected processMessage(message: IClientServerMessage): void {
-            if (message.messageType && this.onMessageHandler) {
+        protected processMessage(attr: Iterable<[number, any]>): void {
+            if (attr && this.onMessageHandler) {
+                var message = this.clientSeverMessageInitializer.create(attr);
                 this.onMessageHandler(this, message);
             }
         }
@@ -57,9 +61,9 @@
             this.sid = sid;
         }
 
-        public sendMessage(message: IClientServerMessage): void {
+        public sendMessage(attr: IClientServerMessage): void {
             try {
-                this.client.send(JSON.stringify(message));
+                this.client.send(JSON.stringify(attr.getList()));
             }
             catch (e) {
                 console.log(e);
