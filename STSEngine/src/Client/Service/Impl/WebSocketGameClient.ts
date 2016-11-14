@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class WebSocketGameClient {
+    export class WebSocketGameClient implements IWebSocketGameClient {
 
         protected commandListService: ICommandListService;
         protected socket: WebSocket;
@@ -10,18 +10,29 @@
         protected playerId: number;
         protected clientSeverMessageInitializer: IClientServerMessageInitializer;
 
+        protected onConnectedHandler: (webSocketClient: IWebSocketGameClient) => void;
+
         protected worldServiceList: IWorldServiceList;
 
-        constructor(socket: WebSocket, playerAction: IPlayerAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
+        constructor(socket: WebSocket, sid: string, playerAction: IPlayerAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
             this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.worldServiceList = worldServiceList;
             this.commandListService = new CommandListService();
             this.socket = socket;
             this.playerAction = playerAction;
-            this.sid = playerAction.getPlayerId().toString();
+            this.sid = sid;
             this.playerAction.setOnAction(this.onPlayerAction.bind(this));
             this.init();
         }
+
+        public getPlayerId(): number {
+            return this.playerId
+        }
+
+        public setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void {
+            this.onConnectedHandler = handler;
+        }
+
 
         protected commandInitializator(attr: Iterable<[number, any]>): ICommand {
             return new Command(new AttributeList(), attr);
@@ -104,6 +115,9 @@
 
         protected processInit(message: ClientServerMessageInit) {
             this.playerId = message.getPlayerId();
+            if (this.onConnectedHandler) {
+                this.onConnectedHandler(this);
+            }
         }
 
         protected onClose(ev: CloseEvent): void {

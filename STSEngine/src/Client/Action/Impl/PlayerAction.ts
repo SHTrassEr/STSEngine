@@ -3,16 +3,10 @@
     export class PlayerAction implements IPlayerAction {
 
         protected commandListService: ICommandListService;
-        protected playerId: number;
         protected onActionHandler: (playerAction: IPlayerAction) => void;
 
-        constructor(playerId: number) {
+        constructor() {
             this.commandListService = new CommandListService();
-            this.playerId = playerId;
-        }
-
-        public getPlayerId(): number {
-            return this.playerId;
         }
 
         public getCommandKeyValuePairList(): [number, any][][] {

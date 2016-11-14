@@ -1,7 +1,9 @@
 ﻿namespace STSEngine {
 
     export interface IWebSocketGameClient {
-        start(): void;
+
         getWorld(): IWorld;
+        getPlayerId(): number;
+        setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void;
     }
 }

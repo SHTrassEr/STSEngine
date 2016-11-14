@@ -16,13 +16,5 @@
         public setName(name: string): void {
             this.attributeList.set(ObjectAttributeType.Name, name);
         }
-            
-        public getScore(): number {
-            return this.attributeList.get(ObjectAttributeType.Score);
-        }
-
-        public setScore(score: number): void {
-            this.attributeList.set(ObjectAttributeType.Score, score);
-        }
     }
 }

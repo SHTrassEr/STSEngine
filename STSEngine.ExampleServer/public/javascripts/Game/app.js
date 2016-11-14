@@ -1,19 +1,51 @@
+function createCookie(name, value) {
+    let expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ')
+            c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0)
+            return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {
+    createCookie(name, "");
+}
+function getSID() {
+    let key = "STSEngine.example.SID";
+    let sid = readCookie(key);
+    if (!sid) {
+        sid = (Math.floor(Math.random() * (1000000))).toString();
+        createCookie(key, sid);
+    }
+    return sid;
+}
 function ready() {
-    var playerId = Math.floor(Math.random() * (100000));
+    var sid = getSID();
     var loc = window.location;
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
-    var playerAction = new STSEngine.Example.PlayerAction(playerId);
-    var client = new STSEngine.Example.WebSocketGameClient(socket, playerAction);
+    var playerAction = new STSEngine.Example.PlayerAction();
+    var client = new STSEngine.Example.WebSocketGameClient(socket, sid, playerAction);
+    client.setOnConnected(onClientConnected);
     var content = document.getElementById("content");
     var world = client.getWorld();
     world.getServiceList();
-    var view = new STSEngine.Example.View(content, (world), playerId);
-    view.start();
+    var view = new STSEngine.Example.View(content, (world));
+    function onClientConnected(client) {
+        view.setPlayerId(client.getPlayerId());
+        view.start();
+    }
     var world = client.getWorld();
     var objectListService = world.getServiceList().getObjectListService();
     var up, down, left, right, fire;
     function getPlayerObjectId() {
-        var o = objectListService.getFirst(o => o.getPlayerId() == playerId);
+        var o = objectListService.getFirst(o => o.getPlayerId() == client.getPlayerId());
         return o.getId();
     }
     function keyDownHandler(e) {

@@ -68,7 +68,6 @@ var STSEngine;
         ObjectAttributeType[ObjectAttributeType["Type"] = 1] = "Type";
         ObjectAttributeType[ObjectAttributeType["Id"] = 2] = "Id";
         ObjectAttributeType[ObjectAttributeType["Name"] = 3] = "Name";
-        ObjectAttributeType[ObjectAttributeType["Score"] = 4] = "Score";
     })(STSEngine.ObjectAttributeType || (STSEngine.ObjectAttributeType = {}));
     var ObjectAttributeType = STSEngine.ObjectAttributeType;
 })(STSEngine || (STSEngine = {}));
@@ -755,12 +754,6 @@ var STSEngine;
         setName(name) {
             this.attributeList.set(STSEngine.ObjectAttributeType.Name, name);
         }
-        getScore() {
-            return this.attributeList.get(STSEngine.ObjectAttributeType.Score);
-        }
-        setScore(score) {
-            this.attributeList.set(STSEngine.ObjectAttributeType.Score, score);
-        }
     }
     STSEngine.Player = Player;
 })(STSEngine || (STSEngine = {}));
@@ -999,6 +992,149 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
+    class World {
+        constructor(worldSettings) {
+            this.attributeList = worldSettings.getWorldAttributeList();
+            this.worldServiceList = worldSettings;
+            this.setStepNumber(0);
+        }
+        getServiceList() {
+            return this.worldServiceList;
+        }
+        getAttributeList() {
+            return this.attributeList;
+        }
+        getStepNumber() {
+            return this.stepNumber;
+        }
+        setStepNumber(stepNumber) {
+            this.stepNumber = stepNumber;
+        }
+        increaseStepNumber() {
+            let stepNumber = this.getStepNumber() + 1;
+            this.setStepNumber(stepNumber);
+        }
+        getCommandInitializer() {
+            return (this.getServiceList().getCommandInitializer());
+        }
+        getProcessInitializer() {
+            return (this.getServiceList().getProcessInitializer());
+        }
+        getObjectInitializer() {
+            return (this.getServiceList().getObjectInitializer());
+        }
+    }
+    STSEngine.World = World;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class WorldAttributeList {
+        constructor(attributeList, kvpList) {
+            if (attributeList) {
+                this.attributeList = attributeList;
+            }
+            else {
+                this.attributeList = new STSEngine.AttributeList();
+            }
+            if (kvpList) {
+                this.attributeList.setList(kvpList);
+            }
+        }
+        getTickLength() {
+            return this.attributeList.get(STSEngine.WorldAttributeType.TickLength, 50);
+        }
+        getList() {
+            return this.attributeList.getList();
+        }
+        getIterator() {
+            return this.attributeList.getIterator();
+        }
+        getAttributeList() {
+            return this.attributeList;
+        }
+        getLastProcessId() {
+            return this.attributeList.get(STSEngine.WorldAttributeType.LastProcessId, 0);
+        }
+        setLastProcessId(id) {
+            this.attributeList.set(STSEngine.WorldAttributeType.LastProcessId, id);
+        }
+        getLastObjectId() {
+            return this.attributeList.get(STSEngine.WorldAttributeType.LastObjectId, 0);
+        }
+        setLastObjectId(id) {
+            this.attributeList.set(STSEngine.WorldAttributeType.LastObjectId, id);
+        }
+    }
+    STSEngine.WorldAttributeList = WorldAttributeList;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    (function (WorldAttributeType) {
+        WorldAttributeType[WorldAttributeType["Unknown"] = 0] = "Unknown";
+        WorldAttributeType[WorldAttributeType["TickLength"] = 1] = "TickLength";
+        WorldAttributeType[WorldAttributeType["LastProcessId"] = 2] = "LastProcessId";
+        WorldAttributeType[WorldAttributeType["LastObjectId"] = 3] = "LastObjectId";
+    })(STSEngine.WorldAttributeType || (STSEngine.WorldAttributeType = {}));
+    var WorldAttributeType = STSEngine.WorldAttributeType;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class WorldServiceList {
+        constructor(worldAttributeList, commandInitializator, objectInitializator, processInitializator, processDispatcher, commandDispatcher, objectListService, processListService, playerListService) {
+            this.worldAttributeList = worldAttributeList;
+            this.commandInitializer = commandInitializator;
+            this.objectInitializer = objectInitializator;
+            this.objectInitializer.setGetIdHandler(this.getObjectId.bind(this));
+            this.processInitializer = processInitializator;
+            this.processInitializer.setGetIdHandler(this.getProcessId.bind(this));
+            this.processDispatcher = processDispatcher;
+            this.commandDispatcher = commandDispatcher;
+            this.objectListService = objectListService;
+            this.processListService = processListService;
+            this.playerListService = playerListService;
+        }
+        getWorldAttributeList() {
+            return this.worldAttributeList;
+        }
+        getCommandInitializer() {
+            return this.commandInitializer;
+        }
+        getObjectInitializer() {
+            return this.objectInitializer;
+        }
+        getProcessInitializer() {
+            return this.processInitializer;
+        }
+        getProcessDispatcher() {
+            return this.processDispatcher;
+        }
+        getCommandDispatcher() {
+            return this.commandDispatcher;
+        }
+        getObjectListService() {
+            return this.objectListService;
+        }
+        getProcessListService() {
+            return this.processListService;
+        }
+        getPlayerListService() {
+            return this.playerListService;
+        }
+        getObjectId() {
+            var id = this.worldAttributeList.getLastObjectId() + 1;
+            this.worldAttributeList.setLastObjectId(id);
+            return id;
+        }
+        getProcessId() {
+            var id = this.worldAttributeList.getLastProcessId() + 1;
+            this.worldAttributeList.setLastProcessId(id);
+            return id;
+        }
+    }
+    STSEngine.WorldServiceList = WorldServiceList;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
     class Engine {
         constructor(world, commandListService) {
             this.world = world;
@@ -1149,156 +1285,9 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class World {
-        constructor(worldSettings) {
-            this.attributeList = worldSettings.getWorldAttributeList();
-            this.worldServiceList = worldSettings;
-            this.setStepNumber(0);
-        }
-        getServiceList() {
-            return this.worldServiceList;
-        }
-        getAttributeList() {
-            return this.attributeList;
-        }
-        getStepNumber() {
-            return this.stepNumber;
-        }
-        setStepNumber(stepNumber) {
-            this.stepNumber = stepNumber;
-        }
-        increaseStepNumber() {
-            let stepNumber = this.getStepNumber() + 1;
-            this.setStepNumber(stepNumber);
-        }
-        getCommandInitializer() {
-            return (this.getServiceList().getCommandInitializer());
-        }
-        getProcessInitializer() {
-            return (this.getServiceList().getProcessInitializer());
-        }
-        getObjectInitializer() {
-            return (this.getServiceList().getObjectInitializer());
-        }
-    }
-    STSEngine.World = World;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class WorldAttributeList {
-        constructor(attributeList, kvpList) {
-            if (attributeList) {
-                this.attributeList = attributeList;
-            }
-            else {
-                this.attributeList = new STSEngine.AttributeList();
-            }
-            if (kvpList) {
-                this.attributeList.setList(kvpList);
-            }
-        }
-        getTickLength() {
-            return this.attributeList.get(STSEngine.WorldAttributeType.TickLength, 50);
-        }
-        getList() {
-            return this.attributeList.getList();
-        }
-        getIterator() {
-            return this.attributeList.getIterator();
-        }
-        getAttributeList() {
-            return this.attributeList;
-        }
-        getLastProcessId() {
-            return this.attributeList.get(STSEngine.WorldAttributeType.LastProcessId, 0);
-        }
-        setLastProcessId(id) {
-            this.attributeList.set(STSEngine.WorldAttributeType.LastProcessId, id);
-        }
-        getLastObjectId() {
-            return this.attributeList.get(STSEngine.WorldAttributeType.LastObjectId, 0);
-        }
-        setLastObjectId(id) {
-            this.attributeList.set(STSEngine.WorldAttributeType.LastObjectId, id);
-        }
-    }
-    STSEngine.WorldAttributeList = WorldAttributeList;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    (function (WorldAttributeType) {
-        WorldAttributeType[WorldAttributeType["Unknown"] = 0] = "Unknown";
-        WorldAttributeType[WorldAttributeType["TickLength"] = 1] = "TickLength";
-        WorldAttributeType[WorldAttributeType["LastProcessId"] = 2] = "LastProcessId";
-        WorldAttributeType[WorldAttributeType["LastObjectId"] = 3] = "LastObjectId";
-    })(STSEngine.WorldAttributeType || (STSEngine.WorldAttributeType = {}));
-    var WorldAttributeType = STSEngine.WorldAttributeType;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class WorldServiceList {
-        constructor(worldAttributeList, commandInitializator, objectInitializator, processInitializator, processDispatcher, commandDispatcher, objectListService, processListService, playerListService) {
-            this.worldAttributeList = worldAttributeList;
-            this.commandInitializer = commandInitializator;
-            this.objectInitializer = objectInitializator;
-            this.objectInitializer.setGetIdHandler(this.getObjectId.bind(this));
-            this.processInitializer = processInitializator;
-            this.processInitializer.setGetIdHandler(this.getProcessId.bind(this));
-            this.processDispatcher = processDispatcher;
-            this.commandDispatcher = commandDispatcher;
-            this.objectListService = objectListService;
-            this.processListService = processListService;
-            this.playerListService = playerListService;
-        }
-        getWorldAttributeList() {
-            return this.worldAttributeList;
-        }
-        getCommandInitializer() {
-            return this.commandInitializer;
-        }
-        getObjectInitializer() {
-            return this.objectInitializer;
-        }
-        getProcessInitializer() {
-            return this.processInitializer;
-        }
-        getProcessDispatcher() {
-            return this.processDispatcher;
-        }
-        getCommandDispatcher() {
-            return this.commandDispatcher;
-        }
-        getObjectListService() {
-            return this.objectListService;
-        }
-        getProcessListService() {
-            return this.processListService;
-        }
-        getPlayerListService() {
-            return this.playerListService;
-        }
-        getObjectId() {
-            var id = this.worldAttributeList.getLastObjectId() + 1;
-            this.worldAttributeList.setLastObjectId(id);
-            return id;
-        }
-        getProcessId() {
-            var id = this.worldAttributeList.getLastProcessId() + 1;
-            this.worldAttributeList.setLastProcessId(id);
-            return id;
-        }
-    }
-    STSEngine.WorldServiceList = WorldServiceList;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
     class PlayerAction {
-        constructor(playerId) {
+        constructor() {
             this.commandListService = new STSEngine.CommandListService();
-            this.playerId = playerId;
-        }
-        getPlayerId() {
-            return this.playerId;
         }
         getCommandKeyValuePairList() {
             return this.commandListService.getCommandKeyValuePairList();
@@ -1319,16 +1308,59 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
+    class View {
+        constructor(rootElement, world) {
+            this.world = world;
+            let worldServiceList = world.getServiceList();
+            this.rootElement = rootElement;
+            this.clearHtmlElement(this.rootElement);
+            this.worldAttributeList = worldServiceList.getWorldAttributeList();
+            this.objectListService = worldServiceList.getObjectListService();
+            this.processListService = worldServiceList.getProcessListService();
+            this.isStarted = false;
+        }
+        setPlayerId(playerId) {
+            this.playerId = playerId;
+        }
+        clearHtmlElement(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        }
+        draw() {
+            if (this.isStarted) {
+                this.refresh();
+                requestAnimationFrame(this.draw.bind(this));
+            }
+        }
+        start() {
+            this.isStarted = true;
+            this.draw();
+        }
+        stop() {
+            this.isStarted = false;
+        }
+    }
+    STSEngine.View = View;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
     class WebSocketGameClient {
-        constructor(socket, playerAction, worldServiceList, clientSeverMessageInitializer) {
+        constructor(socket, sid, playerAction, worldServiceList, clientSeverMessageInitializer) {
             this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.worldServiceList = worldServiceList;
             this.commandListService = new STSEngine.CommandListService();
             this.socket = socket;
             this.playerAction = playerAction;
-            this.sid = playerAction.getPlayerId().toString();
+            this.sid = sid;
             this.playerAction.setOnAction(this.onPlayerAction.bind(this));
             this.init();
+        }
+        getPlayerId() {
+            return this.playerId;
+        }
+        setOnConnected(handler) {
+            this.onConnectedHandler = handler;
         }
         commandInitializator(attr) {
             return new STSEngine.Command(new STSEngine.AttributeList(), attr);
@@ -1397,6 +1429,9 @@ var STSEngine;
         }
         processInit(message) {
             this.playerId = message.getPlayerId();
+            if (this.onConnectedHandler) {
+                this.onConnectedHandler(this);
+            }
         }
         onClose(ev) {
         }
@@ -1407,38 +1442,4 @@ var STSEngine;
         }
     }
     STSEngine.WebSocketGameClient = WebSocketGameClient;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class View {
-        constructor(rootElement, world) {
-            this.world = world;
-            let worldServiceList = world.getServiceList();
-            this.rootElement = rootElement;
-            this.clearHtmlElement(this.rootElement);
-            this.worldAttributeList = worldServiceList.getWorldAttributeList();
-            this.objectListService = worldServiceList.getObjectListService();
-            this.processListService = worldServiceList.getProcessListService();
-            this.isStarted = false;
-        }
-        clearHtmlElement(element) {
-            while (element.firstChild) {
-                element.removeChild(element.firstChild);
-            }
-        }
-        draw() {
-            if (this.isStarted) {
-                this.refresh();
-                requestAnimationFrame(this.draw.bind(this));
-            }
-        }
-        start() {
-            this.isStarted = true;
-            this.draw();
-        }
-        stop() {
-            this.isStarted = false;
-        }
-    }
-    STSEngine.View = View;
 })(STSEngine || (STSEngine = {}));

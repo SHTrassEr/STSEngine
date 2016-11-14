@@ -2,12 +2,12 @@
 
     export class WebSocketGameClient extends STSEngine.WebSocketGameClient {
 
-        constructor(socket: WebSocket, playerAction: IPlayerAction) {
+        constructor(socket: WebSocket, sid: string, playerAction: IPlayerAction) {
 
             let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
             let worldServiceList = new WorldServiceList(worldAttributeList);
-            super(socket, playerAction, worldServiceList, clientServerMessageInitializer);
+            super(socket, sid, playerAction, worldServiceList, clientServerMessageInitializer);
         }
     }
 }

@@ -101,6 +101,13 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    class Point implements IPoint {
+        x: number;
+        y: number;
+        constructor(x: number, y: number);
+    }
+}
+declare namespace STSEngine.Example {
     abstract class ObjectRectangle extends STSEngine.ObjectImpl implements IObjectRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getPosition(): [number, number];
@@ -140,13 +147,6 @@ declare namespace STSEngine.Example {
 declare namespace STSEngine.Example {
     class ObjectPlayer extends ObjectRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-}
-declare namespace STSEngine.Example {
-    class Point implements IPoint {
-        x: number;
-        y: number;
-        constructor(x: number, y: number);
     }
 }
 declare namespace STSEngine.Example {
@@ -275,6 +275,21 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    interface IPoint {
+        x: number;
+        y: number;
+    }
+}
+declare namespace STSEngine.Example {
+    enum MoveDirection {
+        Unknow = 0,
+        Up = 1,
+        Right = 2,
+        Down = 3,
+        Left = 4,
+    }
+}
+declare namespace STSEngine.Example {
     interface IObjectRectangle extends IObject {
         getPosition(): [number, number];
         getPosition(d: number): number;
@@ -307,21 +322,6 @@ declare namespace STSEngine.Example {
     enum ObjectType {
         Player = 0,
         Bullet = 1,
-    }
-}
-declare namespace STSEngine.Example {
-    interface IPoint {
-        x: number;
-        y: number;
-    }
-}
-declare namespace STSEngine.Example {
-    enum MoveDirection {
-        Unknow = 0,
-        Up = 1,
-        Right = 2,
-        Down = 3,
-        Left = 4,
     }
 }
 declare namespace STSEngine.Example {
@@ -371,8 +371,10 @@ declare namespace STSEngine.Example {
 }
 declare namespace STSEngine.Example {
     class WebSocketGameServer extends STSEngine.WebSocketGameServer {
+        protected lastPlayerId: number;
+        protected connectedPlayerList: Map<string, number>;
         constructor(socket: WebSocket);
-        protected registerNewPlayer(newPlayerId: number): void;
+        protected getPlayerId(sid: string): number;
     }
 }
 

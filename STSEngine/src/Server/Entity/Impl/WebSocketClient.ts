@@ -3,6 +3,7 @@
     export class WebSocketClient implements IWebSocketClient {
 
         protected id: number;
+        protected playerId: number;
         protected status: WebSocketClientStatus;
         protected client: any;
         protected sid: string;
@@ -29,10 +30,21 @@
         }
 
         protected processMessage(attr: Iterable<[number, any]>): void {
-            if (attr && this.onMessageHandler) {
-                var message = this.clientSeverMessageInitializer.create(attr);
-                this.onMessageHandler(this, message);
+            if (this.status != WebSocketClientStatus.Disconnected) {
+                if (attr && this.onMessageHandler) {
+
+                    try {
+                        var message = this.clientSeverMessageInitializer.create(attr);
+                    }
+                    catch (e) {
+                        console.log(e);
+                        this.status = WebSocketClientStatus.Disconnected;
+                    }
+                    
+                    this.onMessageHandler(this, message);
+                }
             }
+
         }
 
         protected onClose(): void {
@@ -59,6 +71,14 @@
 
         public setSID(sid: string): void {
             this.sid = sid;
+        }
+
+        public getPlayerId(): number {
+            return this.playerId;
+        }
+
+        public setPlayerId(playerId: number): void {
+            this.playerId = playerId;
         }
 
         public sendMessage(attr: IClientServerMessage): void {

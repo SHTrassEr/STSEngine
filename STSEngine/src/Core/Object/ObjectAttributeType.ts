@@ -4,7 +4,6 @@
         Unknown,
         Type,
         Id,
-        Name,
-        Score
+        Name
     }
 }

@@ -101,6 +101,13 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    class Point implements IPoint {
+        x: number;
+        y: number;
+        constructor(x: number, y: number);
+    }
+}
+declare namespace STSEngine.Example {
     abstract class ObjectRectangle extends STSEngine.ObjectImpl implements IObjectRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getPosition(): [number, number];
@@ -140,13 +147,6 @@ declare namespace STSEngine.Example {
 declare namespace STSEngine.Example {
     class ObjectPlayer extends ObjectRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-}
-declare namespace STSEngine.Example {
-    class Point implements IPoint {
-        x: number;
-        y: number;
-        constructor(x: number, y: number);
     }
 }
 declare namespace STSEngine.Example {
@@ -275,6 +275,21 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    interface IPoint {
+        x: number;
+        y: number;
+    }
+}
+declare namespace STSEngine.Example {
+    enum MoveDirection {
+        Unknow = 0,
+        Up = 1,
+        Right = 2,
+        Down = 3,
+        Left = 4,
+    }
+}
+declare namespace STSEngine.Example {
     interface IObjectRectangle extends IObject {
         getPosition(): [number, number];
         getPosition(d: number): number;
@@ -307,21 +322,6 @@ declare namespace STSEngine.Example {
     enum ObjectType {
         Player = 0,
         Bullet = 1,
-    }
-}
-declare namespace STSEngine.Example {
-    interface IPoint {
-        x: number;
-        y: number;
-    }
-}
-declare namespace STSEngine.Example {
-    enum MoveDirection {
-        Unknow = 0,
-        Up = 1,
-        Right = 2,
-        Down = 3,
-        Left = 4,
     }
 }
 declare namespace STSEngine.Example {
@@ -370,11 +370,7 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    interface IPlayerAction {
-        getPlayerId(): number;
-        setOnAction(handler: () => void): any;
-        getCommandKeyValuePairList(): [number, any][][];
-        clear(): void;
+    interface IPlayerAction extends STSEngine.IPlayerAction {
         startMoveRight(objectId: number): void;
         startMoveLeft(objectId: number): void;
         startMoveUp(objectId: number): void;
@@ -386,13 +382,10 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class PlayerAction implements IPlayerAction {
-        protected commandListService: ICommandListService;
-        protected playerId: number;
+    class PlayerAction extends STSEngine.PlayerAction implements IPlayerAction {
         protected onActionHandler: (playerAction: IPlayerAction) => void;
         protected commandInitializer: CommandInitializer;
-        constructor(playerId: number);
-        getPlayerId(): number;
+        constructor();
         protected commandInitializator(attr: Iterable<[number, any]>): ICommand;
         protected addCommand(command: ICommand): void;
         startMoveRight(objectId: number): void;
@@ -404,21 +397,16 @@ declare namespace STSEngine.Example {
         stopMoveUp(objectId: number): void;
         stopMoveDown(objectId: number): void;
         fire(objectId: number): void;
-        getCommandKeyValuePairList(): [number, any][][];
-        clear(): void;
-        setOnAction(handler: (playerAction: IPlayerAction) => void): void;
-        protected onAction(): void;
     }
 }
 declare namespace STSEngine.Example {
     class WebSocketGameClient extends STSEngine.WebSocketGameClient {
-        constructor(socket: WebSocket, playerAction: IPlayerAction);
+        constructor(socket: WebSocket, sid: string, playerAction: IPlayerAction);
     }
 }
 declare namespace STSEngine.Example {
     class View extends STSEngine.View {
         protected worldAttributeList: WorldAttributeList;
-        protected playerId: number;
         protected width: number;
         protected height: number;
         protected renderer: PIXI.SystemRenderer;
@@ -429,7 +417,7 @@ declare namespace STSEngine.Example {
         protected objectMap: Map<number, PIXI.Graphics>;
         protected cellSize: number;
         protected stepNumber: number;
-        constructor(rootElement: HTMLDivElement, world: IWorld, playerId: number);
+        constructor(rootElement: HTMLDivElement, world: IWorld);
         protected drawObjectRectangle(o: ObjectRectangle): PIXI.Graphics;
         protected getObjectSprite(o: ObjectRectangle): PIXI.Graphics;
         protected clearStage(): void;

@@ -3,7 +3,7 @@
     export class View extends STSEngine.View {
 
         protected worldAttributeList: WorldAttributeList;
-        protected playerId: number;
+
 
         protected width: number;
         protected height: number;
@@ -19,10 +19,9 @@
 
         protected stepNumber: number;
 
-        constructor(rootElement: HTMLDivElement, world: IWorld, playerId: number) {
+        constructor(rootElement: HTMLDivElement, world: IWorld) {
             super(rootElement, world);
 
-            this.playerId = playerId;
             this.cellSize = 8;
             this.width = rootElement.clientWidth;
             this.height = 59 * this.cellSize;
@@ -41,7 +40,6 @@
             this.stage.addChild(this.worldLimit);
             this.stepNumber = -1;
         }
-
 
         protected drawObjectRectangle(o: ObjectRectangle): PIXI.Graphics {
             let position = o.getPosition();

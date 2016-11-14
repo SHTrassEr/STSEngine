@@ -10,6 +10,9 @@
         getSID(): string;
         setSID(sid: string): void;
 
+        getPlayerId(): number;
+        setPlayerId(playerId: number): void;
+
         sendMessage(message: IClientServerMessage);
         setOnMessage(handler: (client: IWebSocketClient, message: IClientServerMessage) => void): void;
         setOnClose(handler: (client: IWebSocketClient) => void): void;

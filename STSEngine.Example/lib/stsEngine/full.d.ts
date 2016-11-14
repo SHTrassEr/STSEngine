@@ -43,6 +43,17 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    class BaseException {
+        private message;
+        constructor(message?: string);
+        getMessage(): string;
+    }
+}
+declare namespace STSEngine {
+    class NotImplementedException {
+    }
+}
+declare namespace STSEngine {
     interface IAttributeList extends IterableKeyValuePair, ICommitable {
         get(attribute: number, defaultValue?: any): any;
         set(attribute: number, value: any): void;
@@ -61,17 +72,6 @@ declare namespace STSEngine {
     interface IterableKeyValuePair extends Iterable<[number, any]> {
         getList(): [number, any][];
         getIterator(): IterableIterator<[number, any]>;
-    }
-}
-declare namespace STSEngine {
-    class BaseException {
-        private message;
-        constructor(message?: string);
-        getMessage(): string;
-    }
-}
-declare namespace STSEngine {
-    class NotImplementedException {
     }
 }
 declare namespace STSEngine {
@@ -128,8 +128,6 @@ declare namespace STSEngine {
     interface IPlayer extends IObject {
         getName(): string;
         setName(name: string): void;
-        getScore(): number;
-        setScore(score: number): void;
     }
 }
 declare namespace STSEngine {
@@ -138,7 +136,6 @@ declare namespace STSEngine {
         Type = 1,
         Id = 2,
         Name = 3,
-        Score = 4,
     }
 }
 declare namespace STSEngine {
@@ -205,6 +202,40 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    interface IWorld {
+        getServiceList(): IWorldServiceList;
+        getAttributeList(): IWorldAttributeList;
+        getStepNumber(): number;
+        setStepNumber(stepNumber: number): void;
+        increaseStepNumber(): void;
+        getCommandInitializer<T extends IItemInitializer<ICommand>>(): T;
+        getProcessInitializer<T extends IItemInitializer<IProcess>>(): T;
+        getObjectInitializer<T extends IItemInitializer<IObject>>(): T;
+    }
+}
+declare namespace STSEngine {
+    interface IWorldAttributeList extends IterableKeyValuePair {
+        getTickLength(): number;
+        getLastProcessId(): number;
+        setLastProcessId(id: number): any;
+        getLastObjectId(): number;
+        setLastObjectId(id: number): any;
+    }
+}
+declare namespace STSEngine {
+    interface IWorldServiceList {
+        getWorldAttributeList(): IWorldAttributeList;
+        getCommandInitializer(): IItemInitializer<ICommand>;
+        getObjectInitializer(): IItemInitializer<IObject>;
+        getProcessInitializer(): IItemInitializer<IProcess>;
+        getProcessDispatcher(): IProcessDispatcher;
+        getCommandDispatcher(): ICommandDispatcher;
+        getObjectListService(): IObjectListService<IObject>;
+        getProcessListService(): IProcessListService;
+        getPlayerListService(): IObjectListService<IPlayer>;
+    }
+}
+declare namespace STSEngine {
     interface ICommitable {
         commit(): void;
         rollback(): void;
@@ -251,40 +282,6 @@ declare namespace STSEngine {
 declare namespace STSEngine {
     class ServiceAttributeType {
         static LastId: string;
-    }
-}
-declare namespace STSEngine {
-    interface IWorld {
-        getServiceList(): IWorldServiceList;
-        getAttributeList(): IWorldAttributeList;
-        getStepNumber(): number;
-        setStepNumber(stepNumber: number): void;
-        increaseStepNumber(): void;
-        getCommandInitializer<T extends IItemInitializer<ICommand>>(): T;
-        getProcessInitializer<T extends IItemInitializer<IProcess>>(): T;
-        getObjectInitializer<T extends IItemInitializer<IObject>>(): T;
-    }
-}
-declare namespace STSEngine {
-    interface IWorldAttributeList extends IterableKeyValuePair {
-        getTickLength(): number;
-        getLastProcessId(): number;
-        setLastProcessId(id: number): any;
-        getLastObjectId(): number;
-        setLastObjectId(id: number): any;
-    }
-}
-declare namespace STSEngine {
-    interface IWorldServiceList {
-        getWorldAttributeList(): IWorldAttributeList;
-        getCommandInitializer(): IItemInitializer<ICommand>;
-        getObjectInitializer(): IItemInitializer<IObject>;
-        getProcessInitializer(): IItemInitializer<IProcess>;
-        getProcessDispatcher(): IProcessDispatcher;
-        getCommandDispatcher(): ICommandDispatcher;
-        getObjectListService(): IObjectListService<IObject>;
-        getProcessListService(): IProcessListService;
-        getPlayerListService(): IObjectListService<IPlayer>;
     }
 }
 declare namespace STSEngine {
@@ -502,8 +499,6 @@ declare namespace STSEngine {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         getName(): string;
         setName(name: string): void;
-        getScore(): number;
-        setScore(score: number): void;
     }
 }
 declare namespace STSEngine {
@@ -580,59 +575,6 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    class Engine implements IEngine {
-        protected world: IWorld;
-        protected processListService: IProcessListService;
-        protected processDispatcher: IProcessDispatcher;
-        protected commandDispatcher: ICommandDispatcher;
-        protected commandListService: ICommandListService;
-        constructor(world: IWorld, commandListService: ICommandListService);
-        getWorld(): IWorld;
-        step(): void;
-        getCommandList(): ICommand[];
-        protected processCommandList(): void;
-        protected addProcessList(processList: Iterable<IProcess>): void;
-    }
-}
-declare namespace STSEngine {
-    class FilterService<T> implements IFilterService<T> {
-        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): IterableIterator<T>;
-        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
-    }
-}
-declare namespace STSEngine {
-    class GameServer implements IGameServer {
-        protected emptyCommandList: ICommand[];
-        protected engine: IEngine;
-        protected metronome: IMetronome;
-        protected commandLog: ICommand[][];
-        protected timerId: any;
-        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
-        constructor(engine: IEngine);
-        start(): void;
-        getCommandLog(startStepNumber: number): ICommand[][];
-        protected updateWorld(): void;
-        protected getStepNumber(): number;
-        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
-    }
-}
-declare namespace STSEngine {
-    class Metronome implements IMetronome {
-        protected tickLength: number;
-        protected startTime: number;
-        protected pauseStart: number;
-        protected pauseLength: number;
-        protected isPaused: boolean;
-        constructor(tickLength: number);
-        start(startTime?: number): void;
-        getStartTime(): number;
-        pause(): void;
-        resume(): void;
-        getTickLength(): number;
-        getTickCount(): number;
-    }
-}
-declare namespace STSEngine {
     class World implements IWorld {
         protected worldServiceList: IWorldServiceList;
         protected stepNumber: number;
@@ -697,12 +639,67 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    class Engine implements IEngine {
+        protected world: IWorld;
+        protected processListService: IProcessListService;
+        protected processDispatcher: IProcessDispatcher;
+        protected commandDispatcher: ICommandDispatcher;
+        protected commandListService: ICommandListService;
+        constructor(world: IWorld, commandListService: ICommandListService);
+        getWorld(): IWorld;
+        step(): void;
+        getCommandList(): ICommand[];
+        protected processCommandList(): void;
+        protected addProcessList(processList: Iterable<IProcess>): void;
+    }
+}
+declare namespace STSEngine {
+    class FilterService<T> implements IFilterService<T> {
+        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): IterableIterator<T>;
+        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
+    }
+}
+declare namespace STSEngine {
+    class GameServer implements IGameServer {
+        protected emptyCommandList: ICommand[];
+        protected engine: IEngine;
+        protected metronome: IMetronome;
+        protected commandLog: ICommand[][];
+        protected timerId: any;
+        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
+        constructor(engine: IEngine);
+        start(): void;
+        getCommandLog(startStepNumber: number): ICommand[][];
+        protected updateWorld(): void;
+        protected getStepNumber(): number;
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
+    }
+}
+declare namespace STSEngine {
+    class Metronome implements IMetronome {
+        protected tickLength: number;
+        protected startTime: number;
+        protected pauseStart: number;
+        protected pauseLength: number;
+        protected isPaused: boolean;
+        constructor(tickLength: number);
+        start(startTime?: number): void;
+        getStartTime(): number;
+        pause(): void;
+        resume(): void;
+        getTickLength(): number;
+        getTickCount(): number;
+    }
+}
+declare namespace STSEngine {
     interface IWebSocketClient {
         getId(): number;
         getStatus(): WebSocketClientStatus;
         setStatus(status: WebSocketClientStatus): void;
         getSID(): string;
         setSID(sid: string): void;
+        getPlayerId(): number;
+        setPlayerId(playerId: number): void;
         sendMessage(message: IClientServerMessage): any;
         setOnMessage(handler: (client: IWebSocketClient, message: IClientServerMessage) => void): void;
         setOnClose(handler: (client: IWebSocketClient) => void): void;
@@ -738,6 +735,7 @@ declare namespace STSEngine {
 declare namespace STSEngine {
     class WebSocketClient implements IWebSocketClient {
         protected id: number;
+        protected playerId: number;
         protected status: WebSocketClientStatus;
         protected client: any;
         protected sid: string;
@@ -754,6 +752,8 @@ declare namespace STSEngine {
         setStatus(status: WebSocketClientStatus): void;
         getSID(): string;
         setSID(sid: string): void;
+        getPlayerId(): number;
+        setPlayerId(playerId: number): void;
         sendMessage(attr: IClientServerMessage): void;
         setOnMessage(handler: (client: IWebSocketClient, message: IClientServerMessage) => void): void;
         setOnClose(handler: (client: IWebSocketClient) => void): void;
@@ -773,7 +773,7 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    class WebSocketGameServer implements IWebSocketGameServer {
+    abstract class WebSocketGameServer implements IWebSocketGameServer {
         protected webSocketServer: IWebSocketServer;
         protected world: IWorld;
         protected commandListService: ICommandListService;
@@ -787,9 +787,10 @@ declare namespace STSEngine {
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void;
         protected createStepMessage(currentStepNumber: number, commandList: ICommand[]): ClientServerMessageStep;
         protected onClientConnected(client: IWebSocketClient): void;
-        protected registerNewPlayer(newPlayerId: number): void;
+        protected abstract getPlayerId(sid: string): any;
         protected onClientMessage(webSocketClient: IWebSocketClient, message: IClientServerMessage): void;
-        protected processCommandList(message: ClientServerMessageCommandList): void;
+        protected processCommandList(webSocketClient: IWebSocketClient, message: ClientServerMessageCommandList): void;
+        protected initCommandList(webSocketClient: IWebSocketClient, commandList: Iterable<ICommand>): Iterable<ICommand>;
         start(): void;
     }
 }
@@ -817,16 +818,9 @@ declare namespace STSEngine {
 }
 declare namespace STSEngine {
     interface IPlayerAction {
-        getPlayerId(): number;
         setOnAction(handler: () => void): any;
         getCommandKeyValuePairList(): [number, any][][];
         clear(): void;
-    }
-}
-declare namespace STSEngine {
-    interface IWebSocketGameClient {
-        start(): void;
-        getWorld(): IWorld;
     }
 }
 declare namespace STSEngine {
@@ -836,12 +830,17 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    interface IWebSocketGameClient {
+        getWorld(): IWorld;
+        getPlayerId(): number;
+        setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void;
+    }
+}
+declare namespace STSEngine {
     class PlayerAction implements IPlayerAction {
         protected commandListService: ICommandListService;
-        protected playerId: number;
         protected onActionHandler: (playerAction: IPlayerAction) => void;
-        constructor(playerId: number);
-        getPlayerId(): number;
+        constructor();
         getCommandKeyValuePairList(): [number, any][][];
         clear(): void;
         setOnAction(handler: (playerAction: IPlayerAction) => void): void;
@@ -849,7 +848,25 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    class WebSocketGameClient {
+    abstract class View {
+        protected rootElement: HTMLDivElement;
+        protected worldAttributeList: IWorldAttributeList;
+        protected objectListService: IObjectListService<IObject>;
+        protected processListService: IProcessListService;
+        protected isStarted: boolean;
+        protected world: IWorld;
+        protected playerId: number;
+        constructor(rootElement: HTMLDivElement, world: IWorld);
+        setPlayerId(playerId: number): void;
+        protected clearHtmlElement(element: HTMLElement): void;
+        protected draw(): void;
+        protected abstract refresh(): void;
+        start(): void;
+        stop(): void;
+    }
+}
+declare namespace STSEngine {
+    class WebSocketGameClient implements IWebSocketGameClient {
         protected commandListService: ICommandListService;
         protected socket: WebSocket;
         protected sid: string;
@@ -857,8 +874,11 @@ declare namespace STSEngine {
         protected playerAction: IPlayerAction;
         protected playerId: number;
         protected clientSeverMessageInitializer: IClientServerMessageInitializer;
+        protected onConnectedHandler: (webSocketClient: IWebSocketGameClient) => void;
         protected worldServiceList: IWorldServiceList;
-        constructor(socket: WebSocket, playerAction: IPlayerAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer);
+        constructor(socket: WebSocket, sid: string, playerAction: IPlayerAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer);
+        getPlayerId(): number;
+        setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void;
         protected commandInitializator(attr: Iterable<[number, any]>): ICommand;
         protected init(): void;
         protected createWorld(): IWorld;
@@ -874,21 +894,5 @@ declare namespace STSEngine {
         protected onClose(ev: CloseEvent): void;
         protected onError(ev: Event): void;
         protected sendMessage(message: IClientServerMessage): void;
-    }
-}
-declare namespace STSEngine {
-    abstract class View {
-        protected rootElement: HTMLDivElement;
-        protected worldAttributeList: IWorldAttributeList;
-        protected objectListService: IObjectListService<IObject>;
-        protected processListService: IProcessListService;
-        protected isStarted: boolean;
-        protected world: IWorld;
-        constructor(rootElement: HTMLDivElement, world: IWorld);
-        protected clearHtmlElement(element: HTMLElement): void;
-        protected draw(): void;
-        protected abstract refresh(): void;
-        start(): void;
-        stop(): void;
     }
 }

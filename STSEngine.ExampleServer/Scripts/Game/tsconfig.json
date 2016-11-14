@@ -10,6 +10,7 @@
   },
 
   "files": [
+    "../typings/jquery/jquery.d.ts",
     "../typings/pixi.js/pixi.js.d.ts",
     "../typings/STSEngine/client.d.ts",
     "../typings/STSEngine.Example/client.d.ts",

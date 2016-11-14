@@ -11,6 +11,7 @@
         protected isStarted: boolean;
 
         protected world: IWorld;
+        protected playerId: number;
 
         constructor(rootElement: HTMLDivElement, world: IWorld) {
             this.world = world;
@@ -24,6 +25,10 @@
             this.processListService = worldServiceList.getProcessListService();
 
             this.isStarted = false;
+        }
+
+        public setPlayerId(playerId: number) {
+            this.playerId = playerId;
         }
 
         protected clearHtmlElement(element: HTMLElement) {
@@ -49,6 +54,5 @@
         public stop(): void {
             this.isStarted = false;
         }
-
     }
 }

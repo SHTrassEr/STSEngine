@@ -325,6 +325,19 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        Example.Point = Point;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class ObjectRectangle extends STSEngine.ObjectImpl {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -446,19 +459,6 @@ var STSEngine;
             }
         }
         Example.ObjectPlayer = ObjectPlayer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class Point {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-            }
-        }
-        Example.Point = Point;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -907,6 +907,20 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        (function (MoveDirection) {
+            MoveDirection[MoveDirection["Unknow"] = 0] = "Unknow";
+            MoveDirection[MoveDirection["Up"] = 1] = "Up";
+            MoveDirection[MoveDirection["Right"] = 2] = "Right";
+            MoveDirection[MoveDirection["Down"] = 3] = "Down";
+            MoveDirection[MoveDirection["Left"] = 4] = "Left";
+        })(Example.MoveDirection || (Example.MoveDirection = {}));
+        var MoveDirection = Example.MoveDirection;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         (function (ObjectAttributeType) {
             ObjectAttributeType[ObjectAttributeType["PlayerId"] = 50] = "PlayerId";
             ObjectAttributeType[ObjectAttributeType["Position"] = 51] = "Position";
@@ -928,20 +942,6 @@ var STSEngine;
             ObjectType[ObjectType["Bullet"] = 1] = "Bullet";
         })(Example.ObjectType || (Example.ObjectType = {}));
         var ObjectType = Example.ObjectType;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        (function (MoveDirection) {
-            MoveDirection[MoveDirection["Unknow"] = 0] = "Unknow";
-            MoveDirection[MoveDirection["Up"] = 1] = "Up";
-            MoveDirection[MoveDirection["Right"] = 2] = "Right";
-            MoveDirection[MoveDirection["Down"] = 3] = "Down";
-            MoveDirection[MoveDirection["Left"] = 4] = "Left";
-        })(Example.MoveDirection || (Example.MoveDirection = {}));
-        var MoveDirection = Example.MoveDirection;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -974,20 +974,15 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class PlayerAction {
-            constructor(playerId) {
+        class PlayerAction extends STSEngine.PlayerAction {
+            constructor() {
+                super();
                 this.commandInitializer = new Example.CommandInitializer();
-                this.commandListService = new STSEngine.CommandListService();
-                this.playerId = playerId;
-            }
-            getPlayerId() {
-                return this.playerId;
             }
             commandInitializator(attr) {
                 return new STSEngine.Command(new STSEngine.AttributeList(), attr);
             }
             addCommand(command) {
-                command.setInitiatorId(this.playerId);
                 this.commandListService.add(command);
                 this.onAction();
             }
@@ -1044,20 +1039,6 @@ var STSEngine;
                 command.setObjectId(objectId);
                 this.addCommand(command);
             }
-            getCommandKeyValuePairList() {
-                return this.commandListService.getCommandKeyValuePairList();
-            }
-            clear() {
-                this.commandListService.clear();
-            }
-            setOnAction(handler) {
-                this.onActionHandler = handler;
-            }
-            onAction() {
-                if (this.onActionHandler) {
-                    this.onActionHandler(this);
-                }
-            }
         }
         Example.PlayerAction = PlayerAction;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
@@ -1067,11 +1048,11 @@ var STSEngine;
     var Example;
     (function (Example) {
         class WebSocketGameClient extends STSEngine.WebSocketGameClient {
-            constructor(socket, playerAction) {
+            constructor(socket, sid, playerAction) {
                 let clientServerMessageInitializer = new STSEngine.ClientServerMessageInitializer();
                 let worldAttributeList = new Example.WorldAttributeList();
                 let worldServiceList = new Example.WorldServiceList(worldAttributeList);
-                super(socket, playerAction, worldServiceList, clientServerMessageInitializer);
+                super(socket, sid, playerAction, worldServiceList, clientServerMessageInitializer);
             }
         }
         Example.WebSocketGameClient = WebSocketGameClient;
@@ -1082,9 +1063,8 @@ var STSEngine;
     var Example;
     (function (Example) {
         class View extends STSEngine.View {
-            constructor(rootElement, world, playerId) {
+            constructor(rootElement, world) {
                 super(rootElement, world);
-                this.playerId = playerId;
                 this.cellSize = 8;
                 this.width = rootElement.clientWidth;
                 this.height = 59 * this.cellSize;

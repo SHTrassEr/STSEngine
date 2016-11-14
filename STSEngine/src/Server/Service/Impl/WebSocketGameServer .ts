@@ -1,15 +1,16 @@
 ﻿namespace STSEngine {
 
-    export class WebSocketGameServer implements IWebSocketGameServer {
+    export abstract class WebSocketGameServer implements IWebSocketGameServer {
 
         protected webSocketServer: IWebSocketServer;
         protected world: IWorld;
         protected commandListService: ICommandListService;
         protected gameServer: IGameServer;
         protected worldSettings: IWorldServiceList;
-
         protected clientSeverMessageInitializer: IClientServerMessageInitializer;
         protected commandInitializer: IItemInitializer<ICommand>;
+
+
 
         constructor(server: any, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
             this.webSocketServer = new WebSocketServer(server, clientSeverMessageInitializer);
@@ -47,8 +48,8 @@
         }
 
         protected onClientConnected(client: IWebSocketClient): void {
-            let clientId = parseInt(client.getSID());
-            this.registerNewPlayer(clientId);
+            let clientId = this.getPlayerId(client.getSID());
+            client.setPlayerId(clientId);
             let messageInit = new ClientServerMessageInit();
             messageInit.setPlayerId(clientId);
             client.sendMessage(messageInit);
@@ -65,19 +66,26 @@
             client.sendMessage(messageStepList);
         }
 
-        protected registerNewPlayer(newPlayerId: number) {
-
-        }
+        protected abstract getPlayerId(sid: string);
 
 
         protected onClientMessage(webSocketClient: IWebSocketClient, message: IClientServerMessage): void {
             if (message instanceof ClientServerMessageCommandList) {
-                this.processCommandList(message);
+                this.processCommandList(webSocketClient, message);
             }
         }
 
-        protected processCommandList(message: ClientServerMessageCommandList) {
-            this.commandListService.setCommandList(this.commandInitializer.createList(message.getCommandList()));
+        protected processCommandList(webSocketClient: IWebSocketClient, message: ClientServerMessageCommandList) {
+            let commandList = this.commandInitializer.createList(message.getCommandList());
+            this.commandListService.setCommandList(this.initCommandList(webSocketClient, commandList));
+        } 
+
+        protected * initCommandList(webSocketClient: IWebSocketClient, commandList: Iterable<ICommand>): Iterable<ICommand> {
+            var playerId = webSocketClient.getPlayerId();
+            for (let command of commandList) {
+                command.setInitiatorId(playerId);
+                yield command;
+            }
         }
 
         public start(): void {

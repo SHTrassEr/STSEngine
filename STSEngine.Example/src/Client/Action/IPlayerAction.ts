@@ -1,11 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IPlayerAction {
-        getPlayerId(): number;
-
-        setOnAction(handler: () => void);
-        getCommandKeyValuePairList(): [number, any][][];
-        clear(): void;
+    export interface IPlayerAction extends STSEngine.IPlayerAction {
 
         startMoveRight(objectId: number): void;
         startMoveLeft(objectId: number): void;

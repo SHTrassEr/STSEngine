@@ -37,6 +37,7 @@
     <TypeScriptCompile Include="Scripts\Game\app.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\pixi.js\pixi.js.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\STSEngine.Example\client.d.ts" />
@@ -93,6 +94,7 @@
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\typings\" />
     <Folder Include="Scripts\typings\express\" />
+    <Folder Include="Scripts\typings\jquery\" />
     <Folder Include="Scripts\typings\node\" />
     <Folder Include="Scripts\typings\pixi.js\" />
     <Folder Include="Scripts\typings\STSEngine.Example\" />
