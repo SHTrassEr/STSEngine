@@ -60,19 +60,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Point {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-            }
-        }
-        Example.Point = Point;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class Command extends STSEngine.Command {
         }
         Example.Command = Command;
@@ -456,6 +443,19 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        Example.Point = Point;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class Item extends STSEngine.Item {
         }
         Example.Item = Item;
@@ -624,6 +624,125 @@ var STSEngine;
     (function (ItemType) {
         ItemType.Player = ItemType.getNewTypeId();
     })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CollisionService {
+            constructor(worldAttributeList, itemListService, clientListService) {
+                this.clientListService = clientListService;
+                this.worldAttributeList = worldAttributeList;
+                this.itemListService = itemListService;
+            }
+            processCollision(moveItem, newPosition) {
+                if (moveItem instanceof Example.ItemPlayer) {
+                    this.processCollisionObjectPlayer(moveItem, newPosition);
+                }
+                else if (moveItem instanceof Example.ItemBullet) {
+                    this.processCollisionObjectBullet(moveItem, newPosition);
+                }
+            }
+            processCollisionObjectPlayer(moveItem, newPosition) {
+                this.processCollisionObjectRectangleWorld(moveItem, newPosition);
+                let objectList = this.itemListService.getIterator();
+                for (var o of objectList) {
+                    if (moveItem.getId() != o.getId()) {
+                        if (o instanceof Example.ItemPlayer) {
+                            this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
+                        }
+                    }
+                }
+                moveItem.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectBullet(moveItem, newPosition) {
+                if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
+                    this.itemListService.remove(moveItem.getId());
+                }
+                let objectList = this.itemListService.getIterator();
+                for (var o of objectList) {
+                    if (moveItem.getId() != o.getId()) {
+                        if (o instanceof Example.ItemPlayer) {
+                            this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
+                        }
+                    }
+                }
+                moveItem.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o) {
+                let position = moveItem.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveItemSize = moveItem.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                        if (position[0] < newPosition[0]) {
+                            newPosition[0] = oPosition[0] - moveItemSize[0];
+                            return true;
+                        }
+                        else if (position[0] > newPosition[0]) {
+                            newPosition[0] = oPosition[0] + oSize[0];
+                            return true;
+                        }
+                        else if (position[1] < newPosition[1]) {
+                            newPosition[1] = oPosition[1] - moveItemSize[1];
+                            return true;
+                        }
+                        else if (position[1] > newPosition[1]) {
+                            newPosition[1] = oPosition[1] + oSize[1];
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o) {
+                let position = moveItem.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveItemSize = moveItem.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                        this.itemListService.remove(moveItem.getId());
+                        let playerId = moveItem.getPlayerId();
+                        let client = this.clientListService.getTyped(playerId, Example.ClientActive);
+                        client.setScore(client.getScore() + 10);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectRectangleWorld(moveItem, newPosition) {
+                if (newPosition[0] < 0) {
+                    newPosition[0] = 0;
+                    return true;
+                }
+                if (newPosition[1] < 0) {
+                    newPosition[1] = 0;
+                    return true;
+                }
+                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
+                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
+                    return true;
+                }
+                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
+                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
+                    return true;
+                }
+                return false;
+            }
+            isRectangleObjectCollision(pos1, size1, pos2, size2) {
+                if ((pos2[0] + size2[0] <= pos1[0]) ||
+                    (pos2[1] + size2[1] <= pos1[1]) ||
+                    (pos2[0] >= pos1[0] + size1[0]) ||
+                    (pos2[1] >= pos1[1] + size1[1])) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        Example.CollisionService = CollisionService;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -902,125 +1021,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class CollisionService {
-            constructor(worldAttributeList, itemListService, clientListService) {
-                this.clientListService = clientListService;
-                this.worldAttributeList = worldAttributeList;
-                this.itemListService = itemListService;
-            }
-            processCollision(moveItem, newPosition) {
-                if (moveItem instanceof Example.ItemPlayer) {
-                    this.processCollisionObjectPlayer(moveItem, newPosition);
-                }
-                else if (moveItem instanceof Example.ItemBullet) {
-                    this.processCollisionObjectBullet(moveItem, newPosition);
-                }
-            }
-            processCollisionObjectPlayer(moveItem, newPosition) {
-                this.processCollisionObjectRectangleWorld(moveItem, newPosition);
-                let objectList = this.itemListService.getIterator();
-                for (var o of objectList) {
-                    if (moveItem.getId() != o.getId()) {
-                        if (o instanceof Example.ItemPlayer) {
-                            this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
-                        }
-                    }
-                }
-                moveItem.setPositionPrecise(newPosition);
-            }
-            processCollisionObjectBullet(moveItem, newPosition) {
-                if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
-                    this.itemListService.remove(moveItem.getId());
-                }
-                let objectList = this.itemListService.getIterator();
-                for (var o of objectList) {
-                    if (moveItem.getId() != o.getId()) {
-                        if (o instanceof Example.ItemPlayer) {
-                            this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
-                        }
-                    }
-                }
-                moveItem.setPositionPrecise(newPosition);
-            }
-            processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o) {
-                let position = moveItem.getPositionPrecise();
-                let oPosition = o.getPositionPrecise();
-                let moveItemSize = moveItem.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
-                        if (position[0] < newPosition[0]) {
-                            newPosition[0] = oPosition[0] - moveItemSize[0];
-                            return true;
-                        }
-                        else if (position[0] > newPosition[0]) {
-                            newPosition[0] = oPosition[0] + oSize[0];
-                            return true;
-                        }
-                        else if (position[1] < newPosition[1]) {
-                            newPosition[1] = oPosition[1] - moveItemSize[1];
-                            return true;
-                        }
-                        else if (position[1] > newPosition[1]) {
-                            newPosition[1] = oPosition[1] + oSize[1];
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-            processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o) {
-                let position = moveItem.getPositionPrecise();
-                let oPosition = o.getPositionPrecise();
-                let moveItemSize = moveItem.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
-                        this.itemListService.remove(moveItem.getId());
-                        let playerId = moveItem.getPlayerId();
-                        let client = this.clientListService.getTyped(playerId, Example.ClientActive);
-                        client.setScore(client.getScore() + 10);
-                        return true;
-                    }
-                }
-                return false;
-            }
-            processCollisionObjectRectangleWorld(moveItem, newPosition) {
-                if (newPosition[0] < 0) {
-                    newPosition[0] = 0;
-                    return true;
-                }
-                if (newPosition[1] < 0) {
-                    newPosition[1] = 0;
-                    return true;
-                }
-                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
-                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
-                    return true;
-                }
-                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
-                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
-                    return true;
-                }
-                return false;
-            }
-            isRectangleObjectCollision(pos1, size1, pos2, size2) {
-                if ((pos2[0] + size2[0] <= pos1[0]) ||
-                    (pos2[1] + size2[1] <= pos1[1]) ||
-                    (pos2[0] >= pos1[0] + size1[0]) ||
-                    (pos2[1] >= pos1[1] + size1[1])) {
-                    return false;
-                }
-                return true;
-            }
-        }
-        Example.CollisionService = CollisionService;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class WorldAttributeList extends STSEngine.WorldAttributeList {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -1184,21 +1184,6 @@ var STSEngine;
             }
         }
         Example.PlayerAction = PlayerAction;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
-            constructor(socket, sid, playerAction) {
-                let clientServerMessageInitializer = new STSEngine.ClientServerMessageInitializer();
-                let worldAttributeList = new Example.WorldAttributeList();
-                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
-                super(socket, sid, playerAction, worldServiceList, clientServerMessageInitializer);
-            }
-        }
-        Example.WebSocketGameClient = WebSocketGameClient;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -1372,5 +1357,20 @@ var STSEngine;
             }
         }
         Example.View = View;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
+            constructor(socket, sid, playerAction) {
+                let clientServerMessageInitializer = new STSEngine.ClientServerMessageInitializer();
+                let worldAttributeList = new Example.WorldAttributeList();
+                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
+                super(socket, sid, playerAction, worldServiceList, clientServerMessageInitializer);
+            }
+        }
+        Example.WebSocketGameClient = WebSocketGameClient;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));

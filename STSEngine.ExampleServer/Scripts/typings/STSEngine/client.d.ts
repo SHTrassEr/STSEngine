@@ -86,11 +86,76 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    interface IClientServerMessage extends IEntity {
+    interface IItem extends IEntity {
+        getId(): number;
+        setId(id: number): void;
+        getType(): number;
+        setType(type: number): void;
+        getAttributeList(): IAttributeList;
     }
 }
 declare namespace STSEngine {
-    interface IClientServerMessageInitializer extends IEntityInitializer<IClientServerMessage> {
+    interface IItemInitializer extends IEntityInitializer<IEntity> {
+    }
+}
+declare namespace STSEngine {
+    interface IItemListService extends IEntityListService<IItem> {
+    }
+}
+declare namespace STSEngine {
+    interface IProcess extends IterableKeyValuePair {
+        getId(): number;
+        setId(id: number): void;
+        getType(): number;
+        setType(processType: number): void;
+        getProcessExecCount(): number;
+        setProcessExecCount(execCount: number): void;
+        getProcessStatus(): ProcessStatus;
+        setProcessStatus(processStatus: ProcessStatus): void;
+        getAttributeList(): IAttributeList;
+    }
+}
+declare namespace STSEngine {
+    interface IProcessDispatcher {
+        init(process: IProcess): void;
+        execute(process: IProcess): void;
+        finish(process: IProcess): void;
+    }
+}
+declare namespace STSEngine {
+    interface IProcessHandler {
+        init(process: IProcess): void;
+        execute(process: IProcess): void;
+        finish(process: IProcess): void;
+    }
+}
+declare namespace STSEngine {
+    interface IProcessInitializer extends IEntityInitializer<IProcess> {
+    }
+}
+declare namespace STSEngine {
+    interface IProcessListService extends IFilterable<IProcess> {
+        init(objectList: Iterable<Iterable<[number, any]>>): void;
+        getProcessList(): IProcess[];
+        add(process: IProcess): void;
+        removeFinished(): void;
+        clear(): void;
+        getIterator(): IterableIterator<IProcess>;
+        getList(): [number, any][][];
+        setList(object: Iterable<IProcess>, clear?: boolean): void;
+    }
+}
+declare namespace STSEngine {
+    enum ProcessStatus {
+        Unknown = 0,
+        Init = 1,
+        Executing = 2,
+        Finished = 3,
+    }
+}
+declare namespace STSEngine {
+    enum ProcessType {
+        Unknown = 0,
     }
 }
 declare namespace STSEngine {
@@ -189,75 +254,11 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    interface IProcess extends IterableKeyValuePair {
-        getId(): number;
-        setId(id: number): void;
-        getType(): number;
-        setType(processType: number): void;
-        getProcessExecCount(): number;
-        setProcessExecCount(execCount: number): void;
-        getProcessStatus(): ProcessStatus;
-        setProcessStatus(processStatus: ProcessStatus): void;
-        getAttributeList(): IAttributeList;
+    interface IClientServerMessage extends IEntity {
     }
 }
 declare namespace STSEngine {
-    interface IProcessDispatcher {
-        init(process: IProcess): void;
-        execute(process: IProcess): void;
-        finish(process: IProcess): void;
-    }
-}
-declare namespace STSEngine {
-    interface IProcessHandler {
-        init(process: IProcess): void;
-        execute(process: IProcess): void;
-        finish(process: IProcess): void;
-    }
-}
-declare namespace STSEngine {
-    interface IProcessInitializer extends IEntityInitializer<IProcess> {
-    }
-}
-declare namespace STSEngine {
-    interface IProcessListService extends IFilterable<IProcess> {
-        init(objectList: Iterable<Iterable<[number, any]>>): void;
-        getProcessList(): IProcess[];
-        add(process: IProcess): void;
-        removeFinished(): void;
-        clear(): void;
-        getIterator(): IterableIterator<IProcess>;
-        getList(): [number, any][][];
-        setList(object: Iterable<IProcess>, clear?: boolean): void;
-    }
-}
-declare namespace STSEngine {
-    enum ProcessStatus {
-        Init = 0,
-        Executing = 1,
-        Finished = 2,
-    }
-}
-declare namespace STSEngine {
-    enum ProcessType {
-        Unknown = 0,
-    }
-}
-declare namespace STSEngine {
-    interface IItem extends IEntity {
-        getId(): number;
-        setId(id: number): void;
-        getType(): number;
-        setType(type: number): void;
-        getAttributeList(): IAttributeList;
-    }
-}
-declare namespace STSEngine {
-    interface IItemInitializer extends IEntityInitializer<IEntity> {
-    }
-}
-declare namespace STSEngine {
-    interface IItemListService extends IEntityListService<IItem> {
+    interface IClientServerMessageInitializer extends IEntityInitializer<IClientServerMessage> {
     }
 }
 declare namespace STSEngine {
@@ -436,110 +437,97 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    abstract class ClientServerMessage extends Entity implements IClientServerMessage {
+    class Item extends Entity implements IItem {
     }
-    module ClientServerMessageType {
+    module ItemType {
         function getNewTypeId(): number;
     }
 }
 declare namespace STSEngine {
-    class ClientServerMessageCommandList extends ClientServerMessage {
-        private _commandList;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        setCommandList(commandList: [number, any][][]): void;
-        getCommandList(): [number, any][][];
-    }
-    module ClientServerMessageType {
-        const CommandList: number;
+    abstract class ItemInitializer extends EntityInitializer<IItem> implements IItemInitializer {
     }
 }
 declare namespace STSEngine {
-    class ClientServerMessageInit extends ClientServerMessage {
-        private _playerId;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        setPlayerId(playerId: number): void;
-        getPlayerId(): number;
-    }
-    module ClientServerMessageType {
-        const Init: number;
+    class ItemListService extends EntityListService<IItem> implements IItemListService {
     }
 }
 declare namespace STSEngine {
-    class ClientServerMessageInitializer extends EntityInitializer<IClientServerMessage> implements IClientServerMessageInitializer {
-        createByType(type: number, attr?: Iterable<[number, any]>): IClientServerMessage;
-        createCommandList(attr?: Iterable<[number, any]>): ClientServerMessageCommandList;
-        createRequestAuthentication(attr?: Iterable<[number, any]>): ClientServerMessageRequestAuthentication;
-        createResponseAuthentication(attr?: Iterable<[number, any]>): ClientServerMessageResponseAuthentication;
-        createStep(attr?: Iterable<[number, any]>): ClientServerMessageStep;
-        createInit(attr?: Iterable<[number, any]>): ClientServerMessageInit;
-        createStepList(attr?: Iterable<[number, any]>): ClientServerMessageStepList;
-        createWorldFullInfo(attr?: Iterable<[number, any]>): ClientServerMessageWorldFullInfo;
-        protected createAttributeList(): IAttributeList;
+    class Process extends Entity implements IProcess {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        private _processStatus;
+        private _execCount;
+        getProcessStatus(): ProcessStatus;
+        setProcessStatus(processStatus: ProcessStatus): void;
+        getProcessExecCount(): number;
+        setProcessExecCount(execCount: number): void;
+    }
+    module ProcessType {
+        function getNewTypeId(): number;
     }
 }
 declare namespace STSEngine {
-    class ClientServerMessageRequestAuthentication extends ClientServerMessage {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-    module ClientServerMessageType {
-        const RequestAuthentication: number;
-    }
-}
-declare namespace STSEngine {
-    class ClientServerMessageResponseAuthentication extends ClientServerMessage {
-        private _sid;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        setSID(sid: string): void;
-        getSID(): string;
-    }
-    module ClientServerMessageType {
-        const ResponseAuthentication: number;
+    class ProcessDispatcher implements IProcessDispatcher {
+        protected processHandlerList: IProcessHandler[];
+        execute(process: IProcess): void;
+        init(process: IProcess): void;
+        finish(process: IProcess): void;
+        protected getProcessHandler(process: IProcess): IProcessHandler;
     }
 }
 declare namespace STSEngine {
-    class ClientServerMessageStep extends ClientServerMessage {
-        private _commandList;
-        private _stepNumber;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        setCommandList(commandList: ICommand[]): void;
-        getCommandList(): [number, any][][];
-        getStepNumber(): number;
-        setStepNumber(stepNumber: number): void;
-    }
-    module ClientServerMessageType {
-        const Step: number;
-    }
-}
-declare namespace STSEngine {
-    class ClientServerMessageStepList extends ClientServerMessage {
-        private _stepList;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        setStepList(stepList: IEntity[]): void;
-        getStepList(): [number, any][][];
-    }
-    module ClientServerMessageType {
-        const StepList: number;
+    class ProcessHandler implements IProcessHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        init(process: IProcess): void;
+        execute(process: IProcess): void;
+        finish(process: IProcess): void;
+        protected initProcess(process: IProcess): void;
+        protected executeProcess(process: IProcess): void;
+        protected finishProcess(process: IProcess): void;
+        protected isValidProcessType(command: IProcess): boolean;
+        protected startProcess(process: IProcess): void;
     }
 }
 declare namespace STSEngine {
-    class ClientServerMessageWorldFullInfo extends ClientServerMessage {
-        private _worldAttributeList;
-        private _clientListService;
-        private _itemListService;
-        private _processListService;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        setWorld(world: IWorld): void;
-        setWorldAttributeList(worldAttributeList: IWorldAttributeList): void;
-        getWorldAttributeList(): [number, any][];
-        setClientListService(clientListService: IClientListService): void;
-        getClientListService(): [number, any][][];
-        setItemListService(itemListService: IItemListService): void;
-        getItemListService(): [number, any][][];
-        setProcessListService(processListService: IProcessListService): void;
-        getProcessListService(): [number, any][][];
+    abstract class ProcessInitializer extends EntityInitializer<IProcess> implements IProcessInitializer {
     }
-    module ClientServerMessageType {
-        const WorldFullInfo: number;
+}
+declare namespace STSEngine {
+    class ProcessListService implements IProcessListService {
+        protected processList: IProcess[];
+        protected filterService: IFilterService<IProcess>;
+        constructor();
+        init(processList: Iterable<IProcess>): void;
+        getProcessList(): IProcess[];
+        add(process: IProcess): void;
+        removeFinished(): void;
+        clear(): void;
+        getIterator(): IterableIterator<IProcess>;
+        getList(): [number, any][][];
+        setList(entityList: Iterable<IProcess>, clear?: boolean): void;
+        getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess>;
+        getFirst(condition: (item: IProcess) => boolean): IProcess;
+    }
+}
+declare namespace STSEngine {
+    class ProcessListServiceCommitable implements IProcessListService, ICommitable {
+        protected processList: IProcess[];
+        protected filterService: IFilterService<IProcess>;
+        protected firstUncommitedIndex: number;
+        constructor();
+        getProcessList(): IProcess[];
+        add(process: IProcess): void;
+        init(processList: Iterable<IProcess>): void;
+        removeFinished(): void;
+        clear(): void;
+        getIterator(): IterableIterator<IProcess>;
+        getList(): [number, any][][];
+        setList(processList: Iterable<IProcess>, clear?: boolean): void;
+        commit(): void;
+        rollback(): void;
+        isDirty(): boolean;
+        getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess>;
+        getFirst(condition: (item: IProcess) => boolean): IProcess;
     }
 }
 declare namespace STSEngine {
@@ -673,104 +661,110 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    class Process extends Entity implements IProcess {
+    abstract class ClientServerMessage extends Entity implements IClientServerMessage {
+    }
+    module ClientServerMessageType {
+        function getNewTypeId(): number;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageCommandList extends ClientServerMessage {
+        private _commandList;
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        private _processStatus;
-        private _execCount;
-        getProcessStatus(): ProcessStatus;
-        setProcessStatus(processStatus: ProcessStatus): void;
-        getProcessExecCount(): number;
-        setProcessExecCount(execCount: number): void;
+        setCommandList(commandList: [number, any][][]): void;
+        getCommandList(): [number, any][][];
     }
-    module ProcessType {
-        function getNewTypeId(): number;
+    module ClientServerMessageType {
+        const CommandList: number;
     }
 }
 declare namespace STSEngine {
-    class ProcessDispatcher implements IProcessDispatcher {
-        protected processHandlerList: IProcessHandler[];
-        execute(process: IProcess): void;
-        init(process: IProcess): void;
-        finish(process: IProcess): void;
-        protected getProcessHandler(process: IProcess): IProcessHandler;
-    }
-}
-declare namespace STSEngine {
-    class ProcessHandler implements IProcessHandler {
-        protected worldServiceList: IWorldServiceList;
-        constructor(worldServiceList: IWorldServiceList);
-        init(process: IProcess): void;
-        execute(process: IProcess): void;
-        finish(process: IProcess): void;
-        protected initProcess(process: IProcess): void;
-        protected executeProcess(process: IProcess): void;
-        protected finishProcess(process: IProcess): void;
-        protected isValidProcessType(command: IProcess): boolean;
-        protected startProcess(process: IProcess): void;
-    }
-}
-declare namespace STSEngine {
-    abstract class ProcessInitializer extends EntityInitializer<IProcess> implements IProcessInitializer {
-    }
-}
-declare namespace STSEngine {
-    class ProcessListService implements IProcessListService {
-        protected processList: IProcess[];
-        protected filterService: IFilterService<IProcess>;
-        constructor();
-        init(processList: Iterable<IProcess>): void;
-        getProcessList(): IProcess[];
-        add(process: IProcess): void;
-        removeFinished(): void;
-        clear(): void;
-        getIterator(): IterableIterator<IProcess>;
-        getList(): [number, any][][];
-        setList(entityList: Iterable<IProcess>, clear?: boolean): void;
-        getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess>;
-        getFirst(condition: (item: IProcess) => boolean): IProcess;
-    }
-}
-declare namespace STSEngine {
-    class ProcessListServiceCommitable implements IProcessListService, ICommitable {
-        protected processList: IProcess[];
-        protected filterService: IFilterService<IProcess>;
-        protected firstUncommitedIndex: number;
-        constructor();
-        getProcessList(): IProcess[];
-        add(process: IProcess): void;
-        init(processList: Iterable<IProcess>): void;
-        removeFinished(): void;
-        clear(): void;
-        getIterator(): IterableIterator<IProcess>;
-        getList(): [number, any][][];
-        setList(processList: Iterable<IProcess>, clear?: boolean): void;
-        commit(): void;
-        rollback(): void;
-        isDirty(): boolean;
-        getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess>;
-        getFirst(condition: (item: IProcess) => boolean): IProcess;
-    }
-}
-declare namespace STSEngine {
-    class Item extends Entity implements IItem {
-    }
-    module ItemType {
-        function getNewTypeId(): number;
-    }
-}
-declare namespace STSEngine {
-    abstract class ItemInitializer extends EntityInitializer<IItem> implements IItemInitializer {
-    }
-}
-declare namespace STSEngine {
-    class ItemListService extends EntityListService<IItem> implements IItemListService {
-    }
-}
-declare namespace STSEngine {
-    interface IWebSocketGameClient {
-        getWorld(): IWorld;
+    class ClientServerMessageInit extends ClientServerMessage {
+        private _playerId;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        setPlayerId(playerId: number): void;
         getPlayerId(): number;
-        setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void;
+    }
+    module ClientServerMessageType {
+        const Init: number;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageInitializer extends EntityInitializer<IClientServerMessage> implements IClientServerMessageInitializer {
+        createByType(type: number, attr?: Iterable<[number, any]>): IClientServerMessage;
+        createCommandList(attr?: Iterable<[number, any]>): ClientServerMessageCommandList;
+        createRequestAuthentication(attr?: Iterable<[number, any]>): ClientServerMessageRequestAuthentication;
+        createResponseAuthentication(attr?: Iterable<[number, any]>): ClientServerMessageResponseAuthentication;
+        createStep(attr?: Iterable<[number, any]>): ClientServerMessageStep;
+        createInit(attr?: Iterable<[number, any]>): ClientServerMessageInit;
+        createStepList(attr?: Iterable<[number, any]>): ClientServerMessageStepList;
+        createWorldFullInfo(attr?: Iterable<[number, any]>): ClientServerMessageWorldFullInfo;
+        protected createAttributeList(): IAttributeList;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageRequestAuthentication extends ClientServerMessage {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+    }
+    module ClientServerMessageType {
+        const RequestAuthentication: number;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageResponseAuthentication extends ClientServerMessage {
+        private _sid;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        setSID(sid: string): void;
+        getSID(): string;
+    }
+    module ClientServerMessageType {
+        const ResponseAuthentication: number;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageStep extends ClientServerMessage {
+        private _commandList;
+        private _stepNumber;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        setCommandList(commandList: ICommand[]): void;
+        getCommandList(): [number, any][][];
+        getStepNumber(): number;
+        setStepNumber(stepNumber: number): void;
+    }
+    module ClientServerMessageType {
+        const Step: number;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageStepList extends ClientServerMessage {
+        private _stepList;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        setStepList(stepList: IEntity[]): void;
+        getStepList(): [number, any][][];
+    }
+    module ClientServerMessageType {
+        const StepList: number;
+    }
+}
+declare namespace STSEngine {
+    class ClientServerMessageWorldFullInfo extends ClientServerMessage {
+        private _worldAttributeList;
+        private _clientListService;
+        private _itemListService;
+        private _processListService;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        setWorld(world: IWorld): void;
+        setWorldAttributeList(worldAttributeList: IWorldAttributeList): void;
+        getWorldAttributeList(): [number, any][];
+        setClientListService(clientListService: IClientListService): void;
+        getClientListService(): [number, any][][];
+        setItemListService(itemListService: IItemListService): void;
+        getItemListService(): [number, any][][];
+        setProcessListService(processListService: IProcessListService): void;
+        getProcessListService(): [number, any][][];
+    }
+    module ClientServerMessageType {
+        const WorldFullInfo: number;
     }
 }
 declare namespace STSEngine {
@@ -781,9 +775,27 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
+    interface IWebSocketGameClient {
+        getWorld(): IWorld;
+        getPlayerId(): number;
+        setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void;
+    }
+}
+declare namespace STSEngine {
     interface IView {
         start(): void;
         stop(): void;
+    }
+}
+declare namespace STSEngine {
+    class PlayerAction implements IPlayerAction {
+        protected commandListService: ICommandListService;
+        protected onActionHandler: (playerAction: IPlayerAction) => void;
+        constructor();
+        getCommandKeyValuePairList(): [number, any][][];
+        clear(): void;
+        setOnAction(handler: (playerAction: IPlayerAction) => void): void;
+        protected onAction(): void;
     }
 }
 declare namespace STSEngine {
@@ -816,17 +828,6 @@ declare namespace STSEngine {
         protected onClose(ev: CloseEvent): void;
         protected onError(ev: Event): void;
         protected sendMessage(message: IClientServerMessage): void;
-    }
-}
-declare namespace STSEngine {
-    class PlayerAction implements IPlayerAction {
-        protected commandListService: ICommandListService;
-        protected onActionHandler: (playerAction: IPlayerAction) => void;
-        constructor();
-        getCommandKeyValuePairList(): [number, any][][];
-        clear(): void;
-        setOnAction(handler: (playerAction: IPlayerAction) => void): void;
-        protected onAction(): void;
     }
 }
 declare namespace STSEngine {

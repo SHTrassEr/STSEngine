@@ -6,14 +6,13 @@ namespace STSEngine {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setProcessStatus(ProcessStatus.Init);
         }
-    
+
         private _processStatus: number = ++this.lastAttributeId;
         private _execCount: number = ++this.lastAttributeId;
 
         public getProcessStatus(): ProcessStatus {
-            return this.attributeList.get(this._processStatus);
+            return this.attributeList.get(this._processStatus, ProcessStatus.Init);
         }
 
         public setProcessStatus(processStatus: ProcessStatus): void {
