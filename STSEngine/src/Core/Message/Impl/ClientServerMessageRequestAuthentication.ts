@@ -7,4 +7,8 @@
             this.setType(ClientServerMessageType.RequestAuthentication);
         }
     }
+
+    export module ClientServerMessageType {
+        export const RequestAuthentication = ClientServerMessageType.getNewTypeId();
+    }
 }

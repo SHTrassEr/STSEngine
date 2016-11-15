@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class AttributeList implements IAttributeList {
+    export class AttributeListMap implements IAttributeList {
         protected attributeList: Map<number, any>;
 
         constructor() {

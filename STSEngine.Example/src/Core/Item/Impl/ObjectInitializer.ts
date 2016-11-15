@@ -8,8 +8,10 @@
 
         protected createByType(type: number, attr?: Iterable<[number, any]>): IItem {
             switch (type) {
-                case ObjectType.Player:
+                case ItemType.Player:
                     return this.createPlayer(attr);
+                case ItemType.Bullet:
+                    return this.createBullet(attr);
             }
         }
 
@@ -30,7 +32,7 @@
         }
 
         protected createAttributeList(): IAttributeList {
-            return new AttributeList();
+            return new AttributeListArray();
         }
     }
 }

@@ -1,32 +1,33 @@
 ﻿/// <reference path="../../Util/RandomGenerator.ts" />
 
-QUnit.module("Core." + STSEngine.AttributeList.name);
+QUnit.module("Core." + STSEngine.AttributeListArray.name);
 
 
 
 QUnit.test("all", function (assert) {
-    let attributeList = new STSEngine.AttributeList();
-    let keyStrList = getRandomIntArray();
-    let valueStrList = getRandomStringArray();
-    let valueIntList = getRandomIntArray();
+    let attributeList = new STSEngine.AttributeListArray();
+    let length = 40;
 
-    for (let i = 0; i < keyStrList.length; i++) {
-        attributeList.set(keyStrList[i], valueStrList[i]);
+    let valueStrList = getRandomStringArray(length);
+    let valueIntList = getRandomIntArray(length);
+
+    for (let i = 0; i < length; i++) {
+        attributeList.set(i, valueStrList[i]);
     }
-    for (let i = 0; i < keyStrList.length; i++) {
-        assert.strictEqual(attributeList.has(keyStrList[i]), true);
-        assert.strictEqual(attributeList.get(keyStrList[i]), valueStrList[i]);
+    for (let i = 0; i < length; i++) {
+        assert.strictEqual(attributeList.has(i), true);
+        assert.strictEqual(attributeList.get(i), valueStrList[i]);
     }
-    for (let i = 0; i < keyStrList.length; i++) {
-        attributeList.set(keyStrList[i], valueIntList[i]);
+    for (let i = 0; i < length; i++) {
+        attributeList.set(i, valueIntList[i]);
     }
-    for (let i = 0; i < keyStrList.length; i++) {
-        assert.strictEqual(attributeList.has(keyStrList[i]), true);
-        assert.strictEqual(attributeList.get(keyStrList[i]), valueIntList[i]);
+    for (let i = 0; i < length; i++) {
+        assert.strictEqual(attributeList.has(i), true);
+        assert.strictEqual(attributeList.get(i), valueIntList[i]);
     }
 
-    for (let key of keyStrList) {
-        attributeList.delete(key);
-        assert.strictEqual(attributeList.has(key), false);
+    for (let i = 0; i < length; i++) {
+        attributeList.delete(i);
+        assert.strictEqual(attributeList.has(i), false);
     }
 });

@@ -12,7 +12,7 @@
             if (attributeList) {
                 this.attributeList = attributeList;
             } else {
-                this.attributeList = new AttributeList();
+                this.attributeList = new AttributeListArray();
             } 
             
             if (kvpList) {

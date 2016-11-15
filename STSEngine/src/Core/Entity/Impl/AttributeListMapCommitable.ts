@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export class AttributeListCommitable implements IAttributeList {
+    export class AttributeListMapCommitable implements IAttributeList {
         protected deletedAttributeList: Set<number>;
         protected commitedAttributeList: Map<number, any>;
         protected attributeList: Map<number, any>;

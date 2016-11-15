@@ -2,7 +2,7 @@
 
 namespace STSEngine {
 
-    export class PlayerListService extends EntityListService<IPlayer> implements IPlayerListService {
+    export class ClientListService extends EntityListService<IClient> implements IClientListService {
 
     }
 }

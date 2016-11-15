@@ -28,4 +28,13 @@ namespace STSEngine {
             this.attributeList.set(this._execCount, execCount);
         }
     }
+
+    export module ProcessType {
+
+        let lastTypeId = 0;
+
+        export function getNewTypeId(): number {
+            return ++lastTypeId
+        }
+    }
 }

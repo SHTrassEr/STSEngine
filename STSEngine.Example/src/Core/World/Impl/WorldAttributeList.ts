@@ -2,6 +2,8 @@
 
     export class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
 
+        private _worldSize: number = ++this.lastAttributeId;
+
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
@@ -9,11 +11,11 @@
         }
     
         public getWorldSize(): [number, number] {
-            return this.attributeList.get(WorldAttributeType.WorldSize);
+            return this.attributeList.get(this._worldSize);
         }
 
-        setWorldSize(size: [number, number]): void {
-            this.attributeList.set(WorldAttributeType.WorldSize, size);
+        public setWorldSize(size: [number, number]): void {
+            this.attributeList.set(this._worldSize, size);
         }
     }
 }

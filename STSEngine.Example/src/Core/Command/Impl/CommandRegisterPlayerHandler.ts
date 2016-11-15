@@ -9,10 +9,10 @@
         }
 
         protected executeCommand(command: CommandRegisterPlayer): void {
-            let player = new Player();
-            player.setName(command.getPlayerName());
-            player.setId(command.getPlayerId());
-            this.worldServiceList.getPlayerListService().add(player);
+            let client = new Client();
+            client.setName(command.getPlayerName());
+            client.setId(command.getPlayerId());
+            this.worldServiceList.getClientListService().add(client);
 
             let process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
             process.setPlayerId(command.getPlayerId());
@@ -22,7 +22,7 @@
         protected isValidCommand(command: CommandRegisterPlayer): boolean {
             let playerId = command.getPlayerId();
             if (command.getInitiatorId() === 0) {
-                var player = this.worldServiceList.getPlayerListService().getFirst(p => p.getId() == playerId);
+                var player = this.worldServiceList.getClientListService().getFirst(p => p.getId() == playerId);
                 if (!player) {
                     return true;
                 }

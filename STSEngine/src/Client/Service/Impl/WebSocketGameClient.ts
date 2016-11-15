@@ -35,7 +35,7 @@
 
 
         protected commandInitializator(attr: Iterable<[number, any]>): ICommand {
-            return new Command(new AttributeList(), attr);
+            return new Command(new AttributeListArray(), attr);
         }
 
         protected init() {

@@ -1,4 +1,6 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Command.ts" />
+
+namespace STSEngine.Example {
 
     export class CommandMoveObjectStop extends Command {
 
@@ -26,5 +28,12 @@
         public setMoveDirection(direction: MoveDirection): void {
             this.attributeList.set(this._moveDirection, direction);
         }
+    }
+}
+
+namespace STSEngine {
+
+    export module CommandType {
+        export const MoveStop = getNewTypeId();
     }
 }

@@ -46,7 +46,7 @@
         }
 
         protected onClientConnected(client: IWebSocketClient): void {
-            let clientId = this.getPlayerId(client.getSID());
+            let clientId = this.getClientIdBySID(client.getSID());
             client.setPlayerId(clientId);
             let messageInit = new ClientServerMessageInit();
             messageInit.setPlayerId(clientId);
@@ -64,7 +64,7 @@
             client.sendMessage(messageStepList);
         }
 
-        protected abstract getPlayerId(sid: string);
+        protected abstract getClientIdBySID(sid: string);
 
 
         protected onClientMessage(webSocketClient: IWebSocketClient, message: IClientServerMessage): void {

@@ -2,7 +2,7 @@
 
 namespace STSEngine {
 
-    export class Player extends Entity implements IPlayer {
+    export class Client extends Entity implements IClient {
 
         protected attributeList: IAttributeList;
 
@@ -10,7 +10,6 @@ namespace STSEngine {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ItemType.Player);
         }
 
         public getName(): string {

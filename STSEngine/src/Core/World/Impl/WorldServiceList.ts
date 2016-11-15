@@ -4,7 +4,7 @@
         protected worldAttributeList: IWorldAttributeList;
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
-        protected playerListService: IPlayerListService;
+        protected clientListService: IClientListService;
 
         protected commandInitializer: ICommandInitializer;
         protected itemInitializer: IItemInitializer;
@@ -44,8 +44,8 @@
             return this.processListService;
         }
 
-        public getPlayerListService(): IPlayerListService {
-            return this.playerListService;
+        public getClientListService(): IClientListService {
+            return this.clientListService;
         }
 
         protected getObjectId(): number {

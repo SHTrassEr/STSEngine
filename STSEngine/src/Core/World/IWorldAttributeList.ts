@@ -1,13 +1,15 @@
 ﻿namespace STSEngine {
 
-    export interface IWorldAttributeList extends IterableKeyValuePair {
+    export interface IWorldAttributeList extends IEntity {
+
         getTickLength(): number;
+        setTickLength(tickLength: number): void;
 
         getLastProcessId(): number;
-        setLastProcessId(id: number);
+        setLastProcessId(id: number): void;
 
         getLastObjectId(): number;
-        setLastObjectId(id: number);
+        setLastObjectId(id: number): void;
 
         getStepNumber(): number;
         setStepNumber(stepNumber: number): void;

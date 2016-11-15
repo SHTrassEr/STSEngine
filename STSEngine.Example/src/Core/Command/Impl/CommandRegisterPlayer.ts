@@ -1,4 +1,6 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Command.ts" />
+
+namespace STSEngine.Example {
 
     export class CommandRegisterPlayer extends Command {
 
@@ -8,7 +10,7 @@
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setType(STSEngine.CommandType.RegisterPlayer);
+            this.setType(CommandType.RegisterPlayer);
         }
 
 
@@ -29,5 +31,12 @@
             this.attributeList.set(this._playerName, playerName);
         }
 
+    }
+}
+
+namespace STSEngine {
+
+    export module CommandType {
+        export const RegisterPlayer = getNewTypeId();
     }
 }

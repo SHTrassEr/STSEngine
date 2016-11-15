@@ -19,7 +19,7 @@
         }
 
 
-        protected getPlayerId(sid: string): number {
+        protected getClientIdBySID(sid: string): number {
             var playerId = 0;
 
             if (this.connectedPlayerList.has(sid)) {

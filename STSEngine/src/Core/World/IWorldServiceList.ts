@@ -9,6 +9,6 @@
         getCommandDispatcher(): ICommandDispatcher;
         getItemListService(): IItemListService;
         getProcessListService(): IProcessListService;
-        getPlayerListService(): IPlayerListService;
+        getClientListService(): IClientListService;
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IPlayer extends STSEngine.IPlayer {
+    export interface IClient extends STSEngine.IClient {
 
         getScore(): number;
         setScore(score: number): void;

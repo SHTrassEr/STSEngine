@@ -14,4 +14,13 @@ namespace STSEngine {
             this.attributeList.set(this._initiatorId, id);
         }
     }
+
+    export module CommandType {
+
+        let lastTypeId = 0;
+
+        export function getNewTypeId(): number {
+            return ++lastTypeId
+        }
+    }
 }

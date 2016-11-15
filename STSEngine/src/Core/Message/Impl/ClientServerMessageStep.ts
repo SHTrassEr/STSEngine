@@ -2,6 +2,9 @@
 
     export class ClientServerMessageStep extends ClientServerMessage {
 
+        private _commandList: number = ++this.lastAttributeId;
+        private _stepNumber: number = ++this.lastAttributeId;
+
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
             this.setType(ClientServerMessageType.Step);
@@ -15,19 +18,23 @@
                 }
             }
 
-            this.attributeList.set(ClientServerMessageAttributeType.CommandList, commandAttributeList);
+            this.attributeList.set(this._commandList, commandAttributeList);
         }
 
         public getCommandList(): [number, any][][] {
-            return this.attributeList.get(ClientServerMessageAttributeType.CommandList);
+            return this.attributeList.get(this._commandList);
         }
 
         public getStepNumber(): number {
-            return this.attributeList.get(ClientServerMessageAttributeType.StepNumber);
+            return this.attributeList.get(this._stepNumber);
         }
 
         public setStepNumber(stepNumber: number): void {
-            this.attributeList.set(ClientServerMessageAttributeType.StepNumber, stepNumber);
+            this.attributeList.set(this._stepNumber, stepNumber);
         }
+    }
+
+    export module ClientServerMessageType {
+        export const Step = ClientServerMessageType.getNewTypeId();
     }
 }

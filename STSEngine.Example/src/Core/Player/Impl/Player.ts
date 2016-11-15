@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class Player extends STSEngine.Player implements IPlayer {
+    export class Client extends STSEngine.Client implements IClient {
 
         protected attributeScoreId: number = ++this.lastAttributeId;
 

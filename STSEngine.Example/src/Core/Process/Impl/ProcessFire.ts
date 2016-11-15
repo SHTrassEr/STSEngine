@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Process.ts" />
 
-    export class ProcessFire extends STSEngine.Process {
+namespace STSEngine.Example {
+
+    export class ProcessFire extends Process {
 
         private _objectId: number = ++this.lastAttributeId;
 
@@ -17,5 +19,12 @@
             this.attributeList.set(this._objectId, id);
         }
 
+    }
+}
+
+namespace STSEngine {
+
+    export module ProcessType {
+        export const Fire = getNewTypeId();
     }
 }

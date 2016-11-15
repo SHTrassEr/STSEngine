@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Command.ts" />
 
-    export class CommandCreatePlayerObject extends STSEngine.Command {
+namespace STSEngine.Example {
+
+    export class CommandCreatePlayerObject extends Command {
 
         private _playerId: number = ++this.lastAttributeId;
 
@@ -19,3 +21,11 @@
         }
     }
 }
+
+namespace STSEngine {
+
+    export module CommandType {
+        export const CreatePlayerObject = getNewTypeId();
+    }
+}
+

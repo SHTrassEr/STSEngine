@@ -1,60 +1,44 @@
-﻿namespace STSEngine {
+﻿/// <reference path="../../Entity/Impl/Entity.ts" />
 
-    export class WorldAttributeList implements IWorldAttributeList {
+namespace STSEngine {
 
-        protected attributeList: IAttributeList;
+    export class WorldAttributeList extends Entity implements IWorldAttributeList {
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            if (attributeList) {
-                this.attributeList = attributeList;
-            } else {
-                this.attributeList = new AttributeList();
-            }
-
-            if (kvpList) {
-                this.attributeList.setList(kvpList);
-            }
-        }
+        private _tickLength: number = ++this.lastAttributeId;
+        private _processId: number = ++this.lastAttributeId;
+        private _lastObjectId: number = ++this.lastAttributeId;
+        private _stepNumber: number = ++this.lastAttributeId;
 
         public getTickLength(): number {
-            return this.attributeList.get(WorldAttributeType.TickLength, 50);
+            return this.attributeList.get(this._tickLength, 50);
         }
 
-        public getList(): [number, any][] {
-            return this.attributeList.getList();
-        }
-
-        [Symbol.iterator]
-        public getIterator(): IterableIterator<[number, any]> {
-            return this.attributeList.getIterator();
-        }
-
-        public getAttributeList(): IAttributeList {
-            return this.attributeList;
+        public setTickLength(tickLength: number): void {
+            this.attributeList.set(this._tickLength, tickLength);
         }
 
         public getLastProcessId(): number {
-            return this.attributeList.get(WorldAttributeType.LastProcessId, 0);
+            return this.attributeList.get(this._processId, 0);
         }
 
         public setLastProcessId(id: number) {
-            this.attributeList.set(WorldAttributeType.LastProcessId, id);
+            this.attributeList.set(this._processId, id);
         }
 
         public getLastObjectId(): number {
-            return this.attributeList.get(WorldAttributeType.LastObjectId, 0);
+            return this.attributeList.get(this._lastObjectId, 0);
         }
 
         public setLastObjectId(id: number) {
-            this.attributeList.set(WorldAttributeType.LastObjectId, id);
+            this.attributeList.set(this._lastObjectId, id);
         }
 
         public getStepNumber(): number {
-            return this.attributeList.get(WorldAttributeType.StepNumber, 0);
+            return this.attributeList.get(this._stepNumber, 0);
         }
 
         public setStepNumber(stepNumber: number): void {
-            this.attributeList.set(WorldAttributeType.StepNumber, stepNumber);
+            this.attributeList.set(this._stepNumber, stepNumber);
         }
     }
 }

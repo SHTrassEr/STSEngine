@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Process.ts" />
 
-    export class ProcessMoveObject extends STSEngine.Process {
+namespace STSEngine.Example {
+
+    export class ProcessMoveObject extends Process {
 
         private _objectId: number = ++this.lastAttributeId;
         private _moveDirection: number = ++this.lastAttributeId;
@@ -25,5 +27,12 @@
         public setMoveDirection(direction: MoveDirection): void {
             this.attributeList.set(this._moveDirection, direction);
         }
+    }
+}
+
+namespace STSEngine {
+
+    export module ProcessType {
+        export const Move = getNewTypeId();
     }
 }

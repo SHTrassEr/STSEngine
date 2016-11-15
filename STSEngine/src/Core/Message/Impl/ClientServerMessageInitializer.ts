@@ -48,7 +48,7 @@ namespace STSEngine {
         }
 
         protected createAttributeList(): IAttributeList {
-            return new AttributeList();
+            return new AttributeListArray();
         }
     }
 }

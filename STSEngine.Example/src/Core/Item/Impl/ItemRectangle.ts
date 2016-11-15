@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Item.ts" />
 
-    export abstract class ItemRectangle extends STSEngine.Item implements IItemRectangle {
+namespace STSEngine.Example {
+
+    export abstract class ItemRectangle extends Item implements IItemRectangle {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);

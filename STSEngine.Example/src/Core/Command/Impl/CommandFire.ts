@@ -1,4 +1,6 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Command.ts" />
+
+namespace STSEngine.Example {
 
     export class CommandFire extends Command {
 
@@ -17,5 +19,12 @@
         public setObjectId(id: number): void {
             this.attributeList.set(this._objectId, id);
         }
+    }
+}
+
+namespace STSEngine {
+
+    export module CommandType {
+        export const Fire = getNewTypeId();
     }
 }

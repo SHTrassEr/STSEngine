@@ -10,9 +10,6 @@
             this.commandInitializer = new CommandInitializer();
         }
 
-        protected commandInitializator(attr: Iterable<[number, any]>): ICommand {
-            return new Command(new AttributeList(), attr);
-        }
 
         protected addCommand(command: ICommand): void {
             this.commandListService.add(command);

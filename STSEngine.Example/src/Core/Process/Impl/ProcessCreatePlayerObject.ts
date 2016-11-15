@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="Process.ts" />
 
-    export class ProcessCreatePlayerObject extends STSEngine.Process {
+namespace STSEngine.Example {
+
+    export class ProcessCreatePlayerObject extends Process {
 
         private _playerId: number = ++this.lastAttributeId;
 
@@ -16,5 +18,12 @@
         public setPlayerId(id: number): void {
             this.attributeList.set(this._playerId, id);
         }
+    }
+}
+
+namespace STSEngine {
+
+    export module ProcessType {
+        export const CreatePlayerObject = getNewTypeId();
     }
 }
