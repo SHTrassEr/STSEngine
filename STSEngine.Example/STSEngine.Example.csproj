@@ -58,8 +58,8 @@
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemBullet.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemRectangle.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItemRectangle.ts" />
-    <TypeScriptCompile Include="src\Core\Player\Impl\Player.ts" />
-    <TypeScriptCompile Include="src\Core\Player\IPlayer.ts" />
+    <TypeScriptCompile Include="src\Core\Client\Impl\Client.ts" />
+    <TypeScriptCompile Include="src\Core\Client\Client.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\Process.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\Point.ts" />

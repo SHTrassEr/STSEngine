@@ -51,8 +51,23 @@ function ready() {
     function onClientConnected(client: STSEngine.IWebSocketGameClient) {
         view.setPlayerId(client.getPlayerId());
         view.start();
+
+        setInterval(updateScore, 1000);
     }
 
+    let scoreDiv = document.getElementById("score");
+
+    function updateScore() {
+        var clientList = world.getServiceList().getClientListService().getIterator();
+        let str = '';
+        for (let client of clientList) {
+            if (client instanceof STSEngine.Example.Client) {
+                str += client.getId() + " " + client.getScore() + "<br>";
+            }
+        }
+
+        scoreDiv.innerHTML = str;
+    }
 
     var world = client.getWorld();
     var objectListService = world.getServiceList().getItemListService();

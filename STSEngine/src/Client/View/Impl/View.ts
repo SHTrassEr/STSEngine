@@ -7,6 +7,7 @@
         protected worldAttributeList: IWorldAttributeList;
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
+        protected clientListService: IClientListService;
 
         protected isStarted: boolean;
 
@@ -23,6 +24,7 @@
             this.worldAttributeList = worldServiceList.getWorldAttributeList();
             this.itemListService = worldServiceList.getItemListService();
             this.processListService = worldServiceList.getProcessListService();
+            this.clientListService = worldServiceList.getClientListService();
 
             this.isStarted = false;
         }

@@ -5,7 +5,7 @@
         protected attributeScoreId: number = ++this.lastAttributeId;
 
         public getScore(): number {
-            return this.attributeList.get(this.attributeScoreId);
+            return this.attributeList.get(this.attributeScoreId, 0);
         }
 
         public setScore(score: number): void {

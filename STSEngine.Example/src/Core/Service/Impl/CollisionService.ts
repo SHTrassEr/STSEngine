@@ -3,8 +3,11 @@
     export class CollisionService implements ICollisionService {
         protected itemListService: IItemListService;
         protected worldAttributeList: IWorldAttributeList;
+        protected clientListService: IClientListService;
 
-        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService) {
+        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService, clientListService: IClientListService) {
+
+            this.clientListService = clientListService;
             this.worldAttributeList = worldAttributeList;
             this.itemListService = itemListService;
         }
@@ -90,6 +93,12 @@
             if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
                 if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
                     this.itemListService.remove(moveItem.getId());
+
+                    let playerId = moveItem.getPlayerId();
+                    let client = this.clientListService.getTyped<IClient>(playerId, Client);
+
+                    client.setScore(client.getScore() + 10);
+
                     return true;
                 }
 
@@ -121,18 +130,6 @@
             return false;
         }
 
-
-/*        public processCollisionAny(o1: IObject, objectList: Iterable<IObject>): boolean {
-            for (var o of objectList) {
-                if (o1.getId() != o.getId()) {
-                    if (this.isCollision(o1, o)) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }*/
 
         protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean {
             if ((pos2[0] + size2[0] <= pos1[0]) ||

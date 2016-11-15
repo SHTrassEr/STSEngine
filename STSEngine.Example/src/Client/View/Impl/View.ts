@@ -4,7 +4,6 @@
 
         protected worldAttributeList: WorldAttributeList;
 
-
         protected width: number;
         protected height: number;
 
@@ -19,6 +18,12 @@
 
         protected stepNumber: number;
 
+        protected clientInfoTextMap: Map<number, PIXI.Text>;
+
+        protected clientListService: IClientListService;
+
+        
+
         constructor(rootElement: HTMLDivElement, world: IWorld) {
             super(rootElement, world);
 
@@ -31,6 +36,7 @@
             this.rootElement.appendChild(this.renderer.view);
 
             this.objectMap = new Map<number, PIXI.Graphics>();
+            this.clientInfoTextMap = new Map<number, PIXI.Text>();
 
             this.stage = new PIXI.Container();
 
@@ -39,6 +45,36 @@
             this.stage.addChild(this.grid);
             this.stage.addChild(this.worldLimit);
             this.stepNumber = -1;
+        }
+
+        protected getClientInfoText(client: IClient) {
+
+            if (!this.clientInfoTextMap.has(client.getId())) {
+                let text = new PIXI.Text();
+                text.style.fill = 0xff1010;
+                text.style.font.fontsize(16);
+                text.width = 100;
+                text.height = 20;
+
+                text.position.y = text.height * (this.clientInfoTextMap.size + 1);
+                this.stage.addChild(text);
+                this.clientInfoTextMap.set(client.getId(), new PIXI.Text());
+            }
+
+            return this.clientInfoTextMap.get(client.getId());
+        }
+
+        protected updateClientInfo(client: IClient) {
+            let text = this.getClientInfoText(client);
+            text.text = client.getId() + " " + client.getScore();
+        }
+
+        protected updateAllClientInfo() {
+            for (var client of this.clientListService.getIterator()) {
+                if (client instanceof Client) {
+                    this.updateClientInfo(client);
+                }
+            }
         }
 
         protected drawObjectRectangle(o: ItemRectangle): PIXI.Graphics {
@@ -117,7 +153,7 @@
                     let x = this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x;
                     let y = this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y;
 
-                    if (o.getPlayerId() == this.playerId) {
+                    if (o instanceof ItemPlayer && o.getPlayerId() == this.playerId) {
                         this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
 
                         this.grid.position.set(x - this.width / 2, y - this.height / 2);
@@ -149,6 +185,8 @@
                     objectSprite.rotation
                 }
             }
+
+            this.updateAllClientInfo();
 
             this.renderer.render(this.stage);
         }

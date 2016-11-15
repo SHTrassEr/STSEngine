@@ -19,7 +19,7 @@
             this.itemListService = new ItemListService();
             this.processListService = new ProcessListService();
             this.clientListService = new ClientListService();
-            this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService);
+            this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
 
             this.commandInitializer = new CommandInitializer();
             this.objectInitializer = new ItemInitializer(this.getObjectId.bind(this));

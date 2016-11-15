@@ -24,7 +24,7 @@
         protected fire(object: ItemPlayer): void {
             var bullet = this.worldServiceList.getItemInitializer().createBullet();
             bullet.setPositionPrecise([object.getPosition(0) + (object.getSize()[0] / 2), object.getPosition(1) + (object.getSize()[0] / 2)]);
-
+            bullet.setPlayerId(object.getPlayerId());
             bullet.setMaxSpeed(4);
             bullet.setMoveDirection(object.getMoveDirection());
 

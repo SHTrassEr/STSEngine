@@ -3,6 +3,25 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class Client extends STSEngine.Client {
+            constructor() {
+                super(...arguments);
+                this.attributeScoreId = ++this.lastAttributeId;
+            }
+            getScore() {
+                return this.attributeList.get(this.attributeScoreId, 0);
+            }
+            setScore(score) {
+                this.attributeList.set(this.attributeScoreId, score);
+            }
+        }
+        Example.Client = Client;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class Command extends STSEngine.Command {
         }
         Example.Command = Command;
@@ -386,153 +405,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Point {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-            }
-        }
-        Example.Point = Point;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class Client extends STSEngine.Client {
-            constructor() {
-                super(...arguments);
-                this.attributeScoreId = ++this.lastAttributeId;
-            }
-            getScore() {
-                return this.attributeList.get(this.attributeScoreId);
-            }
-            setScore(score) {
-                this.attributeList.set(this.attributeScoreId, score);
-            }
-        }
-        Example.Client = Client;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CollisionService {
-            constructor(worldAttributeList, itemListService) {
-                this.worldAttributeList = worldAttributeList;
-                this.itemListService = itemListService;
-            }
-            processCollision(moveItem, newPosition) {
-                if (moveItem instanceof Example.ItemPlayer) {
-                    this.processCollisionObjectPlayer(moveItem, newPosition);
-                }
-                else if (moveItem instanceof Example.ItemBullet) {
-                    this.processCollisionObjectBullet(moveItem, newPosition);
-                }
-            }
-            processCollisionObjectPlayer(moveItem, newPosition) {
-                this.processCollisionObjectRectangleWorld(moveItem, newPosition);
-                let objectList = this.itemListService.getIterator();
-                for (var o of objectList) {
-                    if (moveItem.getId() != o.getId()) {
-                        if (o instanceof Example.ItemPlayer) {
-                            this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
-                        }
-                    }
-                }
-                moveItem.setPositionPrecise(newPosition);
-            }
-            processCollisionObjectBullet(moveItem, newPosition) {
-                if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
-                    this.itemListService.remove(moveItem.getId());
-                }
-                let objectList = this.itemListService.getIterator();
-                for (var o of objectList) {
-                    if (moveItem.getId() != o.getId()) {
-                        if (o instanceof Example.ItemPlayer) {
-                            this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
-                        }
-                    }
-                }
-                moveItem.setPositionPrecise(newPosition);
-            }
-            processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o) {
-                let position = moveItem.getPositionPrecise();
-                let oPosition = o.getPositionPrecise();
-                let moveItemSize = moveItem.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
-                        if (position[0] < newPosition[0]) {
-                            newPosition[0] = oPosition[0] - moveItemSize[0];
-                            return true;
-                        }
-                        else if (position[0] > newPosition[0]) {
-                            newPosition[0] = oPosition[0] + oSize[0];
-                            return true;
-                        }
-                        else if (position[1] < newPosition[1]) {
-                            newPosition[1] = oPosition[1] - moveItemSize[1];
-                            return true;
-                        }
-                        else if (position[1] > newPosition[1]) {
-                            newPosition[1] = oPosition[1] + oSize[1];
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-            processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o) {
-                let position = moveItem.getPositionPrecise();
-                let oPosition = o.getPositionPrecise();
-                let moveItemSize = moveItem.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
-                        this.itemListService.remove(moveItem.getId());
-                        return true;
-                    }
-                }
-                return false;
-            }
-            processCollisionObjectRectangleWorld(moveItem, newPosition) {
-                if (newPosition[0] < 0) {
-                    newPosition[0] = 0;
-                    return true;
-                }
-                if (newPosition[1] < 0) {
-                    newPosition[1] = 0;
-                    return true;
-                }
-                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
-                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
-                    return true;
-                }
-                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
-                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
-                    return true;
-                }
-                return false;
-            }
-            isRectangleObjectCollision(pos1, size1, pos2, size2) {
-                if ((pos2[0] + size2[0] <= pos1[0]) ||
-                    (pos2[1] + size2[1] <= pos1[1]) ||
-                    (pos2[0] >= pos1[0] + size1[0]) ||
-                    (pos2[1] >= pos1[1] + size1[1])) {
-                    return false;
-                }
-                return true;
-            }
-        }
-        Example.CollisionService = CollisionService;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class Process extends STSEngine.Process {
         }
         Example.Process = Process;
@@ -652,6 +524,7 @@ var STSEngine;
             fire(object) {
                 var bullet = this.worldServiceList.getItemInitializer().createBullet();
                 bullet.setPositionPrecise([object.getPosition(0) + (object.getSize()[0] / 2), object.getPosition(1) + (object.getSize()[0] / 2)]);
+                bullet.setPlayerId(object.getPlayerId());
                 bullet.setMaxSpeed(4);
                 bullet.setMoveDirection(object.getMoveDirection());
                 this.worldServiceList.getItemListService().add(bullet);
@@ -803,6 +676,19 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        Example.Point = Point;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class WorldAttributeList extends STSEngine.WorldAttributeList {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -829,7 +715,7 @@ var STSEngine;
                 this.itemListService = new STSEngine.ItemListService();
                 this.processListService = new STSEngine.ProcessListService();
                 this.clientListService = new STSEngine.ClientListService();
-                this.collisionService = new Example.CollisionService(this.worldAttributeList, this.itemListService);
+                this.collisionService = new Example.CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
                 this.commandInitializer = new Example.CommandInitializer();
                 this.objectInitializer = new Example.ItemInitializer(this.getObjectId.bind(this));
                 this.processInitializer = new Example.ProcessInitializer(this.getProcessId.bind(this));
@@ -878,6 +764,125 @@ var STSEngine;
             }
         }
         Example.WorldServiceList = WorldServiceList;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CollisionService {
+            constructor(worldAttributeList, itemListService, clientListService) {
+                this.clientListService = clientListService;
+                this.worldAttributeList = worldAttributeList;
+                this.itemListService = itemListService;
+            }
+            processCollision(moveItem, newPosition) {
+                if (moveItem instanceof Example.ItemPlayer) {
+                    this.processCollisionObjectPlayer(moveItem, newPosition);
+                }
+                else if (moveItem instanceof Example.ItemBullet) {
+                    this.processCollisionObjectBullet(moveItem, newPosition);
+                }
+            }
+            processCollisionObjectPlayer(moveItem, newPosition) {
+                this.processCollisionObjectRectangleWorld(moveItem, newPosition);
+                let objectList = this.itemListService.getIterator();
+                for (var o of objectList) {
+                    if (moveItem.getId() != o.getId()) {
+                        if (o instanceof Example.ItemPlayer) {
+                            this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
+                        }
+                    }
+                }
+                moveItem.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectBullet(moveItem, newPosition) {
+                if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
+                    this.itemListService.remove(moveItem.getId());
+                }
+                let objectList = this.itemListService.getIterator();
+                for (var o of objectList) {
+                    if (moveItem.getId() != o.getId()) {
+                        if (o instanceof Example.ItemPlayer) {
+                            this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
+                        }
+                    }
+                }
+                moveItem.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o) {
+                let position = moveItem.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveItemSize = moveItem.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                        if (position[0] < newPosition[0]) {
+                            newPosition[0] = oPosition[0] - moveItemSize[0];
+                            return true;
+                        }
+                        else if (position[0] > newPosition[0]) {
+                            newPosition[0] = oPosition[0] + oSize[0];
+                            return true;
+                        }
+                        else if (position[1] < newPosition[1]) {
+                            newPosition[1] = oPosition[1] - moveItemSize[1];
+                            return true;
+                        }
+                        else if (position[1] > newPosition[1]) {
+                            newPosition[1] = oPosition[1] + oSize[1];
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o) {
+                let position = moveItem.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveItemSize = moveItem.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                        this.itemListService.remove(moveItem.getId());
+                        let playerId = moveItem.getPlayerId();
+                        let client = this.clientListService.getTyped(playerId, Example.Client);
+                        client.setScore(client.getScore() + 10);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectRectangleWorld(moveItem, newPosition) {
+                if (newPosition[0] < 0) {
+                    newPosition[0] = 0;
+                    return true;
+                }
+                if (newPosition[1] < 0) {
+                    newPosition[1] = 0;
+                    return true;
+                }
+                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
+                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
+                    return true;
+                }
+                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
+                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
+                    return true;
+                }
+                return false;
+            }
+            isRectangleObjectCollision(pos1, size1, pos2, size2) {
+                if ((pos2[0] + size2[0] <= pos1[0]) ||
+                    (pos2[1] + size2[1] <= pos1[1]) ||
+                    (pos2[0] >= pos1[0] + size1[0]) ||
+                    (pos2[1] >= pos1[1] + size1[1])) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        Example.CollisionService = CollisionService;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -1152,12 +1157,37 @@ var STSEngine;
                 this.renderer.roundPixels = true;
                 this.rootElement.appendChild(this.renderer.view);
                 this.objectMap = new Map();
+                this.clientInfoTextMap = new Map();
                 this.stage = new PIXI.Container();
                 this.grid = this.drawGrid();
                 this.worldLimit = this.drawWordLimit();
                 this.stage.addChild(this.grid);
                 this.stage.addChild(this.worldLimit);
                 this.stepNumber = -1;
+            }
+            getClientInfoText(client) {
+                if (!this.clientInfoTextMap.has(client.getId())) {
+                    let text = new PIXI.Text();
+                    text.style.fill = 0xff1010;
+                    text.style.font.fontsize(16);
+                    text.width = 100;
+                    text.height = 20;
+                    text.position.y = text.height * (this.clientInfoTextMap.size + 1);
+                    this.stage.addChild(text);
+                    this.clientInfoTextMap.set(client.getId(), new PIXI.Text());
+                }
+                return this.clientInfoTextMap.get(client.getId());
+            }
+            updateClientInfo(client) {
+                let text = this.getClientInfoText(client);
+                text.text = client.getId() + " " + client.getScore();
+            }
+            updateAllClientInfo() {
+                for (var client of this.clientListService.getIterator()) {
+                    if (client instanceof Example.Client) {
+                        this.updateClientInfo(client);
+                    }
+                }
             }
             drawObjectRectangle(o) {
                 let position = o.getPosition();
@@ -1214,7 +1244,7 @@ var STSEngine;
                         let objectSprite = this.getObjectSprite(o);
                         let x = this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x;
                         let y = this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y;
-                        if (o.getPlayerId() == this.playerId) {
+                        if (o instanceof Example.ItemPlayer && o.getPlayerId() == this.playerId) {
                             this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
                             this.grid.position.set(x - this.width / 2, y - this.height / 2);
                         }
@@ -1239,6 +1269,7 @@ var STSEngine;
                         objectSprite.rotation;
                     }
                 }
+                this.updateAllClientInfo();
                 this.renderer.render(this.stage);
             }
             getDrawPoint(p) {
