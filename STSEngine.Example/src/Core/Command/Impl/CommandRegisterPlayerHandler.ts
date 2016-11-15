@@ -9,7 +9,7 @@
         }
 
         protected executeCommand(command: CommandRegisterPlayer): void {
-            let client = new Client();
+            let client = new ClientActive();
             client.setName(command.getPlayerName());
             client.setId(command.getPlayerId());
             this.worldServiceList.getClientListService().add(client);

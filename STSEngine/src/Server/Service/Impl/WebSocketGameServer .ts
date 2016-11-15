@@ -21,8 +21,8 @@
         }
 
         protected init() {
-            let world = this.createWorld();
-            let engine = new Engine(world, this.commandListService);
+            this.world = this.createWorld();
+            let engine = new Engine(this.world, this.commandListService);
             this.gameServer = new GameServer(engine);
             this.gameServer.setOnUpdateWorld(this.onUpdateWorld.bind(this));
             this.webSocketServer.setOnClientConnected(this.onClientConnected.bind(this));
@@ -52,7 +52,13 @@
             messageInit.setPlayerId(clientId);
             client.sendMessage(messageInit);
 
-            let stepList: ClientServerMessageStep[] = [];
+            let messageWorldFullInfo = new ClientServerMessageWorldFullInfo();
+            messageWorldFullInfo.setWorld(this.world);
+
+            client.sendMessage(messageWorldFullInfo);
+            
+
+            /*let stepList: ClientServerMessageStep[] = [];
             let commandLog = this.gameServer.getCommandLog(0);
             for (let commandList of commandLog) {
                 let message = this.createStepMessage(0, commandList);
@@ -61,7 +67,7 @@
 
             let messageStepList = new ClientServerMessageStepList();
             messageStepList.setStepList(stepList);
-            client.sendMessage(messageStepList);
+            client.sendMessage(messageStepList);*/
         }
 
         protected abstract getClientIdBySID(sid: string);

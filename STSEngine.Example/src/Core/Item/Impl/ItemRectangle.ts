@@ -4,10 +4,6 @@ namespace STSEngine.Example {
 
     export abstract class ItemRectangle extends Item implements IItemRectangle {
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-        }
-
         private _position: number = ++this.lastAttributeId;
         private _positionPrecise: number = ++this.lastAttributeId;
         private _playerId: number = ++this.lastAttributeId;

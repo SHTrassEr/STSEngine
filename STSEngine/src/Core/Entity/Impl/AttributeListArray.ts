@@ -23,7 +23,15 @@
             this.attributeList[attribute] = value;
         }
 
-        public setList(attributeList: Iterable<[number, any]>): void {
+        public clear() {
+            this.attributeList = [];
+        }
+
+        public setList(attributeList: Iterable<[number, any]>, clear?: boolean): void {
+            if (clear) {
+                this.clear();
+            }
+
             for (let kvp of attributeList) {
                 this.set(kvp[0], kvp[1]);
             }

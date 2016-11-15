@@ -95,7 +95,7 @@
                     this.itemListService.remove(moveItem.getId());
 
                     let playerId = moveItem.getPlayerId();
-                    let client = this.clientListService.getTyped<IClient>(playerId, Client);
+                    let client = this.clientListService.getTyped<IClientActive>(playerId, ClientActive);
 
                     client.setScore(client.getScore() + 10);
 

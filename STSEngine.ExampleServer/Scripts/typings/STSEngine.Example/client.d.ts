@@ -1,8 +1,32 @@
 declare namespace STSEngine.Example {
-    class Client extends STSEngine.Client implements IClient {
+    abstract class Client extends STSEngine.Client implements IClient {
+    }
+}
+declare namespace STSEngine.Example {
+    class ClientActive extends Client implements IClientActive {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
         protected attributeScoreId: number;
         getScore(): number;
         setScore(score: number): void;
+    }
+}
+declare namespace STSEngine {
+    module ClientType {
+        const Active: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class ClientInitializer extends STSEngine.ClientInitializer implements IClientInitializer {
+        protected createByType(type: number, attr?: Iterable<[number, any]>): IClient;
+        createActive(attr?: Iterable<[number, any]>): ClientActive;
+        protected createAttributeList(): IAttributeList;
+    }
+}
+declare namespace STSEngine.Example {
+    class Point implements IPoint {
+        x: number;
+        y: number;
+        constructor(x: number, y: number);
     }
 }
 declare namespace STSEngine.Example {
@@ -146,6 +170,70 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    class Item extends STSEngine.Item implements IItem {
+    }
+}
+declare namespace STSEngine.Example {
+    abstract class ItemRectangle extends Item implements IItemRectangle {
+        private _position;
+        private _positionPrecise;
+        private _playerId;
+        private _minSpeed;
+        private _maxSpeed;
+        private _size;
+        private _moveDirection;
+        getPosition(): [number, number];
+        getPosition(d: number): number;
+        protected setPosition(position: [number, number]): void;
+        getPositionPrecise(): [number, number];
+        getPositionPrecise(d: number): number;
+        setPositionPrecise(position: [number, number]): void;
+        getPlayerId(): number;
+        setPlayerId(playerId: number): void;
+        getMinSpeed(): number;
+        setMinSpeed(speed: number): void;
+        getMaxSpeed(): number;
+        setMaxSpeed(speed: number): void;
+        getSize(): [number, number];
+        getSize(d: number): number;
+        setSize(size: [number, number]): void;
+        getMoveDirection(): MoveDirection;
+        setMoveDirection(direction: MoveDirection): void;
+    }
+}
+declare namespace STSEngine.Example {
+    class ItemBullet extends ItemRectangle {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        protected initDefault(): void;
+    }
+}
+declare namespace STSEngine {
+    module ItemType {
+        const Bullet: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class ItemInitializer extends STSEngine.ItemInitializer implements IItemInitializer {
+        constructor(createIdHandler: () => number);
+        protected createByType(type: number, attr?: Iterable<[number, any]>): IItem;
+        createPlayer(attr?: Iterable<[number, any]>): ItemPlayer;
+        createBullet(attr?: Iterable<[number, any]>): ItemBullet;
+        protected setItemId(item: IItem): void;
+        protected createAttributeList(): IAttributeList;
+    }
+}
+declare namespace STSEngine.Example {
+    class ItemPlayer extends ItemRectangle {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        protected initDefault(): void;
+    }
+}
+declare namespace STSEngine {
+    module ItemType {
+        const Player: number;
+    }
+}
+declare namespace STSEngine.Example {
     class Process extends STSEngine.Process implements IProcess {
     }
 }
@@ -236,10 +324,18 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class Point implements IPoint {
-        x: number;
-        y: number;
-        constructor(x: number, y: number);
+    class CollisionService implements ICollisionService {
+        protected itemListService: IItemListService;
+        protected worldAttributeList: IWorldAttributeList;
+        protected clientListService: IClientListService;
+        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService, clientListService: IClientListService);
+        processCollision(moveItem: IItem, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number]): void;
+        protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayerObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number], o: ItemPlayer): boolean;
+        protected processCollisionObjectBulletObjectPlayer(moveItem: ItemBullet, newPosition: [number, number], o: ItemPlayer): boolean;
+        protected processCollisionObjectRectangleWorld(moveItem: IItemRectangle, newPosition: [number, number]): boolean;
+        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
     }
 }
 declare namespace STSEngine.Example {
@@ -256,6 +352,7 @@ declare namespace STSEngine.Example {
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
         protected clientListService: IClientListService;
+        protected clientInitializer: IClientInitializer;
         protected commandInitializer: ICommandInitializer;
         protected objectInitializer: IItemInitializer;
         protected processInitializer: IProcessInitializer;
@@ -273,92 +370,20 @@ declare namespace STSEngine.Example {
         getProcessListService(): IProcessListService;
         getCollisionService(): ICollisionService;
         getClientListService(): IClientListService;
+        getClientInitializer(): IClientInitializer;
         protected getObjectId(): number;
         protected getProcessId(): number;
     }
 }
 declare namespace STSEngine.Example {
-    class CollisionService implements ICollisionService {
-        protected itemListService: IItemListService;
-        protected worldAttributeList: IWorldAttributeList;
-        protected clientListService: IClientListService;
-        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService, clientListService: IClientListService);
-        processCollision(moveItem: IItem, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number]): void;
-        protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayerObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number], o: ItemPlayer): boolean;
-        protected processCollisionObjectBulletObjectPlayer(moveItem: ItemBullet, newPosition: [number, number], o: ItemPlayer): boolean;
-        protected processCollisionObjectRectangleWorld(moveItem: IItemRectangle, newPosition: [number, number]): boolean;
-        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
-    }
-}
-declare namespace STSEngine.Example {
-    class Item extends STSEngine.Item implements IItem {
-    }
-}
-declare namespace STSEngine.Example {
-    abstract class ItemRectangle extends Item implements IItemRectangle {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        private _position;
-        private _positionPrecise;
-        private _playerId;
-        private _minSpeed;
-        private _maxSpeed;
-        private _size;
-        private _moveDirection;
-        getPosition(): [number, number];
-        getPosition(d: number): number;
-        protected setPosition(position: [number, number]): void;
-        getPositionPrecise(): [number, number];
-        getPositionPrecise(d: number): number;
-        setPositionPrecise(position: [number, number]): void;
-        getPlayerId(): number;
-        setPlayerId(playerId: number): void;
-        getMinSpeed(): number;
-        setMinSpeed(speed: number): void;
-        getMaxSpeed(): number;
-        setMaxSpeed(speed: number): void;
-        getSize(): [number, number];
-        getSize(d: number): number;
-        setSize(size: [number, number]): void;
-        getMoveDirection(): MoveDirection;
-        setMoveDirection(direction: MoveDirection): void;
-    }
-}
-declare namespace STSEngine.Example {
-    class ItemBullet extends ItemRectangle {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-}
-declare namespace STSEngine {
-    module ItemType {
-        const Bullet: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class ItemPlayer extends ItemRectangle {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-}
-declare namespace STSEngine {
-    module ItemType {
-        const Player: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class ItemInitializer extends STSEngine.ItemInitializer implements IItemInitializer {
-        constructor(createIdHandler: () => number);
-        protected createByType(type: number, attr?: Iterable<[number, any]>): IItem;
-        createPlayer(attr?: Iterable<[number, any]>): ItemPlayer;
-        createBullet(attr?: Iterable<[number, any]>): ItemBullet;
-        protected setItemId(item: IItem): void;
-        protected createAttributeList(): IAttributeList;
-    }
-}
-declare namespace STSEngine.Example {
-    interface IClient extends STSEngine.IClient {
+    interface IClientActive extends STSEngine.IClient {
         getScore(): number;
         setScore(score: number): void;
+    }
+}
+declare namespace STSEngine.Example {
+    interface IClientInitializer extends STSEngine.IClientInitializer {
+        createActive(attr?: Iterable<[number, any]>): ClientActive;
     }
 }
 declare namespace STSEngine.Example {
@@ -367,13 +392,6 @@ declare namespace STSEngine.Example {
         createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
         createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
         createFire(attr?: Iterable<[number, any]>): CommandFire;
-    }
-}
-declare namespace STSEngine.Example {
-    interface IProcessInitializer extends STSEngine.IProcessInitializer {
-        createMove(attr?: Iterable<[number, any]>): ProcessMoveObject;
-        createFire(attr?: Iterable<[number, any]>): ProcessFire;
-        createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject;
     }
 }
 declare namespace STSEngine.Example {
@@ -389,37 +407,6 @@ declare namespace STSEngine.Example {
         Right = 2,
         Down = 3,
         Left = 4,
-    }
-}
-declare namespace STSEngine.Example {
-    interface IWorld extends STSEngine.IWorld {
-        getServiceList(): IWorldServiceList;
-        getAttributeList(): IWorldAttributeList;
-    }
-}
-declare namespace STSEngine.Example {
-    interface IWorldAttributeList extends STSEngine.IWorldAttributeList {
-        getWorldSize(): [number, number];
-        setWorldSize(size: [number, number]): void;
-    }
-}
-declare namespace STSEngine.Example {
-    interface IWorldServiceList extends STSEngine.IWorldServiceList {
-        getWorldAttributeList(): IWorldAttributeList;
-        getCommandInitializer(): ICommandInitializer;
-        getItemInitializer(): IItemInitializer;
-        getProcessInitializer(): IProcessInitializer;
-        getProcessDispatcher(): IProcessDispatcher;
-        getCommandDispatcher(): ICommandDispatcher;
-        getItemListService(): IItemListService;
-        getProcessListService(): IProcessListService;
-        getClientListService(): IClientListService;
-        getCollisionService(): ICollisionService;
-    }
-}
-declare namespace STSEngine.Example {
-    interface ICollisionService {
-        processCollision(moveItem: IItem, newPosition: [number, number]): void;
     }
 }
 declare namespace STSEngine.Example {
@@ -444,6 +431,45 @@ declare namespace STSEngine.Example {
         setMaxSpeed(speed: number): void;
         getMoveDirection(): MoveDirection;
         setMoveDirection(direction: MoveDirection): void;
+    }
+}
+declare namespace STSEngine.Example {
+    interface IProcessInitializer extends STSEngine.IProcessInitializer {
+        createMove(attr?: Iterable<[number, any]>): ProcessMoveObject;
+        createFire(attr?: Iterable<[number, any]>): ProcessFire;
+        createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject;
+    }
+}
+declare namespace STSEngine.Example {
+    interface ICollisionService {
+        processCollision(moveItem: IItem, newPosition: [number, number]): void;
+    }
+}
+declare namespace STSEngine.Example {
+    interface IWorld extends STSEngine.IWorld {
+        getServiceList(): IWorldServiceList;
+        getAttributeList(): IWorldAttributeList;
+    }
+}
+declare namespace STSEngine.Example {
+    interface IWorldAttributeList extends STSEngine.IWorldAttributeList {
+        getWorldSize(): [number, number];
+        setWorldSize(size: [number, number]): void;
+    }
+}
+declare namespace STSEngine.Example {
+    interface IWorldServiceList extends STSEngine.IWorldServiceList {
+        getWorldAttributeList(): IWorldAttributeList;
+        getCommandInitializer(): ICommandInitializer;
+        getItemInitializer(): IItemInitializer;
+        getProcessInitializer(): IProcessInitializer;
+        getProcessDispatcher(): IProcessDispatcher;
+        getCommandDispatcher(): ICommandDispatcher;
+        getItemListService(): IItemListService;
+        getProcessListService(): IProcessListService;
+        getClientInitializer(): IClientInitializer;
+        getClientListService(): IClientListService;
+        getCollisionService(): ICollisionService;
     }
 }
 declare namespace STSEngine.Example {
@@ -497,7 +523,7 @@ declare namespace STSEngine.Example {
         protected clientListService: IClientListService;
         constructor(rootElement: HTMLDivElement, world: IWorld);
         protected getClientInfoText(client: IClient): PIXI.Text;
-        protected updateClientInfo(client: IClient): void;
+        protected updateClientInfo(client: IClientActive): void;
         protected updateAllClientInfo(): void;
         protected drawObjectRectangle(o: ItemRectangle): PIXI.Graphics;
         protected getObjectSprite(o: ItemRectangle): PIXI.Graphics;

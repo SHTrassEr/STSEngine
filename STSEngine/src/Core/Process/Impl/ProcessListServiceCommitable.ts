@@ -38,8 +38,34 @@
             }
         }
 
+
+        public clear(): void {
+            this.processList = [];
+            this.firstUncommitedIndex = 0;
+        }
+
         public getIterator(): IterableIterator<IProcess> {
             return this.processList.values();
+        }
+
+        public getList(): [number, any][][] {
+            let iterator = this.getIterator();
+            let list: [number, any][][] = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+
+            return list;
+        }
+
+        public setList(processList: Iterable<IProcess>, clear?: boolean): void {
+            if (clear) {
+                this.clear();
+            }
+
+            for (let entity of processList) {
+                this.add(entity);
+            }
         }
 
         public commit(): void {

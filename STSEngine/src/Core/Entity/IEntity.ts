@@ -9,5 +9,7 @@
         setId(id: number): void;
 
         getAttributeList(): IAttributeList;
+
+        setList(attributeList: Iterable<[number, any]>, clear?: boolean): void;
     }
 }

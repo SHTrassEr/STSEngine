@@ -61,7 +61,7 @@ function ready() {
         var clientList = world.getServiceList().getClientListService().getIterator();
         let str = '';
         for (let client of clientList) {
-            if (client instanceof STSEngine.Example.Client) {
+            if (client instanceof STSEngine.Example.ClientActive) {
                 str += client.getId() + " " + client.getScore() + "<br>";
             }
         }

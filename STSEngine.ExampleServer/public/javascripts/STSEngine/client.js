@@ -1,22 +1,6 @@
 'use strict';
 var STSEngine;
 (function (STSEngine) {
-    (function (ProcessStatus) {
-        ProcessStatus[ProcessStatus["Init"] = 0] = "Init";
-        ProcessStatus[ProcessStatus["Executing"] = 1] = "Executing";
-        ProcessStatus[ProcessStatus["Finished"] = 2] = "Finished";
-    })(STSEngine.ProcessStatus || (STSEngine.ProcessStatus = {}));
-    var ProcessStatus = STSEngine.ProcessStatus;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    (function (ProcessType) {
-        ProcessType[ProcessType["Unknown"] = 0] = "Unknown";
-    })(STSEngine.ProcessType || (STSEngine.ProcessType = {}));
-    var ProcessType = STSEngine.ProcessType;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
     class BaseException {
         constructor(message) {
             this.message = message;
@@ -39,6 +23,22 @@ var STSEngine;
     }
     ServiceAttributeType.LastId = "LastId";
     STSEngine.ServiceAttributeType = ServiceAttributeType;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    (function (ProcessStatus) {
+        ProcessStatus[ProcessStatus["Init"] = 0] = "Init";
+        ProcessStatus[ProcessStatus["Executing"] = 1] = "Executing";
+        ProcessStatus[ProcessStatus["Finished"] = 2] = "Finished";
+    })(STSEngine.ProcessStatus || (STSEngine.ProcessStatus = {}));
+    var ProcessStatus = STSEngine.ProcessStatus;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    (function (ProcessType) {
+        ProcessType[ProcessType["Unknown"] = 0] = "Unknown";
+    })(STSEngine.ProcessType || (STSEngine.ProcessType = {}));
+    var ProcessType = STSEngine.ProcessType;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -72,6 +72,9 @@ var STSEngine;
         getList() {
             return this.attributeList.getList();
         }
+        setList(attributeList, clear) {
+            this.attributeList.setList(attributeList, clear);
+        }
         getIterator() {
             return this.attributeList.getIterator();
         }
@@ -96,6 +99,14 @@ var STSEngine;
         }
     }
     STSEngine.Client = Client;
+    var ClientType;
+    (function (ClientType) {
+        let lastTypeId = 0;
+        function getNewTypeId() {
+            return ++lastTypeId;
+        }
+        ClientType.getNewTypeId = getNewTypeId;
+    })(ClientType = STSEngine.ClientType || (STSEngine.ClientType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -132,6 +143,22 @@ var STSEngine;
         getIterator() {
             return this.objectList.values();
         }
+        getList() {
+            let iterator = this.getIterator();
+            let list = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+            return list;
+        }
+        setList(entityList, clear) {
+            if (clear) {
+                this.clear();
+            }
+            for (let entity of entityList) {
+                this.add(entity);
+            }
+        }
         getAll(condition) {
             return this.filterService.getAll(this.objectList.values(), condition);
         }
@@ -156,197 +183,45 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class AttributeListArray {
-        constructor() {
-            this.attributeList = [];
+    class EntityInitializer {
+        constructor(createIdHandler) {
+            this.itemAttributeType = 1;
+            this.createIdHandler = createIdHandler;
         }
-        get(attribute, defaultValue) {
-            if (attribute >= 0 && attribute < this.attributeList.length) {
-                let value = this.attributeList[attribute];
-                if (value !== undefined) {
-                    return this.attributeList[attribute];
+        create(attr) {
+            if (attr instanceof Number) {
+                return this.createByType(attr);
+            }
+            return this.createByAttr(attr);
+        }
+        getItemType(attr) {
+            for (var kvp of attr) {
+                if (kvp[0] == this.itemAttributeType) {
+                    return kvp[1];
                 }
             }
-            return defaultValue;
+            return 0;
         }
-        set(attribute, value) {
-            this.attributeList[attribute] = value;
-        }
-        setList(attributeList) {
-            for (let kvp of attributeList) {
-                this.set(kvp[0], kvp[1]);
+        *createList(attrList) {
+            for (let attr of attrList) {
+                yield this.create(attr);
             }
         }
-        rollback() {
+        createByAttr(attr) {
+            var itemType = this.getItemType(attr);
+            return this.createByType(itemType, attr);
         }
-        commit() {
-        }
-        isDirty() {
-            return false;
-        }
-        *getIterator() {
-            for (let key = 0; key < this.attributeList.length; key++) {
-                let value = this.attributeList[key];
-                if (value !== undefined) {
-                    yield [key, value];
-                }
-            }
-        }
-        has(attribute) {
-            if (attribute >= 0 && attribute < this.attributeList.length) {
-                if (this.attributeList[attribute] !== undefined) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        delete(attribute) {
-            this.attributeList[attribute] = undefined;
-        }
-        getList() {
-            let list = [];
-            for (let key = 0; key < this.attributeList.length; key++) {
-                let value = this.attributeList[key];
-                if (value !== null && value !== undefined) {
-                    list.push([key, value]);
-                }
-            }
-            return list;
+        createId() {
+            return this.createIdHandler();
         }
     }
-    STSEngine.AttributeListArray = AttributeListArray;
+    STSEngine.EntityInitializer = EntityInitializer;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class AttributeListMap {
-        constructor() {
-            this.attributeList = new Map();
-        }
-        get(attribute, defaultValue) {
-            if (this.attributeList.has(attribute)) {
-                return this.attributeList.get(attribute);
-            }
-            return defaultValue;
-        }
-        set(attribute, value) {
-            this.attributeList.set(attribute, value);
-        }
-        setList(attributeList) {
-            for (let kvp of attributeList) {
-                this.attributeList.set(kvp[0], kvp[1]);
-            }
-        }
-        rollback() {
-        }
-        commit() {
-        }
-        isDirty() {
-            return false;
-        }
-        getIterator() {
-            return this.attributeList.entries();
-        }
-        has(attribute) {
-            return this.attributeList.has(attribute);
-        }
-        delete(attribute) {
-            this.attributeList.delete(attribute);
-        }
-        getList() {
-            let list = [];
-            for (let kvp of this.attributeList) {
-                if (kvp[1] !== null && kvp[1] !== undefined) {
-                    list.push(kvp);
-                }
-            }
-            return list;
-        }
+    class ClientInitializer extends STSEngine.EntityInitializer {
     }
-    STSEngine.AttributeListMap = AttributeListMap;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class AttributeListMapCommitable {
-        constructor() {
-            this.commitedAttributeList = new Map();
-            this.attributeList = new Map();
-            this.deletedAttributeList = new Set();
-        }
-        get(attribute, defaultValue) {
-            if (!this.deletedAttributeList.has(attribute)) {
-                if (this.attributeList.has(attribute)) {
-                    return this.attributeList.get(attribute);
-                }
-                if (this.commitedAttributeList.has(attribute)) {
-                    return this.commitedAttributeList.get(attribute);
-                }
-            }
-            return defaultValue;
-        }
-        set(attribute, value) {
-            this.attributeList.set(attribute, value);
-            this.deletedAttributeList.delete(attribute);
-        }
-        setList(attributeList) {
-            for (let kvp of attributeList) {
-                this.attributeList.set(kvp[0], kvp[1]);
-            }
-        }
-        has(attribute) {
-            if (!this.deletedAttributeList.has(attribute)) {
-                if (this.attributeList.has(attribute)) {
-                    return true;
-                }
-                if (this.commitedAttributeList.has(attribute)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        rollback() {
-            this.attributeList.clear();
-            this.deletedAttributeList.clear();
-        }
-        commit() {
-            if (this.isDirty()) {
-                for (let kvp of this.attributeList) {
-                    this.commitedAttributeList.set(kvp[0], kvp[1]);
-                }
-                for (let attribute of this.deletedAttributeList) {
-                    this.commitedAttributeList.delete(attribute);
-                }
-                this.attributeList.clear();
-                this.deletedAttributeList.clear();
-            }
-        }
-        isDirty() {
-            return (this.attributeList.size > 0) || (this.deletedAttributeList.size > 0);
-        }
-        delete(attribute) {
-            this.attributeList.delete(attribute);
-            if (this.commitedAttributeList.has(attribute)) {
-                this.deletedAttributeList.add(attribute);
-            }
-        }
-        getIterator() {
-            return this.attributeList.entries();
-        }
-        getList() {
-            let list = [];
-            for (let kvp of this.attributeList) {
-                list.push(kvp);
-            }
-            for (let kvp of this.commitedAttributeList) {
-                let attribute = kvp[0];
-                let value = kvp[1];
-                if (!this.attributeList.has(attribute) && !this.deletedAttributeList.has(attribute)) {
-                    list.push(kvp);
-                }
-            }
-            return list;
-        }
-    }
-    STSEngine.AttributeListMapCommitable = AttributeListMapCommitable;
+    STSEngine.ClientInitializer = ClientInitializer;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -424,42 +299,6 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class EntityInitializer {
-        constructor(createIdHandler) {
-            this.itemAttributeType = 1;
-            this.createIdHandler = createIdHandler;
-        }
-        create(attr) {
-            if (attr instanceof Number) {
-                return this.createByType(attr);
-            }
-            return this.createByAttr(attr);
-        }
-        getItemType(attr) {
-            for (var kvp of attr) {
-                if (kvp[0] == this.itemAttributeType) {
-                    return kvp[1];
-                }
-            }
-            return 0;
-        }
-        *createList(attrList) {
-            for (let attr of attrList) {
-                yield this.create(attr);
-            }
-        }
-        createByAttr(attr) {
-            var itemType = this.getItemType(attr);
-            return this.createByType(itemType, attr);
-        }
-        createId() {
-            return this.createIdHandler();
-        }
-    }
-    STSEngine.EntityInitializer = EntityInitializer;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
     class CommandInitializer extends STSEngine.EntityInitializer {
     }
     STSEngine.CommandInitializer = CommandInitializer;
@@ -502,242 +341,467 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class Process extends STSEngine.Entity {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this._processStatus = ++this.lastAttributeId;
-            this._execCount = ++this.lastAttributeId;
-            this.setProcessStatus(STSEngine.ProcessStatus.Init);
-        }
-        getProcessStatus() {
-            return this.attributeList.get(this._processStatus);
-        }
-        setProcessStatus(processStatus) {
-            this.attributeList.set(this._processStatus, processStatus);
-        }
-        getProcessExecCount() {
-            return this.attributeList.get(this._execCount, 0);
-        }
-        setProcessExecCount(execCount) {
-            this.attributeList.set(this._execCount, execCount);
-        }
-    }
-    STSEngine.Process = Process;
-    var ProcessType;
-    (function (ProcessType) {
-        let lastTypeId = 0;
-        function getNewTypeId() {
-            return ++lastTypeId;
-        }
-        ProcessType.getNewTypeId = getNewTypeId;
-    })(ProcessType = STSEngine.ProcessType || (STSEngine.ProcessType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ProcessDispatcher {
-        execute(process) {
-            let processStatus = process.getProcessStatus();
-            if (processStatus === STSEngine.ProcessStatus.Executing) {
-                let handler = this.getProcessHandler(process);
-                handler.execute(process);
-            }
-        }
-        init(process) {
-            let processStatus = process.getProcessStatus();
-            if (processStatus === STSEngine.ProcessStatus.Init) {
-                let handler = this.getProcessHandler(process);
-                handler.init(process);
-            }
-        }
-        finish(process) {
-            let processStatus = process.getProcessStatus();
-            if (processStatus !== STSEngine.ProcessStatus.Finished) {
-                let handler = this.getProcessHandler(process);
-                handler.finish(process);
-            }
-        }
-        getProcessHandler(process) {
-            return this.processHandlerList[process.getType()];
-        }
-    }
-    STSEngine.ProcessDispatcher = ProcessDispatcher;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ProcessHandler {
-        constructor(worldServiceList) {
-            this.worldServiceList = worldServiceList;
-        }
-        init(process) {
-            if (this.isValidProcessType(process)) {
-                this.initProcess(process);
-            }
-        }
-        execute(process) {
-            if (this.isValidProcessType(process)) {
-                this.executeProcess(process);
-                process.setProcessExecCount(process.getProcessExecCount() + 1);
-            }
-        }
-        finish(process) {
-            if (this.isValidProcessType(process)) {
-                this.finishProcess(process);
-            }
-        }
-        initProcess(process) {
-        }
-        executeProcess(process) {
-        }
-        finishProcess(process) {
-        }
-        isValidProcessType(command) {
-            return true;
-        }
-        startProcess(process) {
-            this.worldServiceList.getProcessListService().add(process);
-            this.worldServiceList.getProcessDispatcher().init(process);
-        }
-    }
-    STSEngine.ProcessHandler = ProcessHandler;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ProcessInitializer extends STSEngine.EntityInitializer {
-    }
-    STSEngine.ProcessInitializer = ProcessInitializer;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ProcessListService {
+    class AttributeListArray {
         constructor() {
-            this.processList = [];
-            this.filterService = new STSEngine.FilterService();
+            this.attributeList = [];
         }
-        init(processList) {
-            this.processList = [];
-            for (let p of processList) {
-                this.add(p);
-            }
-        }
-        getProcessList() {
-            return this.processList;
-        }
-        add(process) {
-            this.processList.push(process);
-        }
-        removeFinished() {
-            let list;
-            for (let i = this.processList.length - 1; i >= 0; i--) {
-                let process = this.processList[i];
-                if (process.getProcessStatus() == STSEngine.ProcessStatus.Finished) {
-                    this.processList.splice(i, 1);
+        get(attribute, defaultValue) {
+            if (attribute >= 0 && attribute < this.attributeList.length) {
+                let value = this.attributeList[attribute];
+                if (value !== undefined) {
+                    return this.attributeList[attribute];
                 }
             }
+            return defaultValue;
         }
-        getIterator() {
-            return this.processList.values();
+        set(attribute, value) {
+            this.attributeList[attribute] = value;
         }
-        getAll(condition) {
-            return this.filterService.getAll(this.processList, condition);
+        clear() {
+            this.attributeList = [];
         }
-        getFirst(condition) {
-            return this.filterService.getFirst(this.processList, condition);
-        }
-    }
-    STSEngine.ProcessListService = ProcessListService;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ProcessListServiceCommitable {
-        constructor() {
-            this.processList = [];
-            this.filterService = new STSEngine.FilterService();
-            this.firstUncommitedIndex = 0;
-        }
-        getProcessList() {
-            return this.processList;
-        }
-        add(process) {
-            this.processList.push(process);
-        }
-        init(processList) {
-            this.processList = [];
-            for (let p of processList) {
-                this.add(p);
+        setList(attributeList, clear) {
+            if (clear) {
+                this.clear();
             }
-        }
-        removeFinished() {
-            let list;
-            for (let i = this.firstUncommitedIndex - 1; i >= 0; i--) {
-                let process = this.processList[i];
-                if (process.getProcessStatus() == STSEngine.ProcessStatus.Finished) {
-                    this.processList.splice(i, 1);
-                    this.firstUncommitedIndex--;
-                }
+            for (let kvp of attributeList) {
+                this.set(kvp[0], kvp[1]);
             }
-        }
-        getIterator() {
-            return this.processList.values();
-        }
-        commit() {
-            for (let process of this.processList) {
-                process.getAttributeList().commit();
-            }
-            this.firstUncommitedIndex = this.processList.length;
         }
         rollback() {
-            if (this.processList.length > this.firstUncommitedIndex) {
-                this.processList.splice(this.firstUncommitedIndex);
-            }
-            for (let process of this.processList) {
-                process.getAttributeList().rollback();
-            }
+        }
+        commit() {
         }
         isDirty() {
-            if (this.processList.length > this.firstUncommitedIndex) {
-                return true;
+            return false;
+        }
+        *getIterator() {
+            for (let key = 0; key < this.attributeList.length; key++) {
+                let value = this.attributeList[key];
+                if (value !== undefined) {
+                    yield [key, value];
+                }
             }
-            for (let process of this.processList) {
-                if (process.getAttributeList().isDirty()) {
+        }
+        has(attribute) {
+            if (attribute >= 0 && attribute < this.attributeList.length) {
+                if (this.attributeList[attribute] !== undefined) {
                     return true;
                 }
             }
             return false;
         }
-        getAll(condition) {
-            return this.filterService.getAll(this.processList.values(), condition);
+        delete(attribute) {
+            this.attributeList[attribute] = undefined;
         }
-        getFirst(condition) {
-            return this.filterService.getFirst(this.processList.values(), condition);
+        getList() {
+            let list = [];
+            for (let key = 0; key < this.attributeList.length; key++) {
+                let value = this.attributeList[key];
+                if (value !== null && value !== undefined) {
+                    list.push([key, value]);
+                }
+            }
+            return list;
         }
     }
-    STSEngine.ProcessListServiceCommitable = ProcessListServiceCommitable;
+    STSEngine.AttributeListArray = AttributeListArray;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class Item extends STSEngine.Entity {
+    class AttributeListMap {
+        constructor() {
+            this.attributeList = new Map();
+        }
+        get(attribute, defaultValue) {
+            if (this.attributeList.has(attribute)) {
+                return this.attributeList.get(attribute);
+            }
+            return defaultValue;
+        }
+        set(attribute, value) {
+            this.attributeList.set(attribute, value);
+        }
+        clear() {
+            this.attributeList.clear();
+        }
+        setList(attributeList, clear) {
+            if (clear) {
+                this.clear();
+            }
+            for (let kvp of attributeList) {
+                this.attributeList.set(kvp[0], kvp[1]);
+            }
+        }
+        rollback() {
+        }
+        commit() {
+        }
+        isDirty() {
+            return false;
+        }
+        getIterator() {
+            return this.attributeList.entries();
+        }
+        has(attribute) {
+            return this.attributeList.has(attribute);
+        }
+        delete(attribute) {
+            this.attributeList.delete(attribute);
+        }
+        getList() {
+            let list = [];
+            for (let kvp of this.attributeList) {
+                if (kvp[1] !== null && kvp[1] !== undefined) {
+                    list.push(kvp);
+                }
+            }
+            return list;
+        }
     }
-    STSEngine.Item = Item;
-    var ItemType;
-    (function (ItemType) {
+    STSEngine.AttributeListMap = AttributeListMap;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class AttributeListMapCommitable {
+        constructor() {
+            this.commitedAttributeList = new Map();
+            this.attributeList = new Map();
+            this.deletedAttributeList = new Set();
+        }
+        get(attribute, defaultValue) {
+            if (!this.deletedAttributeList.has(attribute)) {
+                if (this.attributeList.has(attribute)) {
+                    return this.attributeList.get(attribute);
+                }
+                if (this.commitedAttributeList.has(attribute)) {
+                    return this.commitedAttributeList.get(attribute);
+                }
+            }
+            return defaultValue;
+        }
+        set(attribute, value) {
+            this.attributeList.set(attribute, value);
+            this.deletedAttributeList.delete(attribute);
+        }
+        clear() {
+            this.deletedAttributeList.clear();
+            this.commitedAttributeList.clear();
+            this.attributeList.clear();
+        }
+        setList(attributeList, clear) {
+            if (clear) {
+                this.clear();
+            }
+            for (let kvp of attributeList) {
+                this.attributeList.set(kvp[0], kvp[1]);
+            }
+        }
+        has(attribute) {
+            if (!this.deletedAttributeList.has(attribute)) {
+                if (this.attributeList.has(attribute)) {
+                    return true;
+                }
+                if (this.commitedAttributeList.has(attribute)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        rollback() {
+            this.attributeList.clear();
+            this.deletedAttributeList.clear();
+        }
+        commit() {
+            if (this.isDirty()) {
+                for (let kvp of this.attributeList) {
+                    this.commitedAttributeList.set(kvp[0], kvp[1]);
+                }
+                for (let attribute of this.deletedAttributeList) {
+                    this.commitedAttributeList.delete(attribute);
+                }
+                this.attributeList.clear();
+                this.deletedAttributeList.clear();
+            }
+        }
+        isDirty() {
+            return (this.attributeList.size > 0) || (this.deletedAttributeList.size > 0);
+        }
+        delete(attribute) {
+            this.attributeList.delete(attribute);
+            if (this.commitedAttributeList.has(attribute)) {
+                this.deletedAttributeList.add(attribute);
+            }
+        }
+        getIterator() {
+            return this.attributeList.entries();
+        }
+        getList() {
+            let list = [];
+            for (let kvp of this.attributeList) {
+                list.push(kvp);
+            }
+            for (let kvp of this.commitedAttributeList) {
+                let attribute = kvp[0];
+                let value = kvp[1];
+                if (!this.attributeList.has(attribute) && !this.deletedAttributeList.has(attribute)) {
+                    list.push(kvp);
+                }
+            }
+            return list;
+        }
+    }
+    STSEngine.AttributeListMapCommitable = AttributeListMapCommitable;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessage extends STSEngine.Entity {
+    }
+    STSEngine.ClientServerMessage = ClientServerMessage;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
         let lastTypeId = 0;
         function getNewTypeId() {
             return ++lastTypeId;
         }
-        ItemType.getNewTypeId = getNewTypeId;
-    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
+        ClientServerMessageType.getNewTypeId = getNewTypeId;
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class ItemInitializer extends STSEngine.EntityInitializer {
+    class ClientServerMessageCommandList extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._commandList = ++this.lastAttributeId;
+            this.setType(ClientServerMessageType.CommandList);
+        }
+        setCommandList(commandList) {
+            this.attributeList.set(this._commandList, commandList);
+        }
+        getCommandList() {
+            return this.attributeList.get(this._commandList);
+        }
     }
-    STSEngine.ItemInitializer = ItemInitializer;
+    STSEngine.ClientServerMessageCommandList = ClientServerMessageCommandList;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.CommandList = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class ItemListService extends STSEngine.EntityListService {
+    class ClientServerMessageInit extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._playerId = ++this.lastAttributeId;
+            this.setType(ClientServerMessageType.Init);
+        }
+        setPlayerId(playerId) {
+            this.attributeList.set(this._playerId, playerId);
+        }
+        getPlayerId() {
+            return this.attributeList.get(this._playerId);
+        }
     }
-    STSEngine.ItemListService = ItemListService;
+    STSEngine.ClientServerMessageInit = ClientServerMessageInit;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.Init = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessageInitializer extends STSEngine.EntityInitializer {
+        createByType(type, attr) {
+            switch (type) {
+                case STSEngine.ClientServerMessageType.CommandList:
+                    return this.createCommandList(attr);
+                case STSEngine.ClientServerMessageType.RequestAuthentication:
+                    return this.createRequestAuthentication(attr);
+                case STSEngine.ClientServerMessageType.ResponseAuthentication:
+                    return this.createResponseAuthentication(attr);
+                case STSEngine.ClientServerMessageType.Step:
+                    return this.createStep(attr);
+                case STSEngine.ClientServerMessageType.StepList:
+                    return this.createStepList(attr);
+                case STSEngine.ClientServerMessageType.Init:
+                    return this.createInit(attr);
+                case STSEngine.ClientServerMessageType.WorldFullInfo:
+                    return this.createWorldFullInfo(attr);
+            }
+            throw 'Unexpected command type: ' + type;
+        }
+        createCommandList(attr) {
+            return new STSEngine.ClientServerMessageCommandList(this.createAttributeList(), attr);
+        }
+        createRequestAuthentication(attr) {
+            return new STSEngine.ClientServerMessageRequestAuthentication(this.createAttributeList(), attr);
+        }
+        createResponseAuthentication(attr) {
+            return new STSEngine.ClientServerMessageResponseAuthentication(this.createAttributeList(), attr);
+        }
+        createStep(attr) {
+            return new STSEngine.ClientServerMessageStep(this.createAttributeList(), attr);
+        }
+        createInit(attr) {
+            return new STSEngine.ClientServerMessageInit(this.createAttributeList(), attr);
+        }
+        createStepList(attr) {
+            return new STSEngine.ClientServerMessageStepList(this.createAttributeList(), attr);
+        }
+        createWorldFullInfo(attr) {
+            return new STSEngine.ClientServerMessageWorldFullInfo(this.createAttributeList(), attr);
+        }
+        createAttributeList() {
+            return new STSEngine.AttributeListArray();
+        }
+    }
+    STSEngine.ClientServerMessageInitializer = ClientServerMessageInitializer;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessageRequestAuthentication extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this.setType(ClientServerMessageType.RequestAuthentication);
+        }
+    }
+    STSEngine.ClientServerMessageRequestAuthentication = ClientServerMessageRequestAuthentication;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.RequestAuthentication = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessageResponseAuthentication extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._sid = ++this.lastAttributeId;
+            this.setType(ClientServerMessageType.ResponseAuthentication);
+        }
+        setSID(sid) {
+            this.attributeList.set(this._sid, sid);
+        }
+        getSID() {
+            return this.attributeList.get(this._sid);
+        }
+    }
+    STSEngine.ClientServerMessageResponseAuthentication = ClientServerMessageResponseAuthentication;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.ResponseAuthentication = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessageStep extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._commandList = ++this.lastAttributeId;
+            this._stepNumber = ++this.lastAttributeId;
+            this.setType(ClientServerMessageType.Step);
+        }
+        setCommandList(commandList) {
+            let commandAttributeList = [];
+            if (commandList) {
+                for (let command of commandList) {
+                    commandAttributeList.push(command.getList());
+                }
+            }
+            this.attributeList.set(this._commandList, commandAttributeList);
+        }
+        getCommandList() {
+            return this.attributeList.get(this._commandList);
+        }
+        getStepNumber() {
+            return this.attributeList.get(this._stepNumber);
+        }
+        setStepNumber(stepNumber) {
+            this.attributeList.set(this._stepNumber, stepNumber);
+        }
+    }
+    STSEngine.ClientServerMessageStep = ClientServerMessageStep;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.Step = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessageStepList extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._stepList = ++this.lastAttributeId;
+            this.setType(ClientServerMessageType.StepList);
+        }
+        setStepList(stepList) {
+            let stepAttributeList = [];
+            if (stepList) {
+                for (let step of stepList) {
+                    stepAttributeList.push(step.getList());
+                }
+            }
+            this.attributeList.set(this._stepList, stepAttributeList);
+        }
+        getStepList() {
+            return this.attributeList.get(this._stepList);
+        }
+    }
+    STSEngine.ClientServerMessageStepList = ClientServerMessageStepList;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.StepList = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ClientServerMessageWorldFullInfo extends STSEngine.ClientServerMessage {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._worldAttributeList = ++this.lastAttributeId;
+            this._clientListService = ++this.lastAttributeId;
+            this._itemListService = ++this.lastAttributeId;
+            this._processListService = ++this.lastAttributeId;
+            this.setType(ClientServerMessageType.WorldFullInfo);
+        }
+        setWorld(world) {
+            let serviceList = world.getServiceList();
+            this.setWorldAttributeList(serviceList.getWorldAttributeList());
+            this.setClientListService(serviceList.getClientListService());
+            this.setItemListService(serviceList.getItemListService());
+            this.setProcessListService(serviceList.getProcessListService());
+        }
+        setWorldAttributeList(worldAttributeList) {
+            this.attributeList.set(this._worldAttributeList, worldAttributeList.getList());
+        }
+        getWorldAttributeList() {
+            return this.attributeList.get(this._worldAttributeList);
+        }
+        setClientListService(clientListService) {
+            this.attributeList.set(this._clientListService, clientListService.getList());
+        }
+        getClientListService() {
+            return this.attributeList.get(this._clientListService);
+        }
+        setItemListService(itemListService) {
+            this.attributeList.set(this._itemListService, itemListService.getList());
+        }
+        getItemListService() {
+            return this.attributeList.get(this._itemListService);
+        }
+        setProcessListService(processListService) {
+            this.attributeList.set(this._processListService, processListService.getList());
+        }
+        getProcessListService() {
+            return this.attributeList.get(this._processListService);
+        }
+    }
+    STSEngine.ClientServerMessageWorldFullInfo = ClientServerMessageWorldFullInfo;
+    var ClientServerMessageType;
+    (function (ClientServerMessageType) {
+        ClientServerMessageType.WorldFullInfo = ClientServerMessageType.getNewTypeId();
+    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -814,6 +878,22 @@ var STSEngine;
         }
         getIterator() {
             return this.filterService.getAll(this.objectListService.getIterator(), this.isObjectNotDeleted.bind(this));
+        }
+        getList() {
+            let iterator = this.getIterator();
+            let list = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+            return list;
+        }
+        setList(entityList, clear) {
+            if (clear) {
+                this.clear();
+            }
+            for (let entity of entityList) {
+                this.add(entity);
+            }
         }
         remove(id) {
             if (this.objectListService.has(id) && !this.deletedObjectIdList.has(id)) {
@@ -1065,6 +1145,9 @@ var STSEngine;
         getClientListService() {
             return this.clientListService;
         }
+        getClientInitializer() {
+            return this.clientInitializer;
+        }
         getObjectId() {
             var id = this.worldAttributeList.getLastObjectId() + 1;
             this.worldAttributeList.setLastObjectId(id);
@@ -1080,222 +1163,283 @@ var STSEngine;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class ClientServerMessage extends STSEngine.Entity {
+    class Process extends STSEngine.Entity {
+        constructor(attributeList, kvpList) {
+            super(attributeList, kvpList);
+            this._processStatus = ++this.lastAttributeId;
+            this._execCount = ++this.lastAttributeId;
+            this.setProcessStatus(STSEngine.ProcessStatus.Init);
+        }
+        getProcessStatus() {
+            return this.attributeList.get(this._processStatus);
+        }
+        setProcessStatus(processStatus) {
+            this.attributeList.set(this._processStatus, processStatus);
+        }
+        getProcessExecCount() {
+            return this.attributeList.get(this._execCount, 0);
+        }
+        setProcessExecCount(execCount) {
+            this.attributeList.set(this._execCount, execCount);
+        }
     }
-    STSEngine.ClientServerMessage = ClientServerMessage;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
+    STSEngine.Process = Process;
+    var ProcessType;
+    (function (ProcessType) {
         let lastTypeId = 0;
         function getNewTypeId() {
             return ++lastTypeId;
         }
-        ClientServerMessageType.getNewTypeId = getNewTypeId;
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+        ProcessType.getNewTypeId = getNewTypeId;
+    })(ProcessType = STSEngine.ProcessType || (STSEngine.ProcessType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class ClientServerMessageCommandList extends STSEngine.ClientServerMessage {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this._commandList = ++this.lastAttributeId;
-            this.setType(ClientServerMessageType.CommandList);
-        }
-        setCommandList(commandList) {
-            this.attributeList.set(this._commandList, commandList);
-        }
-        getCommandList() {
-            return this.attributeList.get(this._commandList);
-        }
-    }
-    STSEngine.ClientServerMessageCommandList = ClientServerMessageCommandList;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
-        ClientServerMessageType.CommandList = ClientServerMessageType.getNewTypeId();
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessageInit extends STSEngine.ClientServerMessage {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this._playerId = ++this.lastAttributeId;
-            this.setType(ClientServerMessageType.Init);
-        }
-        setPlayerId(playerId) {
-            this.attributeList.set(this._playerId, playerId);
-        }
-        getPlayerId() {
-            return this.attributeList.get(this._playerId);
-        }
-    }
-    STSEngine.ClientServerMessageInit = ClientServerMessageInit;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
-        ClientServerMessageType.Init = ClientServerMessageType.getNewTypeId();
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessageInitializer extends STSEngine.EntityInitializer {
-        createByType(type, attr) {
-            switch (type) {
-                case STSEngine.ClientServerMessageType.CommandList:
-                    return this.createCommandList(attr);
-                case STSEngine.ClientServerMessageType.RequestAuthentication:
-                    return this.createRequestAuthentication(attr);
-                case STSEngine.ClientServerMessageType.ResponseAuthentication:
-                    return this.createResponseAuthentication(attr);
-                case STSEngine.ClientServerMessageType.Step:
-                    return this.createStep(attr);
-                case STSEngine.ClientServerMessageType.StepList:
-                    return this.createStepList(attr);
-                case STSEngine.ClientServerMessageType.Init:
-                    return this.createInit(attr);
+    class ProcessDispatcher {
+        execute(process) {
+            let processStatus = process.getProcessStatus();
+            if (processStatus === STSEngine.ProcessStatus.Executing) {
+                let handler = this.getProcessHandler(process);
+                handler.execute(process);
             }
-            throw 'Unexpected command type: ' + type;
         }
-        createCommandList(attr) {
-            return new STSEngine.ClientServerMessageCommandList(this.createAttributeList(), attr);
-        }
-        createRequestAuthentication(attr) {
-            return new STSEngine.ClientServerMessageRequestAuthentication(this.createAttributeList(), attr);
-        }
-        createResponseAuthentication(attr) {
-            return new STSEngine.ClientServerMessageResponseAuthentication(this.createAttributeList(), attr);
-        }
-        createStep(attr) {
-            return new STSEngine.ClientServerMessageStep(this.createAttributeList(), attr);
-        }
-        createInit(attr) {
-            return new STSEngine.ClientServerMessageInit(this.createAttributeList(), attr);
-        }
-        createStepList(attr) {
-            return new STSEngine.ClientServerMessageStepList(this.createAttributeList(), attr);
-        }
-        createAttributeList() {
-            return new STSEngine.AttributeListArray();
-        }
-    }
-    STSEngine.ClientServerMessageInitializer = ClientServerMessageInitializer;
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessageRequestAuthentication extends STSEngine.ClientServerMessage {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this.setType(ClientServerMessageType.RequestAuthentication);
-        }
-    }
-    STSEngine.ClientServerMessageRequestAuthentication = ClientServerMessageRequestAuthentication;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
-        ClientServerMessageType.RequestAuthentication = ClientServerMessageType.getNewTypeId();
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessageResponseAuthentication extends STSEngine.ClientServerMessage {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this._sid = ++this.lastAttributeId;
-            this.setType(ClientServerMessageType.ResponseAuthentication);
-        }
-        setSID(sid) {
-            this.attributeList.set(this._sid, sid);
-        }
-        getSID() {
-            return this.attributeList.get(this._sid);
-        }
-    }
-    STSEngine.ClientServerMessageResponseAuthentication = ClientServerMessageResponseAuthentication;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
-        ClientServerMessageType.ResponseAuthentication = ClientServerMessageType.getNewTypeId();
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessageStep extends STSEngine.ClientServerMessage {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this._commandList = ++this.lastAttributeId;
-            this._stepNumber = ++this.lastAttributeId;
-            this.setType(ClientServerMessageType.Step);
-        }
-        setCommandList(commandList) {
-            let commandAttributeList = [];
-            if (commandList) {
-                for (let command of commandList) {
-                    commandAttributeList.push(command.getList());
-                }
+        init(process) {
+            let processStatus = process.getProcessStatus();
+            if (processStatus === STSEngine.ProcessStatus.Init) {
+                let handler = this.getProcessHandler(process);
+                handler.init(process);
             }
-            this.attributeList.set(this._commandList, commandAttributeList);
         }
-        getCommandList() {
-            return this.attributeList.get(this._commandList);
-        }
-        getStepNumber() {
-            return this.attributeList.get(this._stepNumber);
-        }
-        setStepNumber(stepNumber) {
-            this.attributeList.set(this._stepNumber, stepNumber);
-        }
-    }
-    STSEngine.ClientServerMessageStep = ClientServerMessageStep;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
-        ClientServerMessageType.Step = ClientServerMessageType.getNewTypeId();
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    class ClientServerMessageStepList extends STSEngine.ClientServerMessage {
-        constructor(attributeList, kvpList) {
-            super(attributeList, kvpList);
-            this._stepList = ++this.lastAttributeId;
-            this.setType(ClientServerMessageType.StepList);
-        }
-        setStepList(stepList) {
-            let stepAttributeList = [];
-            if (stepList) {
-                for (let step of stepList) {
-                    stepAttributeList.push(step.getList());
-                }
+        finish(process) {
+            let processStatus = process.getProcessStatus();
+            if (processStatus !== STSEngine.ProcessStatus.Finished) {
+                let handler = this.getProcessHandler(process);
+                handler.finish(process);
             }
-            this.attributeList.set(this._stepList, stepAttributeList);
         }
-        getStepList() {
-            return this.attributeList.get(this._stepList);
+        getProcessHandler(process) {
+            return this.processHandlerList[process.getType()];
         }
     }
-    STSEngine.ClientServerMessageStepList = ClientServerMessageStepList;
-    var ClientServerMessageType;
-    (function (ClientServerMessageType) {
-        ClientServerMessageType.StepList = ClientServerMessageType.getNewTypeId();
-    })(ClientServerMessageType = STSEngine.ClientServerMessageType || (STSEngine.ClientServerMessageType = {}));
+    STSEngine.ProcessDispatcher = ProcessDispatcher;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    class PlayerAction {
+    class ProcessHandler {
+        constructor(worldServiceList) {
+            this.worldServiceList = worldServiceList;
+        }
+        init(process) {
+            if (this.isValidProcessType(process)) {
+                this.initProcess(process);
+            }
+        }
+        execute(process) {
+            if (this.isValidProcessType(process)) {
+                this.executeProcess(process);
+                process.setProcessExecCount(process.getProcessExecCount() + 1);
+            }
+        }
+        finish(process) {
+            if (this.isValidProcessType(process)) {
+                this.finishProcess(process);
+            }
+        }
+        initProcess(process) {
+        }
+        executeProcess(process) {
+        }
+        finishProcess(process) {
+        }
+        isValidProcessType(command) {
+            return true;
+        }
+        startProcess(process) {
+            this.worldServiceList.getProcessListService().add(process);
+            this.worldServiceList.getProcessDispatcher().init(process);
+        }
+    }
+    STSEngine.ProcessHandler = ProcessHandler;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ProcessInitializer extends STSEngine.EntityInitializer {
+    }
+    STSEngine.ProcessInitializer = ProcessInitializer;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ProcessListService {
         constructor() {
-            this.commandListService = new STSEngine.CommandListService();
+            this.processList = [];
+            this.filterService = new STSEngine.FilterService();
         }
-        getCommandKeyValuePairList() {
-            return this.commandListService.getCommandKeyValuePairList();
+        init(processList) {
+            this.processList = [];
+            for (let p of processList) {
+                this.add(p);
+            }
+        }
+        getProcessList() {
+            return this.processList;
+        }
+        add(process) {
+            this.processList.push(process);
+        }
+        removeFinished() {
+            let list;
+            for (let i = this.processList.length - 1; i >= 0; i--) {
+                let process = this.processList[i];
+                if (process.getProcessStatus() == STSEngine.ProcessStatus.Finished) {
+                    this.processList.splice(i, 1);
+                }
+            }
         }
         clear() {
-            this.commandListService.clear();
+            this.processList = [];
         }
-        setOnAction(handler) {
-            this.onActionHandler = handler;
-        }
-        onAction() {
-            if (this.onActionHandler) {
-                this.onActionHandler(this);
+        *getIterator() {
+            for (let process of this.processList) {
+                yield process;
             }
         }
+        getList() {
+            let iterator = this.getIterator();
+            let list = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+            return list;
+        }
+        setList(entityList, clear) {
+            if (clear) {
+                this.clear();
+            }
+            for (let entity of entityList) {
+                this.add(entity);
+            }
+        }
+        getAll(condition) {
+            return this.filterService.getAll(this.processList, condition);
+        }
+        getFirst(condition) {
+            return this.filterService.getFirst(this.processList, condition);
+        }
     }
-    STSEngine.PlayerAction = PlayerAction;
+    STSEngine.ProcessListService = ProcessListService;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ProcessListServiceCommitable {
+        constructor() {
+            this.processList = [];
+            this.filterService = new STSEngine.FilterService();
+            this.firstUncommitedIndex = 0;
+        }
+        getProcessList() {
+            return this.processList;
+        }
+        add(process) {
+            this.processList.push(process);
+        }
+        init(processList) {
+            this.processList = [];
+            for (let p of processList) {
+                this.add(p);
+            }
+        }
+        removeFinished() {
+            let list;
+            for (let i = this.firstUncommitedIndex - 1; i >= 0; i--) {
+                let process = this.processList[i];
+                if (process.getProcessStatus() == STSEngine.ProcessStatus.Finished) {
+                    this.processList.splice(i, 1);
+                    this.firstUncommitedIndex--;
+                }
+            }
+        }
+        clear() {
+            this.processList = [];
+            this.firstUncommitedIndex = 0;
+        }
+        getIterator() {
+            return this.processList.values();
+        }
+        getList() {
+            let iterator = this.getIterator();
+            let list = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+            return list;
+        }
+        setList(processList, clear) {
+            if (clear) {
+                this.clear();
+            }
+            for (let entity of processList) {
+                this.add(entity);
+            }
+        }
+        commit() {
+            for (let process of this.processList) {
+                process.getAttributeList().commit();
+            }
+            this.firstUncommitedIndex = this.processList.length;
+        }
+        rollback() {
+            if (this.processList.length > this.firstUncommitedIndex) {
+                this.processList.splice(this.firstUncommitedIndex);
+            }
+            for (let process of this.processList) {
+                process.getAttributeList().rollback();
+            }
+        }
+        isDirty() {
+            if (this.processList.length > this.firstUncommitedIndex) {
+                return true;
+            }
+            for (let process of this.processList) {
+                if (process.getAttributeList().isDirty()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        getAll(condition) {
+            return this.filterService.getAll(this.processList.values(), condition);
+        }
+        getFirst(condition) {
+            return this.filterService.getFirst(this.processList.values(), condition);
+        }
+    }
+    STSEngine.ProcessListServiceCommitable = ProcessListServiceCommitable;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class Item extends STSEngine.Entity {
+    }
+    STSEngine.Item = Item;
+    var ItemType;
+    (function (ItemType) {
+        let lastTypeId = 0;
+        function getNewTypeId() {
+            return ++lastTypeId;
+        }
+        ItemType.getNewTypeId = getNewTypeId;
+    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ItemInitializer extends STSEngine.EntityInitializer {
+    }
+    STSEngine.ItemInitializer = ItemInitializer;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class ItemListService extends STSEngine.EntityListService {
+    }
+    STSEngine.ItemListService = ItemListService;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -1361,6 +1505,9 @@ var STSEngine;
                 case STSEngine.ClientServerMessageType.StepList:
                     this.processStepList(message);
                     break;
+                case STSEngine.ClientServerMessageType.WorldFullInfo:
+                    this.processWorldFullInfo(message);
+                    break;
             }
         }
         sendAuthentication() {
@@ -1381,6 +1528,15 @@ var STSEngine;
                 this.processStep(step);
             }
         }
+        processWorldFullInfo(message) {
+            this.worldServiceList.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
+            let itemList = this.worldServiceList.getItemInitializer().createList(message.getItemListService());
+            this.worldServiceList.getItemListService().setList(itemList, true);
+            let processList = this.worldServiceList.getProcessInitializer().createList(message.getProcessListService());
+            this.worldServiceList.getProcessListService().setList(processList, true);
+            let clientList = this.worldServiceList.getClientInitializer().createList(message.getClientListService());
+            this.worldServiceList.getClientListService().setList(clientList, true);
+        }
         processInit(message) {
             this.playerId = message.getPlayerId();
             if (this.onConnectedHandler) {
@@ -1396,6 +1552,29 @@ var STSEngine;
         }
     }
     STSEngine.WebSocketGameClient = WebSocketGameClient;
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    class PlayerAction {
+        constructor() {
+            this.commandListService = new STSEngine.CommandListService();
+        }
+        getCommandKeyValuePairList() {
+            return this.commandListService.getCommandKeyValuePairList();
+        }
+        clear() {
+            this.commandListService.clear();
+        }
+        setOnAction(handler) {
+            this.onActionHandler = handler;
+        }
+        onAction() {
+            if (this.onActionHandler) {
+                this.onActionHandler(this);
+            }
+        }
+    }
+    STSEngine.PlayerAction = PlayerAction;
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {

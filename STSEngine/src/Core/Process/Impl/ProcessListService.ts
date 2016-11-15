@@ -34,8 +34,34 @@
             }
         }
 
-        public getIterator(): IterableIterator<IProcess> {
-            return this.processList.values();
+        public clear() {
+            this.processList = [];
+        }
+
+        public * getIterator(): IterableIterator<IProcess> {
+            for (let process of this.processList) {
+                yield process;
+            }
+        }
+
+        public getList(): [number, any][][] {
+            let iterator = this.getIterator();
+            let list: [number, any][][] = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+
+            return list;
+        }
+
+        public setList(entityList: Iterable<IProcess>, clear?: boolean): void {
+            if (clear) {
+                this.clear();
+            }
+
+            for (let entity of entityList) {
+                this.add(entity);
+            }
         }
 
         public getAll(condition: (item: IProcess) => boolean): IterableIterator<IProcess> {

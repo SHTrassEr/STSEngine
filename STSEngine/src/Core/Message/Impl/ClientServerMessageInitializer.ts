@@ -18,6 +18,8 @@ namespace STSEngine {
                     return this.createStepList(attr);
                 case ClientServerMessageType.Init:
                     return this.createInit(attr);
+                case ClientServerMessageType.WorldFullInfo:
+                    return this.createWorldFullInfo(attr);
             }
 
             throw  'Unexpected command type: ' + type;
@@ -45,6 +47,10 @@ namespace STSEngine {
 
         public createStepList(attr?: Iterable<[number, any]>): ClientServerMessageStepList {
             return new ClientServerMessageStepList(this.createAttributeList(), attr);
+        }
+
+        public createWorldFullInfo(attr?: Iterable<[number, any]>): ClientServerMessageWorldFullInfo {
+            return new ClientServerMessageWorldFullInfo(this.createAttributeList(), attr);
         }
 
         protected createAttributeList(): IAttributeList {

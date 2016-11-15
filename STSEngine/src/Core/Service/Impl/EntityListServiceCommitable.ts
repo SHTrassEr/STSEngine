@@ -51,6 +51,26 @@ namespace STSEngine {
             return this.filterService.getAll(this.objectListService.getIterator(), this.isObjectNotDeleted.bind(this));
         }
 
+        public getList(): [number, any][][] {
+            let iterator = this.getIterator();
+            let list: [number, any][][] = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+
+            return list;
+        }
+
+        public setList(entityList: Iterable<T>, clear?: boolean): void {
+            if (clear) {
+                this.clear();
+            }
+
+            for (let entity of entityList) {
+                this.add(entity);
+            }
+        }
+
         public remove(id: number): void {
             if (this.objectListService.has(id) && !this.deletedObjectIdList.has(id)) {
                 this.deletedObjectIdList.add(id);

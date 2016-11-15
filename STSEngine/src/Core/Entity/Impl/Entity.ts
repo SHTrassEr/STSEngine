@@ -40,6 +40,10 @@
             return this.attributeList.getList();
         }
 
+        public setList(attributeList: Iterable<[number, any]>, clear?: boolean): void {
+            this.attributeList.setList(attributeList, clear);
+        }
+
         [Symbol.iterator]
         public getIterator(): IterableIterator<[number, any]> {
             return this.attributeList.getIterator();

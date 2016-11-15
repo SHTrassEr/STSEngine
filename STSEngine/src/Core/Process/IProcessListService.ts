@@ -6,6 +6,9 @@
         getProcessList(): IProcess[];
         add(process: IProcess): void;
         removeFinished(): void;
+        clear(): void;
         getIterator(): IterableIterator<IProcess>;
+        getList(): [number, any][][];
+        setList(object: Iterable<IProcess>, clear?: boolean): void;
     }
 }

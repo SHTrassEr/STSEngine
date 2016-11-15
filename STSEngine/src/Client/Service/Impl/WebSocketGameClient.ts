@@ -89,6 +89,9 @@
                 case ClientServerMessageType.StepList:
                     this.processStepList(<ClientServerMessageStepList>message);
                     break;
+                case ClientServerMessageType.WorldFullInfo:
+                    this.processWorldFullInfo(<ClientServerMessageWorldFullInfo>message);
+                    break;
             }
         }
 
@@ -111,6 +114,20 @@
             for (var step of stepList) {
                 this.processStep(<ClientServerMessageStep>step);
             }
+        }
+
+        protected processWorldFullInfo(message: ClientServerMessageWorldFullInfo) {
+            this.worldServiceList.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
+
+            let itemList = this.worldServiceList.getItemInitializer().createList(message.getItemListService());
+            this.worldServiceList.getItemListService().setList(itemList, true);
+
+            let processList = this.worldServiceList.getProcessInitializer().createList(message.getProcessListService());
+            this.worldServiceList.getProcessListService().setList(processList, true);
+
+            let clientList = this.worldServiceList.getClientInitializer().createList(message.getClientListService());
+            this.worldServiceList.getClientListService().setList(clientList, true);
+
         }
 
         protected processInit(message: ClientServerMessageInit) {

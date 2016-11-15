@@ -5,6 +5,7 @@
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
         protected clientListService: IClientListService;
+        protected clientInitializer: IClientInitializer;
 
         protected commandInitializer: ICommandInitializer;
         protected itemInitializer: IItemInitializer;
@@ -46,6 +47,10 @@
 
         public getClientListService(): IClientListService {
             return this.clientListService;
+        }
+
+        public getClientInitializer(): IClientInitializer {
+            return this.clientInitializer;
         }
 
         protected getObjectId(): number {

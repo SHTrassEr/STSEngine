@@ -4,9 +4,19 @@ var STSEngine;
     var Example;
     (function (Example) {
         class Client extends STSEngine.Client {
-            constructor() {
-                super(...arguments);
+        }
+        Example.Client = Client;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ClientActive extends Example.Client {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
                 this.attributeScoreId = ++this.lastAttributeId;
+                this.setType(STSEngine.ClientType.Active);
             }
             getScore() {
                 return this.attributeList.get(this.attributeScoreId, 0);
@@ -15,7 +25,48 @@ var STSEngine;
                 this.attributeList.set(this.attributeScoreId, score);
             }
         }
-        Example.Client = Client;
+        Example.ClientActive = ClientActive;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var ClientType;
+    (function (ClientType) {
+        ClientType.Active = ClientType.getNewTypeId();
+    })(ClientType = STSEngine.ClientType || (STSEngine.ClientType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ClientInitializer extends STSEngine.ClientInitializer {
+            createByType(type, attr) {
+                switch (type) {
+                    case STSEngine.ClientType.Active:
+                        return this.createActive(attr);
+                }
+            }
+            createActive(attr) {
+                return new Example.ClientActive(this.createAttributeList(), attr);
+            }
+            createAttributeList() {
+                return new STSEngine.AttributeListArray();
+            }
+        }
+        Example.ClientInitializer = ClientInitializer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        Example.Point = Point;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -376,7 +427,7 @@ var STSEngine;
                 super(worldServiceList);
             }
             executeCommand(command) {
-                let client = new Example.Client();
+                let client = new Example.ClientActive();
                 client.setName(command.getPlayerName());
                 client.setId(command.getPlayerId());
                 this.worldServiceList.getClientListService().add(client);
@@ -400,6 +451,179 @@ var STSEngine;
         }
         Example.CommandRegisterPlayerHandler = CommandRegisterPlayerHandler;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class Item extends STSEngine.Item {
+        }
+        Example.Item = Item;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemRectangle extends Example.Item {
+            constructor() {
+                super(...arguments);
+                this._position = ++this.lastAttributeId;
+                this._positionPrecise = ++this.lastAttributeId;
+                this._playerId = ++this.lastAttributeId;
+                this._minSpeed = ++this.lastAttributeId;
+                this._maxSpeed = ++this.lastAttributeId;
+                this._size = ++this.lastAttributeId;
+                this._moveDirection = ++this.lastAttributeId;
+            }
+            getPosition(d) {
+                if (typeof d == 'number') {
+                    return this.attributeList.get(this._position)[d];
+                }
+                return this.attributeList.get(this._position);
+            }
+            setPosition(position) {
+                this.attributeList.set(this._position, position);
+            }
+            getPositionPrecise(d) {
+                if (typeof d == 'number') {
+                    return this.attributeList.get(this._positionPrecise)[d];
+                }
+                return this.attributeList.get(this._positionPrecise);
+            }
+            setPositionPrecise(position) {
+                this.attributeList.set(this._positionPrecise, position);
+                this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
+            }
+            getPlayerId() {
+                return this.attributeList.get(this._playerId);
+            }
+            setPlayerId(playerId) {
+                this.attributeList.set(this._playerId, playerId);
+            }
+            getMinSpeed() {
+                return this.attributeList.get(this._minSpeed);
+            }
+            setMinSpeed(speed) {
+                this.attributeList.set(this._minSpeed, speed);
+            }
+            getMaxSpeed() {
+                return this.attributeList.get(this._maxSpeed);
+            }
+            setMaxSpeed(speed) {
+                this.attributeList.set(this._maxSpeed, speed);
+            }
+            getSize(d) {
+                if (d) {
+                    return this.attributeList.get(this._size)[d];
+                }
+                return this.attributeList.get(this._size);
+            }
+            setSize(size) {
+                this.attributeList.set(this._size, size);
+            }
+            getMoveDirection() {
+                return this.attributeList.get(this._moveDirection);
+            }
+            setMoveDirection(direction) {
+                this.attributeList.set(this._moveDirection, direction);
+            }
+        }
+        Example.ItemRectangle = ItemRectangle;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemBullet extends Example.ItemRectangle {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.initDefault();
+            }
+            initDefault() {
+                this.setType(STSEngine.ItemType.Bullet);
+                if (!this.getSize()) {
+                    this.setSize([1, 1]);
+                }
+            }
+        }
+        Example.ItemBullet = ItemBullet;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var ItemType;
+    (function (ItemType) {
+        ItemType.Bullet = ItemType.getNewTypeId();
+    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemInitializer extends STSEngine.ItemInitializer {
+            constructor(createIdHandler) {
+                super(createIdHandler);
+            }
+            createByType(type, attr) {
+                switch (type) {
+                    case STSEngine.ItemType.Player:
+                        return this.createPlayer(attr);
+                    case STSEngine.ItemType.Bullet:
+                        return this.createBullet(attr);
+                }
+            }
+            createPlayer(attr) {
+                var object = new Example.ItemPlayer(this.createAttributeList(), attr);
+                this.setItemId(object);
+                return object;
+            }
+            createBullet(attr) {
+                var object = new Example.ItemBullet(this.createAttributeList(), attr);
+                this.setItemId(object);
+                return object;
+            }
+            setItemId(item) {
+                if (!item.getId()) {
+                    item.setId(this.createId());
+                }
+            }
+            createAttributeList() {
+                return new STSEngine.AttributeListArray();
+            }
+        }
+        Example.ItemInitializer = ItemInitializer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemPlayer extends Example.ItemRectangle {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.initDefault();
+            }
+            initDefault() {
+                this.setType(STSEngine.ItemType.Player);
+                if (!this.getMoveDirection()) {
+                    this.setMoveDirection(Example.MoveDirection.Up);
+                }
+                if (!this.getSize()) {
+                    this.setSize([5, 5]);
+                }
+            }
+        }
+        Example.ItemPlayer = ItemPlayer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var ItemType;
+    (function (ItemType) {
+        ItemType.Player = ItemType.getNewTypeId();
+    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -555,7 +779,9 @@ var STSEngine;
                 }
             }
             setProcessId(process) {
-                process.setId(this.createId());
+                if (!process.getId()) {
+                    process.setId(this.createId());
+                }
             }
             createMove(attr) {
                 var process = new Example.ProcessMoveObject(this.createAttributeList(), attr);
@@ -676,100 +902,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Point {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-            }
-        }
-        Example.Point = Point;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class WorldAttributeList extends STSEngine.WorldAttributeList {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this._worldSize = ++this.lastAttributeId;
-                this.setWorldSize([1000, 1000]);
-            }
-            getWorldSize() {
-                return this.attributeList.get(this._worldSize);
-            }
-            setWorldSize(size) {
-                this.attributeList.set(this._worldSize, size);
-            }
-        }
-        Example.WorldAttributeList = WorldAttributeList;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class WorldServiceList {
-            constructor(worldAttributeList) {
-                this.worldAttributeList = worldAttributeList;
-                this.itemListService = new STSEngine.ItemListService();
-                this.processListService = new STSEngine.ProcessListService();
-                this.clientListService = new STSEngine.ClientListService();
-                this.collisionService = new Example.CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
-                this.commandInitializer = new Example.CommandInitializer();
-                this.objectInitializer = new Example.ItemInitializer(this.getObjectId.bind(this));
-                this.processInitializer = new Example.ProcessInitializer(this.getProcessId.bind(this));
-                this.commandDispatcher = new Example.CommandDispatcher(this);
-                this.processDispatcher = new Example.ProcessDispatcher(this);
-            }
-            getWorldAttributeList() {
-                return this.worldAttributeList;
-            }
-            getCommandInitializer() {
-                return this.commandInitializer;
-            }
-            getItemInitializer() {
-                return this.objectInitializer;
-            }
-            getProcessInitializer() {
-                return this.processInitializer;
-            }
-            getProcessDispatcher() {
-                return this.processDispatcher;
-            }
-            getCommandDispatcher() {
-                return this.commandDispatcher;
-            }
-            getItemListService() {
-                return this.itemListService;
-            }
-            getProcessListService() {
-                return this.processListService;
-            }
-            getCollisionService() {
-                return this.collisionService;
-            }
-            getClientListService() {
-                return this.clientListService;
-            }
-            getObjectId() {
-                var id = this.worldAttributeList.getLastObjectId() + 1;
-                this.worldAttributeList.setLastObjectId(id);
-                return id;
-            }
-            getProcessId() {
-                var id = this.worldAttributeList.getLastProcessId() + 1;
-                this.worldAttributeList.setLastProcessId(id);
-                return id;
-            }
-        }
-        Example.WorldServiceList = WorldServiceList;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class CollisionService {
             constructor(worldAttributeList, itemListService, clientListService) {
                 this.clientListService = clientListService;
@@ -846,7 +978,7 @@ var STSEngine;
                     if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
                         this.itemListService.remove(moveItem.getId());
                         let playerId = moveItem.getPlayerId();
-                        let client = this.clientListService.getTyped(playerId, Example.Client);
+                        let client = this.clientListService.getTyped(playerId, Example.ClientActive);
                         client.setScore(client.getScore() + 10);
                         return true;
                     }
@@ -889,159 +1021,85 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Item extends STSEngine.Item {
-        }
-        Example.Item = Item;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemRectangle extends Example.Item {
+        class WorldAttributeList extends STSEngine.WorldAttributeList {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
-                this._position = ++this.lastAttributeId;
-                this._positionPrecise = ++this.lastAttributeId;
-                this._playerId = ++this.lastAttributeId;
-                this._minSpeed = ++this.lastAttributeId;
-                this._maxSpeed = ++this.lastAttributeId;
-                this._size = ++this.lastAttributeId;
-                this._moveDirection = ++this.lastAttributeId;
+                this._worldSize = ++this.lastAttributeId;
+                this.setWorldSize([1000, 1000]);
             }
-            getPosition(d) {
-                if (typeof d == 'number') {
-                    return this.attributeList.get(this._position)[d];
-                }
-                return this.attributeList.get(this._position);
+            getWorldSize() {
+                return this.attributeList.get(this._worldSize);
             }
-            setPosition(position) {
-                this.attributeList.set(this._position, position);
-            }
-            getPositionPrecise(d) {
-                if (typeof d == 'number') {
-                    return this.attributeList.get(this._positionPrecise)[d];
-                }
-                return this.attributeList.get(this._positionPrecise);
-            }
-            setPositionPrecise(position) {
-                this.attributeList.set(this._positionPrecise, position);
-                this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
-            }
-            getPlayerId() {
-                return this.attributeList.get(this._playerId);
-            }
-            setPlayerId(playerId) {
-                this.attributeList.set(this._playerId, playerId);
-            }
-            getMinSpeed() {
-                return this.attributeList.get(this._minSpeed);
-            }
-            setMinSpeed(speed) {
-                this.attributeList.set(this._minSpeed, speed);
-            }
-            getMaxSpeed() {
-                return this.attributeList.get(this._maxSpeed);
-            }
-            setMaxSpeed(speed) {
-                this.attributeList.set(this._maxSpeed, speed);
-            }
-            getSize(d) {
-                if (d) {
-                    return this.attributeList.get(this._size)[d];
-                }
-                return this.attributeList.get(this._size);
-            }
-            setSize(size) {
-                this.attributeList.set(this._size, size);
-            }
-            getMoveDirection() {
-                return this.attributeList.get(this._moveDirection);
-            }
-            setMoveDirection(direction) {
-                this.attributeList.set(this._moveDirection, direction);
+            setWorldSize(size) {
+                this.attributeList.set(this._worldSize, size);
             }
         }
-        Example.ItemRectangle = ItemRectangle;
+        Example.WorldAttributeList = WorldAttributeList;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class ItemBullet extends Example.ItemRectangle {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setType(STSEngine.ItemType.Bullet);
-                this.setSize([1, 1]);
+        class WorldServiceList {
+            constructor(worldAttributeList) {
+                this.worldAttributeList = worldAttributeList;
+                this.clientInitializer = new Example.ClientInitializer();
+                this.itemListService = new STSEngine.ItemListService();
+                this.processListService = new STSEngine.ProcessListService();
+                this.clientListService = new STSEngine.ClientListService();
+                this.collisionService = new Example.CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
+                this.commandInitializer = new Example.CommandInitializer();
+                this.objectInitializer = new Example.ItemInitializer(this.getObjectId.bind(this));
+                this.processInitializer = new Example.ProcessInitializer(this.getProcessId.bind(this));
+                this.commandDispatcher = new Example.CommandDispatcher(this);
+                this.processDispatcher = new Example.ProcessDispatcher(this);
+            }
+            getWorldAttributeList() {
+                return this.worldAttributeList;
+            }
+            getCommandInitializer() {
+                return this.commandInitializer;
+            }
+            getItemInitializer() {
+                return this.objectInitializer;
+            }
+            getProcessInitializer() {
+                return this.processInitializer;
+            }
+            getProcessDispatcher() {
+                return this.processDispatcher;
+            }
+            getCommandDispatcher() {
+                return this.commandDispatcher;
+            }
+            getItemListService() {
+                return this.itemListService;
+            }
+            getProcessListService() {
+                return this.processListService;
+            }
+            getCollisionService() {
+                return this.collisionService;
+            }
+            getClientListService() {
+                return this.clientListService;
+            }
+            getClientInitializer() {
+                return this.clientInitializer;
+            }
+            getObjectId() {
+                var id = this.worldAttributeList.getLastObjectId() + 1;
+                this.worldAttributeList.setLastObjectId(id);
+                return id;
+            }
+            getProcessId() {
+                var id = this.worldAttributeList.getLastProcessId() + 1;
+                this.worldAttributeList.setLastProcessId(id);
+                return id;
             }
         }
-        Example.ItemBullet = ItemBullet;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var ItemType;
-    (function (ItemType) {
-        ItemType.Bullet = ItemType.getNewTypeId();
-    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemPlayer extends Example.ItemRectangle {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setType(STSEngine.ItemType.Player);
-                this.setMoveDirection(Example.MoveDirection.Up);
-                this.setSize([5, 5]);
-            }
-        }
-        Example.ItemPlayer = ItemPlayer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var ItemType;
-    (function (ItemType) {
-        ItemType.Player = ItemType.getNewTypeId();
-    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemInitializer extends STSEngine.ItemInitializer {
-            constructor(createIdHandler) {
-                super(createIdHandler);
-            }
-            createByType(type, attr) {
-                switch (type) {
-                    case STSEngine.ItemType.Player:
-                        return this.createPlayer(attr);
-                    case STSEngine.ItemType.Bullet:
-                        return this.createBullet(attr);
-                }
-            }
-            createPlayer(attr) {
-                var object = new Example.ItemPlayer(this.createAttributeList(), attr);
-                this.setItemId(object);
-                return object;
-            }
-            createBullet(attr) {
-                var object = new Example.ItemBullet(this.createAttributeList(), attr);
-                this.setItemId(object);
-                return object;
-            }
-            setItemId(item) {
-                item.setId(this.createId());
-            }
-            createAttributeList() {
-                return new STSEngine.AttributeListArray();
-            }
-        }
-        Example.ItemInitializer = ItemInitializer;
+        Example.WorldServiceList = WorldServiceList;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -1184,7 +1242,7 @@ var STSEngine;
             }
             updateAllClientInfo() {
                 for (var client of this.clientListService.getIterator()) {
-                    if (client instanceof Example.Client) {
+                    if (client instanceof Example.ClientActive) {
                         this.updateClientInfo(client);
                     }
                 }

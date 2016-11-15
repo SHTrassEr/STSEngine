@@ -46,6 +46,26 @@ namespace STSEngine {
             return this.objectList.values();
         }
 
+        public getList(): [number, any][][] {
+            let iterator = this.getIterator();
+            let list: [number, any][][] = [];
+            for (let entity of iterator) {
+                list.push(entity.getList());
+            }
+
+            return list;
+        }
+
+        public setList(entityList: Iterable<T>, clear?: boolean): void {
+            if (clear) {
+                this.clear();
+            }
+
+            for (let entity of entityList) {
+                this.add(entity);
+            }
+        }
+
         public getAll(condition: (item: IEntity) => boolean): IterableIterator<T> {
             return this.filterService.getAll(this.objectList.values(), condition);
         }

@@ -33,6 +33,8 @@
     <TypeScriptCompile Include="lib\typings\qunit.d.ts" />
     <TypeScriptCompile Include="src\Client\View\Impl\View.ts" />
     <TypeScriptCompile Include="src\Client\View\IView.ts" />
+    <TypeScriptCompile Include="src\Core\Client\IClientInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Client\Impl\ProcessInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandDispatcher.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandListService.ts" />
@@ -47,6 +49,7 @@
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Message\IClientServerMessageInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageInit.ts" />
+    <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageWorldFullInfo.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageStepList.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageStep.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageCommandList.ts" />

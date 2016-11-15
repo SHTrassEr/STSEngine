@@ -20,4 +20,13 @@ namespace STSEngine {
             this.attributeList.set(this.attributeNameId, name);
         }
     }
+
+    export module ClientType {
+
+        let lastTypeId = 0;
+
+        export function getNewTypeId(): number {
+            return ++lastTypeId
+        }
+    }
 }

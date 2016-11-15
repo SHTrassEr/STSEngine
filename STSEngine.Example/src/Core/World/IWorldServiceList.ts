@@ -9,6 +9,7 @@
         getCommandDispatcher(): ICommandDispatcher;
         getItemListService(): IItemListService;
         getProcessListService(): IProcessListService;
+        getClientInitializer(): IClientInitializer;
         getClientListService(): IClientListService;
         getCollisionService(): ICollisionService;
     }

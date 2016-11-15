@@ -10,6 +10,9 @@
         remove(id: number): void;
         clear(): void;
         getIterator(): IterableIterator<T>;
+        getList(): [number, any][][];
+
+        setList(object: Iterable<T>, clear?: boolean): void;
 
         getTyped<V extends T>(objectId: number, type: any): V;
     }

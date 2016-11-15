@@ -28,7 +28,9 @@
         }
 
         protected setItemId(item: IItem) {
-            item.setId(this.createId());
+            if (!item.getId()) {
+                item.setId(this.createId());
+            }
         }
 
         protected createAttributeList(): IAttributeList {

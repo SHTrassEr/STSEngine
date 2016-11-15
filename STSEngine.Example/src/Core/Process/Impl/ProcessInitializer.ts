@@ -14,7 +14,9 @@
         }
          
         protected setProcessId(process: IProcess) {
-            process.setId(this.createId());
+            if (!process.getId()) {
+                process.setId(this.createId());
+            }
         }
 
         public createMove(attr?: Iterable<[number, any]>): ProcessMoveObject {

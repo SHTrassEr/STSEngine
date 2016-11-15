@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IClient extends STSEngine.IClient {
+    export interface IClientActive extends STSEngine.IClient {
 
         getScore(): number;
         setScore(score: number): void;

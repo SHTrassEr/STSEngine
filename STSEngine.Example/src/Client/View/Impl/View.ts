@@ -64,14 +64,14 @@
             return this.clientInfoTextMap.get(client.getId());
         }
 
-        protected updateClientInfo(client: IClient) {
+        protected updateClientInfo(client: IClientActive) {
             let text = this.getClientInfoText(client);
             text.text = client.getId() + " " + client.getScore();
         }
 
         protected updateAllClientInfo() {
             for (var client of this.clientListService.getIterator()) {
-                if (client instanceof Client) {
+                if (client instanceof ClientActive) {
                     this.updateClientInfo(client);
                 }
             }

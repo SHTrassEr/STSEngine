@@ -6,6 +6,7 @@
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
         protected clientListService: IClientListService;
+        protected clientInitializer: IClientInitializer;
 
         protected commandInitializer: ICommandInitializer;
         protected objectInitializer: IItemInitializer;
@@ -16,6 +17,7 @@
 
         constructor(worldAttributeList: WorldAttributeList) {
             this.worldAttributeList = worldAttributeList;
+            this.clientInitializer = new ClientInitializer();
             this.itemListService = new ItemListService();
             this.processListService = new ProcessListService();
             this.clientListService = new ClientListService();
@@ -67,6 +69,10 @@
 
         public getClientListService(): IClientListService {
             return this.clientListService;
+        }
+
+        public getClientInitializer(): IClientInitializer {
+            return this.clientInitializer;
         }
 
         protected getObjectId(): number {

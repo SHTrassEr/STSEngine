@@ -5,10 +5,22 @@ namespace STSEngine.Example {
     export class ItemPlayer extends ItemRectangle  {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
+            this.initDefault();
+            
+        }
+
+        protected initDefault() {
             this.setType(ItemType.Player);
 
-            this.setMoveDirection(MoveDirection.Up);
-            this.setSize([5, 5]);
+            if (!this.getMoveDirection()) {
+                this.setMoveDirection(MoveDirection.Up);
+            }
+
+            if (!this.getSize()) {
+                this.setSize([5, 5]);
+            }
+            
+
         }
     
     }
