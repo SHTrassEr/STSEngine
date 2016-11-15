@@ -5,7 +5,7 @@
         protected rootElement: HTMLDivElement;
 
         protected worldAttributeList: IWorldAttributeList;
-        protected objectListService: IObjectListService<IObject>;
+        protected itemListService: IItemListService;
         protected processListService: IProcessListService;
 
         protected isStarted: boolean;
@@ -21,7 +21,7 @@
             this.clearHtmlElement(this.rootElement);
 
             this.worldAttributeList = worldServiceList.getWorldAttributeList();
-            this.objectListService = worldServiceList.getObjectListService();
+            this.itemListService = worldServiceList.getItemListService();
             this.processListService = worldServiceList.getProcessListService();
 
             this.isStarted = false;

@@ -7,7 +7,7 @@
             this.setType(ClientServerMessageType.StepList);
         }
 
-        public setStepList(stepList: IObject[]): void {
+        public setStepList(stepList: IEntity[]): void {
             let stepAttributeList: [number, any][][] = []
             if (stepList) {
                 for (let step of stepList) {

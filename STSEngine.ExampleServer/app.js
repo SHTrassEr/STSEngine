@@ -39,7 +39,6 @@
     const server_1 = require('stsEngine/server');
     const server_2 = require('stsEngine.example/server');
     server_1.default.Example = server_2.default;
-    var w = new server_1.default.Example.ObjectPlayer();
     var WebSocketServer = require('ws').Server;
     var server = new WebSocketServer({ port: 62785 });
     var webSocketGameServer = new server_1.default.Example.WebSocketGameServer(server);

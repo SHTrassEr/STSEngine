@@ -2,21 +2,18 @@
 
     export class ProcessCreatePlayerObjectHandler extends STSEngine.ProcessHandler {
 
-        protected processInitializer: ProcessInitializer;
-        protected objectInitializer: ObjectInitializer;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(processInitializer: ProcessInitializer, objectInitializer: ObjectInitializer) {
-            super();
-            this.processInitializer = processInitializer;
-            this.objectInitializer = objectInitializer;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        public initProcess(world: IWorld, process: ProcessCreatePlayerObject): void {
-            var object = this.objectInitializer.createPlayer();
-            object.setPlayerId(process.getPlayerId());
-            object.setPositionPrecise([40, 40]);
-            object.setMaxSpeed(1);
-            this.addObject(world, object);
+        public initProcess(process: ProcessCreatePlayerObject): void {
+            let itemPlayer = this.worldServiceList.getItemInitializer().createPlayer();
+            itemPlayer.setPlayerId(process.getPlayerId());
+            itemPlayer.setPositionPrecise([40, 40]);
+            itemPlayer.setMaxSpeed(1);
+            this.worldServiceList.getItemListService().add(itemPlayer);
             process.setProcessStatus(ProcessStatus.Finished);
         }
     }

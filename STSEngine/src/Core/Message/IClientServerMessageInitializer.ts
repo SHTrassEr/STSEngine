@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export interface IClientServerMessageInitializer extends ItemInitializer<IClientServerMessage> {
+    export interface IClientServerMessageInitializer extends IEntityInitializer<IClientServerMessage> {
     }
 }
 

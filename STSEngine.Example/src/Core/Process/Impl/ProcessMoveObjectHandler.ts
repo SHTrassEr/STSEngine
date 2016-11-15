@@ -2,20 +2,13 @@
 
     export class ProcessMoveObjectHandler extends STSEngine.ProcessHandler {
 
-        protected processInitializer: ProcessInitializer;
-        protected objectInitializer: ObjectInitializer;
-        protected collisionService: ICollisionService;
-        protected worldAttributeList: WorldAttributeList;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(worldAttributeList: WorldAttributeList, processInitializer: ProcessInitializer, objectInitializer: ObjectInitializer, collisionService: ICollisionService) {
-            super();
-            this.worldAttributeList = worldAttributeList;
-            this.processInitializer = processInitializer;
-            this.objectInitializer = objectInitializer;
-            this.collisionService = collisionService;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        public initProcess(world: IWorld, process: ProcessMoveObject): void {
+        public initProcess(process: ProcessMoveObject): void {
             process.setProcessStatus(ProcessStatus.Executing);
 
             if (!process.getMoveDirection()) {
@@ -23,16 +16,16 @@
             }
         }
 
-        public executeProcess(world: IWorld, process: ProcessMoveObject): void {
-            var object = world.getServiceList().getObjectListService().get(process.getObjectId());
+        public executeProcess(process: ProcessMoveObject): void {
+            var object = this.worldServiceList.getItemListService().get(process.getObjectId());
             if (object) {
-                this.moveObject((<IObjectRectangle>object), process.getMoveDirection(), process.getProcessExecCount());
+                this.moveObject((<IItemRectangle>object), process.getMoveDirection(), process.getProcessExecCount());
             } else {
                 process.setProcessStatus(ProcessStatus.Finished);
             }
         }
 
-        protected moveObject(object: IObjectRectangle, direction: MoveDirection, execCount: number): void {
+        protected moveObject(object: IItemRectangle, direction: MoveDirection, execCount: number): void {
             let position = object.getPositionPrecise();
             var speed = object.getMaxSpeed();
 
@@ -65,11 +58,11 @@
 
             object.setMoveDirection(direction);
 
-            this.collisionService.processCollision(object, newPosition);
+            this.worldServiceList.getCollisionService().processCollision(object, newPosition);
 
         }
 
-        public finish(world: IWorld, process: IProcess): void {
+        public finish(process: IProcess): void {
             process.setProcessStatus(ProcessStatus.Finished);
         }
     }

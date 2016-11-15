@@ -1,12 +1,8 @@
-﻿/// <reference path="../../Service/Impl/ItemInitializer.ts" />
+﻿/// <reference path="../../Service/Impl/EntityInitializer.ts" />
 
 namespace STSEngine {
 
-    export class ClientServerMessageInitializer extends ItemInitializer<IClientServerMessage> implements IClientServerMessageInitializer {
-
-        constructor() {
-            super(ObjectAttributeType.Type);
-        }
+    export class ClientServerMessageInitializer extends EntityInitializer<IClientServerMessage> implements IClientServerMessageInitializer {
 
         public createByType(type: number, attr?: Iterable<[number, any]>): IClientServerMessage {
             switch (type) {

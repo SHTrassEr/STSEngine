@@ -2,12 +2,14 @@
 
     export interface IWorldServiceList extends STSEngine.IWorldServiceList{
         getWorldAttributeList(): IWorldAttributeList;
-        getCommandInitializer(): IItemInitializer<ICommand>;
-        getObjectInitializer(): IItemInitializer<IObject>;
-        getProcessInitializer(): IItemInitializer<IProcess>;
+        getCommandInitializer(): ICommandInitializer;
+        getItemInitializer(): IItemInitializer;
+        getProcessInitializer(): IProcessInitializer;
         getProcessDispatcher(): IProcessDispatcher;
         getCommandDispatcher(): ICommandDispatcher;
-        getObjectListService(): IObjectListService<IObject>;
+        getItemListService(): IItemListService;
         getProcessListService(): IProcessListService;
+        getPlayerListService(): IPlayerListService;
+        getCollisionService(): ICollisionService;
     }
 }

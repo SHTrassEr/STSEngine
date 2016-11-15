@@ -2,49 +2,45 @@
 
     export class CommandHandler implements ICommandHandler {
 
-        public execute(world: IWorld, command: ICommand): void {
-            if (this.isValidCommandType(world, command)) {
-                this.executeCommand(world, command);
+        protected worldServiceList: IWorldServiceList;
+
+        constructor(worldServiceList: IWorldServiceList) {
+            this.worldServiceList = worldServiceList;
+        }
+
+        public execute(command: ICommand): void {
+            if (this.isValidCommandType(command)) {
+                this.executeCommand(command);
             }
         }
 
-        public isValid(world: IWorld, command: ICommand): boolean {
-            if (this.isValidCommandType(world, command)) {
-                return this.isValidCommand(world, command);
+        public isValid(command: ICommand): boolean {
+            if (this.isValidCommandType(command)) {
+                return this.isValidCommand(command);
             }
 
             return false;
         }
 
-        protected executeCommand(world: IWorld, command: ICommand) {
+        protected executeCommand(command: ICommand) {
 
         }
 
-        protected isValidCommand(world: IWorld, command: ICommand): boolean {
+        protected isValidCommand(command: ICommand): boolean {
             return true;
         }
 
-        protected isValidCommandType(world: IWorld, command: ICommand): boolean {
+        protected isValidCommandType(command: ICommand): boolean {
             return true;
         }
 
-        protected startProcess(world: IWorld, process: IProcess): void {
-            world.getServiceList().getProcessListService().add(process);
-            world.getServiceList().getProcessDispatcher().init(world, process);
+        protected startProcess(process: IProcess): void {
+            this.worldServiceList.getProcessListService().add(process);
+            this.worldServiceList.getProcessDispatcher().init(process);
         }
 
-        protected finishProcess(world: IWorld, process: IProcess): void {
-            world.getServiceList().getProcessDispatcher().finish(world, process);
+        protected finishProcess(process: IProcess): void {
+            this.worldServiceList.getProcessDispatcher().finish(process);
         }
-
-        protected getObject<T extends IObject>(world: IWorld, objectId: number, type: any): T {
-            let object = <any>world.getServiceList().getObjectListService().get(objectId);
-            if (object instanceof type) {
-                return <T>object;
-            }
-
-            return undefined;
-        }
-
     }
 }

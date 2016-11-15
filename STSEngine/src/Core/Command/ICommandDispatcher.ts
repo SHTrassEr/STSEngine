@@ -1,7 +1,7 @@
 ﻿namespace STSEngine {
 
     export interface ICommandDispatcher {
-        execute(world: IWorld, command: ICommand): void;
+        execute(command: ICommand): void;
     }
 
 }

@@ -6,17 +6,15 @@
         protected world: IWorld;
         protected commandListService: ICommandListService;
         protected gameServer: IGameServer;
-        protected worldSettings: IWorldServiceList;
+        protected worldServiceList: IWorldServiceList;
         protected clientSeverMessageInitializer: IClientServerMessageInitializer;
-        protected commandInitializer: IItemInitializer<ICommand>;
-
 
 
         constructor(server: any, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
             this.webSocketServer = new WebSocketServer(server, clientSeverMessageInitializer);
 
-            this.worldSettings = worldServiceList;
-            this.commandInitializer = worldServiceList.getCommandInitializer();
+            this.worldServiceList = worldServiceList;
+
             this.commandListService = new CommandListService();
             this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.init();
@@ -32,7 +30,7 @@
         }
 
         protected createWorld(): IWorld {
-            return new World(this.worldSettings);
+            return new World(this.worldServiceList);
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
@@ -76,7 +74,7 @@
         }
 
         protected processCommandList(webSocketClient: IWebSocketClient, message: ClientServerMessageCommandList) {
-            let commandList = this.commandInitializer.createList(message.getCommandList());
+            let commandList = this.worldServiceList.getCommandInitializer().createList(message.getCommandList());
             this.commandListService.setCommandList(this.initCommandList(webSocketClient, commandList));
         } 
 

@@ -2,31 +2,30 @@
 
     export class CommandMoveObjectStopHandler extends STSEngine.CommandHandler {
 
-        protected processInitializer: ProcessInitializer;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(processInitializer: ProcessInitializer) {
-            super();
-            this.processInitializer = processInitializer;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        protected executeCommand(world: IWorld, command: CommandMoveObjectStop): Iterable<IProcess> {
-            let processListService = world.getServiceList().getProcessListService();
+        protected executeCommand(command: CommandMoveObjectStop): Iterable<IProcess> {
+            let processListService = this.worldServiceList.getProcessListService();
             let objectId = command.getObjectId();
             let moveDirection = command.getMoveDirection();
             let processList = processListService.getAll(p => ((p instanceof ProcessMoveObject) && (<ProcessMoveObject>p).getObjectId() === objectId) && (<ProcessMoveObject>p).getMoveDirection() === moveDirection);
             for (let process of processList) {
-                this.finishProcess(world, process);
+                this.finishProcess(process);
             }
 
             return null;
         }
 
-        protected isValidCommand(world: IWorld, command: CommandMoveObjectStop): boolean {
+        protected isValidCommand(command: CommandMoveObjectStop): boolean {
             let playerId = command.getInitiatorId();
             if (playerId > 0) {
                 let objectId = command.getObjectId();
-                let object: ObjectPlayer = <any>world.getServiceList().getObjectListService().get(objectId);
-                if (object instanceof ObjectPlayer) {
+                let object = this.worldServiceList.getItemListService().getTyped<ItemPlayer>(objectId, ItemPlayer);
+                if (object) {
                     return (object).getPlayerId() == playerId;
                 }
 
@@ -35,7 +34,7 @@
             return command.getInitiatorId() === 0;
         }
 
-        protected isValidCommandType(world: IWorld, command: ICommand): boolean {
+        protected isValidCommandType(command: ICommand): boolean {
             return command instanceof CommandMoveObjectStop;
         }
     }

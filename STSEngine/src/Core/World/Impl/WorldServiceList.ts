@@ -1,52 +1,30 @@
 ﻿namespace STSEngine {
 
-    export class WorldServiceList implements IWorldServiceList {
+    export abstract class WorldServiceList implements IWorldServiceList {
         protected worldAttributeList: IWorldAttributeList;
-        protected commandInitializer: IItemInitializer<ICommand>;
-        protected objectInitializer: IItemInitializer<IObject>;
-        protected processInitializer: IItemInitializer<IProcess>;
+        protected itemListService: IItemListService;
+        protected processListService: IProcessListService;
+        protected playerListService: IPlayerListService;
+
+        protected commandInitializer: ICommandInitializer;
+        protected itemInitializer: IItemInitializer;
+        protected processInitializer: IProcessInitializer;
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
-        protected objectListService: IObjectListService<IObject>;
-        protected processListService: IProcessListService;
-        protected playerListService: IObjectListService<IPlayer>;
-
-        constructor(worldAttributeList: IWorldAttributeList,
-            commandInitializator: IItemInitializer<ICommand>,
-            objectInitializator: IItemInitializer<IObject>,
-            processInitializator: IItemInitializer<IProcess>,
-            processDispatcher: IProcessDispatcher,
-            commandDispatcher: ICommandDispatcher,
-            objectListService: IObjectListService<IObject>,
-            processListService: IProcessListService,
-            playerListService: IObjectListService<IPlayer>) {
-
-            this.worldAttributeList = worldAttributeList;
-            this.commandInitializer = commandInitializator;
-            this.objectInitializer = objectInitializator;
-            this.objectInitializer.setGetIdHandler(this.getObjectId.bind(this));
-            this.processInitializer = processInitializator;
-            this.processInitializer.setGetIdHandler(this.getProcessId.bind(this));
-            this.processDispatcher = processDispatcher;
-            this.commandDispatcher = commandDispatcher;
-            this.objectListService = objectListService;
-            this.processListService = processListService;
-            this.playerListService = playerListService;
-        }
 
         public getWorldAttributeList(): IWorldAttributeList {
             return this.worldAttributeList;
         }
 
-        public getCommandInitializer(): IItemInitializer<ICommand> {
+        public getCommandInitializer(): ICommandInitializer {
             return this.commandInitializer;
         }
 
-        public getObjectInitializer(): IItemInitializer<IObject> {
-            return this.objectInitializer;
+        public getItemInitializer(): IItemInitializer {
+            return this.itemInitializer;
         }
 
-        public getProcessInitializer(): IItemInitializer<IProcess> {
+        public getProcessInitializer(): IProcessInitializer {
             return this.processInitializer;
         }
 
@@ -58,15 +36,15 @@
             return this.commandDispatcher;
         }
 
-        public getObjectListService(): IObjectListService<IObject> {
-            return this.objectListService;
+        public getItemListService(): IItemListService {
+            return this.itemListService;
         }
 
         public getProcessListService(): IProcessListService {
             return this.processListService;
         }
 
-        public getPlayerListService(): IObjectListService<IPlayer> {
+        public getPlayerListService(): IPlayerListService {
             return this.playerListService;
         }
 

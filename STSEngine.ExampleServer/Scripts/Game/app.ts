@@ -55,12 +55,12 @@ function ready() {
 
 
     var world = client.getWorld();
-    var objectListService = world.getServiceList().getObjectListService();
+    var objectListService = world.getServiceList().getItemListService();
 
     var up: boolean, down: boolean, left: boolean, right: boolean, fire: boolean;
 
     function getPlayerObjectId() {
-        var o = objectListService.getFirst(o => (<STSEngine.Example.ObjectPlayer>(<any>o)).getPlayerId() == client.getPlayerId());
+        var o = objectListService.getFirst(o => (<STSEngine.Example.ItemPlayer>(<any>o)).getPlayerId() == client.getPlayerId());
         return o.getId();
     }
 

@@ -1,10 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class CommandInitializer extends ItemInitializer<ICommand> {
-
-        constructor() {
-            super(STSEngine.CommandAttributeType.Type);
-        }
+    export class CommandInitializer extends STSEngine.CommandInitializer implements ICommandInitializer {
 
         public createByType(type: number, attr?: Iterable<[number, any]>): ICommand {
             switch (type) {
@@ -15,7 +11,7 @@
                 case CommandType.MoveStop:
                     return this.createMoveObjectStop(attr);
                 case CommandType.CreatePlayerObject: 
-                    return this.createPlayerObjectStop(attr);
+                    return this.createPlayerObject(attr);
                 case CommandType.Fire:
                     return this.createFire(attr);
             }
@@ -36,7 +32,7 @@
             return new CommandMoveObjectStop(this.createAttributeList(), attr);
         }
 
-        public createPlayerObjectStop(attr?: Iterable<[number, any]>): CommandCreatePlayerObject {
+        public createPlayerObject(attr?: Iterable<[number, any]>): CommandCreatePlayerObject {
             return new CommandCreatePlayerObject(this.createAttributeList(), attr);
         }
 

@@ -1,9 +1,9 @@
 ﻿namespace STSEngine {
 
     export interface IProcessDispatcher {
-        init(world: IWorld, process: IProcess): void;
-        execute(world: IWorld, process: IProcess): void;
-        finish(world: IWorld, process: IProcess): void;
+        init(process: IProcess): void;
+        execute(process: IProcess): void;
+        finish(process: IProcess): void;
     }
 
 }

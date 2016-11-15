@@ -2,19 +2,20 @@
 
     export class CommandCreatePlayerObject extends STSEngine.Command {
 
+        private _playerId: number = ++this.lastAttributeId;
+
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
             
-            this.setCommandType(CommandType.CreatePlayerObject);
+            this.setType(CommandType.CreatePlayerObject);
         }
 
         public getPlayerId(): number {
-            return this.attributeList.get(CommandAttributeType.PlayerId);
+            return this.attributeList.get(this._playerId);
         }
 
         public setPlayerId(id: number): void {
-            this.attributeList.set(CommandAttributeType.PlayerId, id);
+            this.attributeList.set(this._playerId, id);
         }
-
     }
 }

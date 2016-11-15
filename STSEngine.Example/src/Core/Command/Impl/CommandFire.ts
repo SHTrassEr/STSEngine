@@ -2,18 +2,20 @@
 
     export class CommandFire extends Command {
 
+        private _objectId: number = ++this.lastAttributeId;
+
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setCommandType(CommandType.Fire);
+            this.setType(CommandType.Fire);
         }
 
         public getObjectId(): number {
-            return this.attributeList.get(CommandAttributeType.ObjectId);
+            return this.attributeList.get(this._objectId);
         }
 
         public setObjectId(id: number): void {
-            this.attributeList.set(CommandAttributeType.ObjectId, id);
+            this.attributeList.set(this._objectId, id);
         }
     }
 }

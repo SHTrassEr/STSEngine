@@ -2,26 +2,25 @@
 
     export class CommandMoveObjectStartHandler extends STSEngine.CommandHandler {
 
-        protected processInitializer: ProcessInitializer;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(processInitializer: ProcessInitializer) {
-            super();
-            this.processInitializer = processInitializer;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        protected executeCommand(world: IWorld, command: CommandMoveObjectStart): void {
-            var process = this.processInitializer.createMove();
+        protected executeCommand(command: CommandMoveObjectStart): void {
+            var process = this.worldServiceList.getProcessInitializer().createMove();
             process.setObjectId(command.getObjectId());
             process.setMoveDirection(command.getMoveDirection());
-            this.startProcess(world, process);
+            this.startProcess(process);
         }
 
 
-        protected isValidCommand(world: IWorld, command: CommandMoveObjectStart): boolean {
+        protected isValidCommand(command: CommandMoveObjectStart): boolean {
             let playerId = command.getInitiatorId();
             if (playerId > 0) {
                 let objectId = command.getObjectId();
-                let object = this.getObject<ObjectPlayer>(world, objectId, ObjectPlayer);
+                let object = this.worldServiceList.getItemListService().getTyped<ItemPlayer>(objectId, ItemPlayer);
                 if (object) {
                     return (object).getPlayerId() == playerId;
                 }
@@ -31,7 +30,7 @@
         }
 
 
-        protected isValidCommandType(world: IWorld, command: ICommand): boolean {
+        protected isValidCommandType(command: ICommand): boolean {
             return command instanceof CommandMoveObjectStart;
         }
 

@@ -2,24 +2,23 @@
 
     export class CommandCreatePlayerObjectHandler extends STSEngine.CommandHandler {
 
-        protected processInitializer: ProcessInitializer;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(processInitializer: ProcessInitializer) {
-            super();
-            this.processInitializer = processInitializer;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        protected executeCommand(world: IWorld, command: CommandCreatePlayerObject): void {
-            var process = this.processInitializer.createCreatePlayerObject();
+        protected executeCommand(command: CommandCreatePlayerObject): void {
+            var process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
             process.setPlayerId(command.getPlayerId());
-            this.startProcess(world, process);
+            this.startProcess(process);
         }
 
-        protected isValidCommand(world: IWorld, command: CommandCreatePlayerObject): boolean {
+        protected isValidCommand(command: CommandCreatePlayerObject): boolean {
             return command.getPlayerId() === 0;
         }
 
-        protected isValidCommandType(world: IWorld, command: ICommand): boolean {
+        protected isValidCommandType(command: ICommand): boolean {
             return command instanceof CommandCreatePlayerObject;
         }
     }

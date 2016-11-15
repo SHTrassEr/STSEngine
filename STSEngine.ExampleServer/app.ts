@@ -40,7 +40,6 @@ import STSEngine from  'stsEngine/server';
 import STSEngineExample from  'stsEngine.example/server';
 
 STSEngine.Example = STSEngineExample;
-var w = new STSEngine.Example.ObjectPlayer();
 
 var WebSocketServer = require('ws').Server;
 var server = new WebSocketServer({ port: 62785 });

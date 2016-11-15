@@ -1,9 +1,9 @@
 ﻿namespace STSEngine.Example {
 
-    export class ProcessInitializer extends ItemInitializer<IProcess> {
+    export class ProcessInitializer extends STSEngine.ProcessInitializer implements IProcessInitializer {
 
-        constructor() {
-            super(STSEngine.ProcessAttributeType.Type);
+        constructor(createIdHandler: () => number) {
+            super(createIdHandler);
         }
 
         protected createByType(type: number, attr?: Iterable<[number, any]>): IProcess {
@@ -14,7 +14,7 @@
         }
          
         protected setProcessId(process: IProcess) {
-            process.setId(this.getId());
+            process.setId(this.createId());
         }
 
         public createMove(attr?: Iterable<[number, any]>): ProcessMoveObject {

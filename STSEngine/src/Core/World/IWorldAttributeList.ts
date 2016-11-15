@@ -8,5 +8,8 @@
 
         getLastObjectId(): number;
         setLastObjectId(id: number);
+
+        getStepNumber(): number;
+        setStepNumber(stepNumber: number): void;
     }
 }

@@ -1,5 +1,5 @@
 ﻿namespace STSEngine {
 
-    export interface IClientServerMessage extends IObject {
+    export interface IClientServerMessage extends IEntity {
     }
 }

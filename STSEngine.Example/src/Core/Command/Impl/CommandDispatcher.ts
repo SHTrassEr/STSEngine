@@ -2,17 +2,17 @@
 
     export class CommandDispatcher extends STSEngine.CommandDispatcher {
 
-        constructor(processInitializer: ProcessInitializer) {
+        constructor(worldServiceList: IWorldServiceList) {
             super();
-            this.initCommandHandlerList(processInitializer);
+            this.initCommandHandlerList(worldServiceList);
         }
 
-        protected initCommandHandlerList(processInitializer: ProcessInitializer) {
-            this.commandHandlerList[STSEngine.CommandType.RegisterPlayer] = new CommandRegisterPlayerHandler(processInitializer);
-            this.commandHandlerList[CommandType.CreatePlayerObject] = new CommandCreatePlayerObjectHandler(processInitializer);
-            this.commandHandlerList[CommandType.MoveStart] = new CommandMoveObjectStartHandler(processInitializer);
-            this.commandHandlerList[CommandType.MoveStop] = new CommandMoveObjectStopHandler(processInitializer);
-            this.commandHandlerList[CommandType.Fire] = new CommandFireHandler(processInitializer);
+        protected initCommandHandlerList(worldServiceList: IWorldServiceList) {
+            this.commandHandlerList[STSEngine.CommandType.RegisterPlayer] = new CommandRegisterPlayerHandler(worldServiceList);
+            this.commandHandlerList[CommandType.CreatePlayerObject] = new CommandCreatePlayerObjectHandler(worldServiceList);
+            this.commandHandlerList[CommandType.MoveStart] = new CommandMoveObjectStartHandler(worldServiceList);
+            this.commandHandlerList[CommandType.MoveStop] = new CommandMoveObjectStopHandler(worldServiceList);
+            this.commandHandlerList[CommandType.Fire] = new CommandFireHandler(worldServiceList);
         }
 
     }

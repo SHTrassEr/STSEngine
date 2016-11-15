@@ -2,57 +2,50 @@
 
     export class ProcessHandler implements IProcessHandler {
 
-        public init(world: IWorld, process: IProcess): void {
-            if (this.isValidProcessType(world, process)) {
-                this.initProcess(world, process);
+        protected worldServiceList: IWorldServiceList;
+
+        constructor(worldServiceList: IWorldServiceList) {
+            this.worldServiceList = worldServiceList;
+        }
+
+        public init(process: IProcess): void {
+            if (this.isValidProcessType(process)) {
+                this.initProcess(process);
             }
         }
 
-        public execute(world: IWorld, process: IProcess): void {
-            if (this.isValidProcessType(world, process)) {
-                this.executeProcess(world, process);
+        public execute(process: IProcess): void {
+            if (this.isValidProcessType(process)) {
+                this.executeProcess(process);
                 process.setProcessExecCount(process.getProcessExecCount() + 1);
             }
         }
 
-        public finish(world: IWorld, process: IProcess): void {
-            if (this.isValidProcessType(world, process)) {
-                this.finishProcess(world, process);
+        public finish(process: IProcess): void {
+            if (this.isValidProcessType(process)) {
+                this.finishProcess(process);
             }
         }
 
-        protected initProcess(world: IWorld, process: IProcess): void {
+        protected initProcess(process: IProcess): void {
 
         }
 
-        protected executeProcess(world: IWorld, process: IProcess): void {
+        protected executeProcess(process: IProcess): void {
 
         }
 
-        protected finishProcess(world: IWorld, process: IProcess): void {
+        protected finishProcess(process: IProcess): void {
 
         }
 
-        protected isValidProcessType(world: IWorld, command: IProcess): boolean {
+        protected isValidProcessType(command: IProcess): boolean {
             return true;
         }
 
-        protected addObject(world: IWorld, object: IObject) {
-            world.getServiceList().getObjectListService().add(object);
-        }
-
-        protected getObject<T extends IObject>(world: IWorld, objectId: number, type: any): T {
-            let object = <any>world.getServiceList().getObjectListService().get(objectId);
-            if (object instanceof type) {
-                return <T>object;
-            }
-
-            return undefined;
-        }
-
-        protected startProcess(world: IWorld, process: IProcess): void {
-            world.getServiceList().getProcessListService().add(process);
-            world.getServiceList().getProcessDispatcher().init(world, process);
+        protected startProcess(process: IProcess): void {
+            this.worldServiceList.getProcessListService().add(process);
+            this.worldServiceList.getProcessDispatcher().init(process);
         }
     }
 }

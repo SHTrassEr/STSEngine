@@ -1,73 +1,73 @@
 ﻿namespace STSEngine.Example {
 
     export class CollisionService implements ICollisionService {
-        protected objectListService: IObjectListService<IObject>;
+        protected itemListService: IItemListService;
         protected worldAttributeList: IWorldAttributeList;
 
-        constructor(worldAttributeList: IWorldAttributeList, objectListService: IObjectListService<IObject>) {
+        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService) {
             this.worldAttributeList = worldAttributeList;
-            this.objectListService = objectListService;
+            this.itemListService = itemListService;
         }
 
-        public processCollision(moveObject: IObject, newPosition: [number, number]): void {
-            if (moveObject instanceof ObjectPlayer) {
-                this.processCollisionObjectPlayer(moveObject, newPosition);
-            } else if (moveObject instanceof ObjectBullet) {
-                this.processCollisionObjectBullet(moveObject, newPosition);
+        public processCollision(moveItem: IItem, newPosition: [number, number]): void {
+            if (moveItem instanceof ItemPlayer) {
+                this.processCollisionObjectPlayer(moveItem, newPosition);
+            } else if (moveItem instanceof ItemBullet) {
+                this.processCollisionObjectBullet(moveItem, newPosition);
             }
         }
 
-        protected processCollisionObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number]) {
-            this.processCollisionObjectRectangleWorld(moveObject, newPosition);
+        protected processCollisionObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number]) {
+            this.processCollisionObjectRectangleWorld(moveItem, newPosition);
 
-            let objectList = this.objectListService.getIterator();
+            let objectList = this.itemListService.getIterator();
             for (var o of objectList) {
-                if (moveObject.getId() != o.getId()) {
-                    if (o instanceof ObjectPlayer) {
-                        this.processCollisionObjectPlayerObjectPlayer(moveObject, newPosition, o);
+                if (moveItem.getId() != o.getId()) {
+                    if (o instanceof ItemPlayer) {
+                        this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
                     }
 
                 }
             }
 
-            moveObject.setPositionPrecise(newPosition);
+            moveItem.setPositionPrecise(newPosition);
         }
 
-        protected processCollisionObjectBullet(moveObject: ObjectBullet, newPosition: [number, number]) {
-            if (this.processCollisionObjectRectangleWorld(moveObject, newPosition)) {
-                this.objectListService.remove(moveObject.getId());
+        protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]) {
+            if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
+                this.itemListService.remove(moveItem.getId());
             }
 
-            let objectList = this.objectListService.getIterator();
+            let objectList = this.itemListService.getIterator();
             for (var o of objectList) {
-                if (moveObject.getId() != o.getId()) {
-                    if (o instanceof ObjectPlayer) {
-                        this.processCollisionObjectBulletObjectPlayer(moveObject, newPosition, o);
+                if (moveItem.getId() != o.getId()) {
+                    if (o instanceof ItemPlayer) {
+                        this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
                     } 
 
                 }
             }
 
-            moveObject.setPositionPrecise(newPosition);
+            moveItem.setPositionPrecise(newPosition);
         }
 
-        protected processCollisionObjectPlayerObjectPlayer(moveObject: ObjectPlayer, newPosition: [number, number], o: ObjectPlayer): boolean {
+        protected processCollisionObjectPlayerObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number], o: ItemPlayer): boolean {
 
-            let position = moveObject.getPositionPrecise();
+            let position = moveItem.getPositionPrecise();
             let oPosition = o.getPositionPrecise();
-            let moveObjectSize = moveObject.getSize();
+            let moveItemSize = moveItem.getSize();
             let oSize = o.getSize();
 
-            if (!this.isRectangleObjectCollision(position, moveObjectSize, oPosition, oSize)) {
-                if (this.isRectangleObjectCollision(newPosition, moveObjectSize, oPosition, oSize)) {
+            if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
                     if (position[0] < newPosition[0]) {
-                        newPosition[0] = oPosition[0] - moveObjectSize[0];
+                        newPosition[0] = oPosition[0] - moveItemSize[0];
                         return true;
                     } else if (position[0] > newPosition[0]) {
                         newPosition[0] = oPosition[0] + oSize[0];
                         return true;
                     } else if (position[1] < newPosition[1]) {
-                        newPosition[1] = oPosition[1] - moveObjectSize[1];
+                        newPosition[1] = oPosition[1] - moveItemSize[1];
                         return true;
                     } else if (position[1] > newPosition[1]) {
                         newPosition[1] = oPosition[1] + oSize[1];
@@ -80,16 +80,16 @@
             return false;
         }
 
-        protected processCollisionObjectBulletObjectPlayer(moveObject: ObjectBullet, newPosition: [number, number], o: ObjectPlayer): boolean {
+        protected processCollisionObjectBulletObjectPlayer(moveItem: ItemBullet, newPosition: [number, number], o: ItemPlayer): boolean {
 
-            let position = moveObject.getPositionPrecise();
+            let position = moveItem.getPositionPrecise();
             let oPosition = o.getPositionPrecise();
-            let moveObjectSize = moveObject.getSize();
+            let moveItemSize = moveItem.getSize();
             let oSize = o.getSize();
 
-            if (!this.isRectangleObjectCollision(position, moveObjectSize, oPosition, oSize)) {
-                if (this.isRectangleObjectCollision(newPosition, moveObjectSize, oPosition, oSize)) {
-                    this.objectListService.remove(moveObject.getId());
+            if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                    this.itemListService.remove(moveItem.getId());
                     return true;
                 }
 
@@ -99,7 +99,7 @@
         }
 
 
-        protected processCollisionObjectRectangleWorld(moveObject: IObjectRectangle, newPosition: [number, number]): boolean {
+        protected processCollisionObjectRectangleWorld(moveItem: IItemRectangle, newPosition: [number, number]): boolean {
             if (newPosition[0] < 0) {
                 newPosition[0] = 0;
                 return true;
@@ -109,12 +109,12 @@
                 return true;
             }
 
-            if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0]) {
-                newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveObject.getSize()[0];
+            if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
+                newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
                 return true;
             }
-            if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1]) {
-                newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveObject.getSize()[1];
+            if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
+                newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
                 return true;
             }
 

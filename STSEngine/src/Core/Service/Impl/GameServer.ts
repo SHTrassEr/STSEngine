@@ -45,8 +45,7 @@
         }
 
         protected getStepNumber(): number {
-            let world = this.engine.getWorld();
-            return world.getStepNumber();
+            return this.engine.getWorld().getAttributeList().getStepNumber();
         }
 
         public setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void {

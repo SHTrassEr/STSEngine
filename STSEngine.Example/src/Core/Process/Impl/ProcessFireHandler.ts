@@ -2,49 +2,42 @@
 
     export class ProcessFireHandler extends STSEngine.ProcessHandler {
 
-        protected processInitializer: ProcessInitializer;
-        protected objectInitializer: ObjectInitializer;
-        protected collisionService: ICollisionService;
-        protected worldAttributeList: WorldAttributeList;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(worldAttributeList: WorldAttributeList, processInitializer: ProcessInitializer, objectInitializer: ObjectInitializer, collisionService: ICollisionService) {
-            super();
-            this.worldAttributeList = worldAttributeList;
-            this.processInitializer = processInitializer;
-            this.objectInitializer = objectInitializer;
-            this.collisionService = collisionService;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        public initProcess(world: IWorld, process: ProcessFire): void {
+        public initProcess(process: ProcessFire): void {
             process.setProcessStatus(ProcessStatus.Executing);
         }
 
-        public executeProcess(world: IWorld, process: ProcessFire): void {
-            let object = this.getObject<ObjectPlayer>(world, process.getObjectId(), ObjectPlayer); 
+        public executeProcess(process: ProcessFire): void {
+            let object = this.worldServiceList.getItemListService().getTyped<ItemPlayer>(process.getObjectId(), ItemPlayer); 
             if (object) {
-                this.fire(world, object, world.getServiceList());
+                this.fire(object);
             }
 
             process.setProcessStatus(ProcessStatus.Finished);
         }
 
-        protected fire(world: IWorld, object: ObjectPlayer, worldServiceList: IWorldServiceList): void {
-            var bullet = this.objectInitializer.createBullet();
+        protected fire(object: ItemPlayer): void {
+            var bullet = this.worldServiceList.getItemInitializer().createBullet();
             bullet.setPositionPrecise([object.getPosition(0) + (object.getSize()[0] / 2), object.getPosition(1) + (object.getSize()[0] / 2)]);
 
             bullet.setMaxSpeed(4);
             bullet.setMoveDirection(object.getMoveDirection());
 
-            worldServiceList.getObjectListService().add(bullet);
-            var moveProcess = this.processInitializer.createMove();
+            this.worldServiceList.getItemListService().add(bullet);
+            var moveProcess = this.worldServiceList.getProcessInitializer().createMove();
             moveProcess.setMoveDirection(object.getMoveDirection());
             moveProcess.setObjectId(bullet.getId());
 
-            this.startProcess(world, moveProcess);
+            this.startProcess(moveProcess);
 
         }
 
-        public finish(world: IWorld, process: IProcess): void {
+        public finish(process: IProcess): void {
             process.setProcessStatus(ProcessStatus.Finished);
         }
     }

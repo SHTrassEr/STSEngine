@@ -2,25 +2,24 @@
 
     export class CommandFireHandler extends STSEngine.CommandHandler {
 
-        protected processInitializer: ProcessInitializer;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(processInitializer: ProcessInitializer) {
-            super();
-            this.processInitializer = processInitializer;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        protected executeCommand(world: IWorld, command: CommandFire): void {
-            var process = this.processInitializer.createFire();
+        protected executeCommand(command: CommandFire): void {
+            var process = this.worldServiceList.getProcessInitializer().createFire();
             process.setObjectId(command.getObjectId());
-            this.startProcess(world, process);
+            this.startProcess(process);
         }
 
 
-        protected isValidCommand(world: IWorld, command: CommandFire): boolean {
+        protected isValidCommand(command: CommandFire): boolean {
             let playerId = command.getInitiatorId();
             if (playerId > 0) {
                 let objectId = command.getObjectId();
-                let object = this.getObject<ObjectPlayer>(world, objectId, ObjectPlayer);
+                let object = this.worldServiceList.getItemListService().getTyped<ItemPlayer>(objectId, ItemPlayer);
                 if (object) {
                     return (object).getPlayerId() == playerId;
                 }
@@ -30,7 +29,7 @@
         }
 
 
-        protected isValidCommandType(world: IWorld, command: ICommand): boolean {
+        protected isValidCommandType(command: ICommand): boolean {
             return command instanceof CommandFire;
         }
 

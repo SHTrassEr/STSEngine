@@ -42,7 +42,7 @@ function ready() {
         view.start();
     }
     var world = client.getWorld();
-    var objectListService = world.getServiceList().getObjectListService();
+    var objectListService = world.getServiceList().getItemListService();
     var up, down, left, right, fire;
     function getPlayerObjectId() {
         var o = objectListService.getFirst(o => o.getPlayerId() == client.getPlayerId());

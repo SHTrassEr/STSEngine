@@ -20,14 +20,19 @@
         }
 
         public step() {
-            this.world.increaseStepNumber();
+            this.increaseStepNumber();
             this.processCommandList();
             for (let i = 0; i < this.processListService.getProcessList().length; i++) {
                 let process = this.processListService.getProcessList()[i];
-                this.processDispatcher.execute(this.world, process);
+                this.processDispatcher.execute(process);
             }
 
             this.processListService.removeFinished();
+        }
+
+        protected increaseStepNumber(): void {
+            let stepNumber: number = this.world.getAttributeList().getStepNumber() + 1;
+            this.world.getAttributeList().setStepNumber(stepNumber);
         }
 
         public getCommandList(): ICommand[] {
@@ -37,18 +42,9 @@
         protected processCommandList() : void {
             let commandList = this.commandListService.getCommandList();
             for (let command of commandList) {
-                this.commandDispatcher.execute(this.world, command);
+                this.commandDispatcher.execute(command);
             }
             this.commandListService.clear();
-        }
-
-        protected addProcessList(processList: Iterable<IProcess>) {
-            if (processList) {
-                for (var process of processList) {
-                    this.processListService.add(process);
-                    this.processDispatcher.init(this.world, process);
-                }
-            }
         }
     }
 }

@@ -4,32 +4,32 @@
 
         protected processHandlerList: IProcessHandler[];
 
-        public execute(world: IWorld, process: IProcess): void {
+        public execute(process: IProcess): void {
             let processStatus = process.getProcessStatus();
             if (processStatus === ProcessStatus.Executing) {
                 let handler = this.getProcessHandler(process);
-                handler.execute(world, process);
+                handler.execute(process);
             }
         }
 
-        public init(world: IWorld, process: IProcess): void {
+        public init(process: IProcess): void {
             let processStatus = process.getProcessStatus();
             if (processStatus === ProcessStatus.Init) {
                 let handler = this.getProcessHandler(process);
-                handler.init(world, process);
+                handler.init(process);
             }
         }
 
-        public finish(world: IWorld, process: IProcess): void {
+        public finish(process: IProcess): void {
             let processStatus = process.getProcessStatus();
             if (processStatus !== ProcessStatus.Finished) {
                 let handler = this.getProcessHandler(process);
-                handler.finish(world, process);
+                handler.finish(process);
             }
         }
 
         protected getProcessHandler(process: IProcess): IProcessHandler {
-            return this.processHandlerList[process.getProcessType()];
+            return this.processHandlerList[process.getType()];
         }
     }
 }

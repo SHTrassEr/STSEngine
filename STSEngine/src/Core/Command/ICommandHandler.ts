@@ -1,8 +1,8 @@
 ﻿namespace STSEngine {
 
     export interface ICommandHandler {
-        execute(world: IWorld, command: ICommand): void;
-        isValid(world: IWorld, command: ICommand): boolean;
+        execute(command: ICommand): void;
+        isValid(command: ICommand): boolean;
     }
 
 }

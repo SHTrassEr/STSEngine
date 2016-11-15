@@ -4,8 +4,8 @@
         getId(): number;
         setId(id: number): void;
 
-        getProcessType(): number;
-        setProcessType(processType: number): void
+        getType(): number;
+        setType(processType: number): void
 
         getProcessExecCount(): number;
         setProcessExecCount(execCount: number): void

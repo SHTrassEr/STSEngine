@@ -48,5 +48,13 @@
         public setLastObjectId(id: number) {
             this.attributeList.set(WorldAttributeType.LastObjectId, id);
         }
+
+        public getStepNumber(): number {
+            return this.attributeList.get(WorldAttributeType.StepNumber, 0);
+        }
+
+        public setStepNumber(stepNumber: number): void {
+            this.attributeList.set(WorldAttributeType.StepNumber, stepNumber);
+        }
     }
 }

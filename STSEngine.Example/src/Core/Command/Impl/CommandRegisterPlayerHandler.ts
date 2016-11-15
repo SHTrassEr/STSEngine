@@ -2,24 +2,36 @@
 
     export class CommandRegisterPlayerHandler extends STSEngine.CommandHandler {
 
-        protected processInitializer: ProcessInitializer;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(processInitializer: ProcessInitializer) {
-            super();
-            this.processInitializer = processInitializer;
+        constructor(worldServiceList: IWorldServiceList) {
+            super(worldServiceList);
         }
 
-        protected executeCommand(world: IWorld, command: CommandRegisterPlayer): void {
-            var process = this.processInitializer.createCreatePlayerObject();
+        protected executeCommand(command: CommandRegisterPlayer): void {
+            let player = new Player();
+            player.setName(command.getPlayerName());
+            player.setId(command.getPlayerId());
+            this.worldServiceList.getPlayerListService().add(player);
+
+            let process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
             process.setPlayerId(command.getPlayerId());
-            this.startProcess(world, process);
+            this.startProcess(process);
         }
 
-        protected isValidCommand(world: IWorld, command: CommandRegisterPlayer): boolean {
-            return command.getInitiatorId() === 0;
+        protected isValidCommand(command: CommandRegisterPlayer): boolean {
+            let playerId = command.getPlayerId();
+            if (command.getInitiatorId() === 0) {
+                var player = this.worldServiceList.getPlayerListService().getFirst(p => p.getId() == playerId);
+                if (!player) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        protected isValidCommandType(world: IWorld, command: ICommand): boolean {
+        protected isValidCommandType(command: ICommand): boolean {
             return command instanceof CommandRegisterPlayer;
         }
     }

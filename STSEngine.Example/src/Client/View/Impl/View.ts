@@ -41,7 +41,7 @@
             this.stepNumber = -1;
         }
 
-        protected drawObjectRectangle(o: ObjectRectangle): PIXI.Graphics {
+        protected drawObjectRectangle(o: ItemRectangle): PIXI.Graphics {
             let position = o.getPosition();
             let size = o.getSize();
             let cellSize = this.cellSize;
@@ -76,7 +76,7 @@
             return graphics;
         }
 
-        protected getObjectSprite(o: ObjectRectangle): PIXI.Graphics {
+        protected getObjectSprite(o: ItemRectangle): PIXI.Graphics {
 
             var objectSprite: PIXI.Graphics = this.objectMap.get(o.getId());
             if (!objectSprite) {
@@ -90,7 +90,7 @@
 
         protected clearStage(): void {
             for (var id of this.objectMap.keys()) {
-                if (!this.objectListService.has(id)) {
+                if (!this.itemListService.has(id)) {
                     var child = this.objectMap.get(id);
                     this.stage.removeChild(child);
                     child.destroy();
@@ -101,18 +101,18 @@
 
 
         protected refresh(): void {
-            let iterator = this.objectListService.getIterator();
+            let iterator = this.itemListService.getIterator();
 
-            if (this.world.getStepNumber() == this.stepNumber) { 
+            if (this.worldAttributeList.getStepNumber() == this.stepNumber) { 
                 return;
             }
 
-            this.stepNumber = this.world.getStepNumber();
+            this.stepNumber = this.worldAttributeList.getStepNumber();
 
             this.clearStage();
 
             for (let o of iterator) {
-                if (o instanceof ObjectRectangle) {
+                if (o instanceof ItemRectangle) {
                     let objectSprite = this.getObjectSprite(o);
                     let x = this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x;
                     let y = this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y;

@@ -4,6 +4,7 @@
         Unknown,
         TickLength,
         LastProcessId,
-        LastObjectId
+        LastObjectId,
+        StepNumber
     }
 }
