@@ -2,8 +2,8 @@
 
     export class WebSocketGameServer extends STSEngine.WebSocketGameServer {
 
-        protected lastPlayerId: number;
-        protected connectedPlayerList: Map<string, number>;
+        protected lastClientId: number;
+        protected connectedClientList: Map<string, number>;
 
 
         constructor(socket: WebSocket) {
@@ -14,29 +14,28 @@
             
             super(socket, worldServiceList, clientServerMessageInitializer);
 
-            this.lastPlayerId = 0;
-            this.connectedPlayerList = new Map<string, number>();
+            this.lastClientId = 0;
+            this.connectedClientList = new Map<string, number>();
         }
 
 
         protected getClientIdBySID(sid: string): number {
-            var playerId = 0;
+            var clientId = 0;
 
-            if (this.connectedPlayerList.has(sid)) {
-                playerId = this.connectedPlayerList.get(sid);
+            if (this.connectedClientList.has(sid)) {
+                clientId = this.connectedClientList.get(sid);
             } else {
-                this.lastPlayerId = this.lastPlayerId + 1;
-                playerId = this.lastPlayerId;
+                this.lastClientId = this.lastClientId + 1;
+                clientId = this.lastClientId;
                 var command = new CommandRegisterClient();
                 command.setInitiatorId(0);
-                command.setPlayerId(playerId);
+                command.setClientId(clientId);
                 this.commandListService.add(command); 
 
-                this.connectedPlayerList.set(sid, playerId);
+                this.connectedClientList.set(sid, clientId);
             }
 
-            return playerId;
+            return clientId;
         }
-
     }
 }

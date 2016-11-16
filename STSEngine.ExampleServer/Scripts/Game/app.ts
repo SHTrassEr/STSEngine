@@ -154,21 +154,6 @@ function ready() {
         playerAction.changeClientName(client.getClientId(), nameInput.value);
 
     };
-    
-
-   /*
-    var socket = new WebSocket('ws://localhost:62785');
-
-    socket.onopen = function () {
-        socket.send("test");
-    };
-
-    var content = document.getElementById("content");
-    
-    socket.onmessage = function (message) {
-        content.innerHTML = message.data;
-    }
-    */
 
 };
 

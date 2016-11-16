@@ -16,8 +16,8 @@
                     return this.createMoveObjectStart(attr);
                 case CommandMoveObjectStop.Type:
                     return this.createMoveObjectStop(attr);
-                case CommandCreatePlayerObject.Type: 
-                    return this.createPlayerObject(attr);
+                case CommandCreateClientItemTank.Type: 
+                    return this.createClientItemTank(attr);
                 case CommandFire.Type:
                     return this.createFire(attr);
                 case CommandChangeClientName.Type:
@@ -38,8 +38,8 @@
             return new CommandMoveObjectStop(this.createAttributeList(), attr);
         }
 
-        public createPlayerObject(attr?: Iterable<[number, any]>): CommandCreatePlayerObject {
-            return new CommandCreatePlayerObject(this.createAttributeList(), attr);
+        public createClientItemTank(attr?: Iterable<[number, any]>): CommandCreateClientItemTank {
+            return new CommandCreateClientItemTank(this.createAttributeList(), attr);
         }
 
         public createFire(attr?: Iterable<[number, any]>): CommandFire {

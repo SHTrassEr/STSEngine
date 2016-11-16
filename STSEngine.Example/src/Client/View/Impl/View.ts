@@ -9,7 +9,7 @@
 
         protected renderer: PIXI.SystemRenderer;
         protected stage: PIXI.Container;
-        protected playerObjectSprite: PIXI.Graphics;
+        protected tankSprite: PIXI.Graphics;
         protected grid: PIXI.Graphics;
         protected worldLimit: PIXI.Graphics;
 

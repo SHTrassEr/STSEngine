@@ -9,7 +9,7 @@
 
         protected initCommandHandlerList(worldServiceList: IWorldServiceList) {
             this.commandHandlerList[CommandRegisterClient.Type] = new CommandRegisterClientHandler(worldServiceList);
-            this.commandHandlerList[CommandCreatePlayerObject.Type] = new CommandCreatePlayerObjectHandler(worldServiceList);
+            this.commandHandlerList[CommandCreateClientItemTank.Type] = new CommandCreateClientItemTankHandler(worldServiceList);
             this.commandHandlerList[CommandMoveObjectStart.Type] = new CommandMoveObjectStartHandler(worldServiceList);
             this.commandHandlerList[CommandMoveObjectStop.Type] = new CommandMoveObjectStopHandler(worldServiceList);
             this.commandHandlerList[CommandFire.Type] = new CommandFireHandler(worldServiceList);

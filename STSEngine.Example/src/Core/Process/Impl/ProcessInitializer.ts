@@ -17,8 +17,8 @@
                     return this.createMoveObject(attr);
                 case ProcessFire.Type:
                     return this.createFire(attr);
-                case ProcessCreatePlayerObject.Type:
-                    return this.createCreatePlayerObject(attr);
+                case ProcessCreateClientItemTank.Type:
+                    return this.createCreateClientItemTank(attr);
             }
         }
          
@@ -40,8 +40,8 @@
             return process;
         }
 
-        public createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject {
-            var process = new ProcessCreatePlayerObject(this.createAttributeList(), attr);
+        public createCreateClientItemTank(attr?: Iterable<[number, any]>): ProcessCreateClientItemTank {
+            var process = new ProcessCreateClientItemTank(this.createAttributeList(), attr);
             this.setProcessId(process);
             return process;
         }

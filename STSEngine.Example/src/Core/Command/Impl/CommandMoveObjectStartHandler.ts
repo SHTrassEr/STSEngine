@@ -17,12 +17,12 @@
 
 
         protected isValidCommand(command: CommandMoveObjectStart): boolean {
-            let playerId = command.getInitiatorId();
-            if (playerId > 0) {
+            let initiatorId = command.getInitiatorId();
+            if (initiatorId > 0) {
                 let objectId = command.getObjectId();
                 let object = this.worldServiceList.getItemListService().getTyped<ItemTank>(objectId, ItemTank);
                 if (object) {
-                    return (object).getClientId() == playerId;
+                    return (object).getClientId() == initiatorId;
                 }
             }
 

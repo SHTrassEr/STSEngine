@@ -10,20 +10,20 @@
 
         protected executeCommand(command: CommandRegisterClient): void {
             let client = new ClientActive();
-            client.setName(command.getPlayerName());
-            client.setId(command.getPlayerId());
+            client.setName(command.getClientName());
+            client.setId(command.getClientId());
             this.worldServiceList.getClientListService().add(client);
 
-            let process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
-            process.setPlayerId(command.getPlayerId());
+            let process = this.worldServiceList.getProcessInitializer().createCreateClientItemTank();
+            process.setClientId(command.getClientId());
             this.startProcess(process);
         }
 
         protected isValidCommand(command: CommandRegisterClient): boolean {
-            let playerId = command.getPlayerId();
+            let clientId = command.getClientId();
             if (command.getInitiatorId() === 0) {
-                var player = this.worldServiceList.getClientListService().getFirst(p => p.getId() == playerId);
-                if (!player) {
+                var client = this.worldServiceList.getClientListService().getFirst(p => p.getId() == clientId);
+                if (!client) {
                     return true;
                 }
             }

@@ -14,13 +14,13 @@
 
             switch (type) {
                 case ItemTank.Type:
-                    return this.createPlayer(attr);
+                    return this.createTank(attr);
                 case ItemBullet.Type:
                     return this.createBullet(attr);
             }
         }
 
-        public createPlayer(attr?: Iterable<[number, any]>): ItemTank {
+        public createTank(attr?: Iterable<[number, any]>): ItemTank {
             var object = new ItemTank(this.createAttributeList(), attr);
             this.initId(object);
             return object;

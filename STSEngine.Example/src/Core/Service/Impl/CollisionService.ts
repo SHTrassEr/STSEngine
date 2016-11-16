@@ -14,20 +14,20 @@
 
         public processCollision(moveItem: IItem, newPosition: [number, number]): void {
             if (moveItem instanceof ItemTank) {
-                this.processCollisionObjectPlayer(moveItem, newPosition);
+                this.processCollisionTank(moveItem, newPosition);
             } else if (moveItem instanceof ItemBullet) {
                 this.processCollisionObjectBullet(moveItem, newPosition);
             }
         }
 
-        protected processCollisionObjectPlayer(moveItem: ItemTank, newPosition: [number, number]) {
+        protected processCollisionTank(moveItem: ItemTank, newPosition: [number, number]) {
             this.processCollisionObjectRectangleWorld(moveItem, newPosition);
 
             let objectList = this.itemListService.getIterator();
             for (var o of objectList) {
                 if (moveItem.getId() != o.getId()) {
                     if (o instanceof ItemTank) {
-                        this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
+                        this.processCollisionTankTank(moveItem, newPosition, o);
                     }
 
                 }
@@ -45,7 +45,7 @@
             for (var o of objectList) {
                 if (moveItem.getId() != o.getId()) {
                     if (o instanceof ItemTank) {
-                        this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
+                        this.processCollisionBulletTank(moveItem, newPosition, o);
                     } 
 
                 }
@@ -54,7 +54,7 @@
             moveItem.setPositionPrecise(newPosition);
         }
 
-        protected processCollisionObjectPlayerObjectPlayer(moveItem: ItemTank, newPosition: [number, number], o: ItemTank): boolean {
+        protected processCollisionTankTank(moveItem: ItemTank, newPosition: [number, number], o: ItemTank): boolean {
 
             let position = moveItem.getPositionPrecise();
             let oPosition = o.getPositionPrecise();
@@ -83,7 +83,7 @@
             return false;
         }
 
-        protected processCollisionObjectBulletObjectPlayer(moveItem: ItemBullet, newPosition: [number, number], o: ItemTank): boolean {
+        protected processCollisionBulletTank(moveItem: ItemBullet, newPosition: [number, number], o: ItemTank): boolean {
 
             let position = moveItem.getPositionPrecise();
             let oPosition = o.getPositionPrecise();
@@ -94,8 +94,8 @@
                 if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
                     this.itemListService.remove(moveItem.getId());
 
-                    let playerId = moveItem.getClientId();
-                    let client = this.clientListService.getTyped<IClientActive>(playerId, ClientActive);
+                    let clientId = moveItem.getClientId();
+                    let client = this.clientListService.getTyped<IClientActive>(clientId, ClientActive);
 
                     client.setScore(client.getScore() + 10);
 
