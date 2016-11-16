@@ -10,7 +10,7 @@ namespace STSEngine.Example {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setType(CommandType.RegisterPlayer);
+            this.setType(CommandRegisterPlayer.Type);
         }
 
 
@@ -32,11 +32,8 @@ namespace STSEngine.Example {
         }
 
     }
-}
 
-namespace STSEngine {
-
-    export module CommandType {
-        export const RegisterPlayer = getNewTypeId();
+    export module CommandRegisterPlayer {
+        export const Type = ++Command.LastTypeId;
     }
 }

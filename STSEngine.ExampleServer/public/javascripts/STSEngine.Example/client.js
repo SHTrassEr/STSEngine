@@ -60,389 +60,6 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Command extends STSEngine.Command {
-        }
-        Example.Command = Command;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandCreatePlayerObject extends Example.Command {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this._playerId = ++this.lastAttributeId;
-                this.setType(STSEngine.CommandType.CreatePlayerObject);
-            }
-            getPlayerId() {
-                return this.attributeList.get(this._playerId);
-            }
-            setPlayerId(id) {
-                this.attributeList.set(this._playerId, id);
-            }
-        }
-        Example.CommandCreatePlayerObject = CommandCreatePlayerObject;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var CommandType;
-    (function (CommandType) {
-        CommandType.CreatePlayerObject = CommandType.getNewTypeId();
-    })(CommandType = STSEngine.CommandType || (STSEngine.CommandType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandCreatePlayerObjectHandler extends STSEngine.CommandHandler {
-            constructor(worldServiceList) {
-                super(worldServiceList);
-            }
-            executeCommand(command) {
-                var process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
-                process.setPlayerId(command.getPlayerId());
-                this.startProcess(process);
-            }
-            isValidCommand(command) {
-                return command.getPlayerId() === 0;
-            }
-            isValidCommandType(command) {
-                return command instanceof Example.CommandCreatePlayerObject;
-            }
-        }
-        Example.CommandCreatePlayerObjectHandler = CommandCreatePlayerObjectHandler;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandDispatcher extends STSEngine.CommandDispatcher {
-            constructor(worldServiceList) {
-                super();
-                this.initCommandHandlerList(worldServiceList);
-            }
-            initCommandHandlerList(worldServiceList) {
-                this.commandHandlerList[STSEngine.CommandType.RegisterPlayer] = new Example.CommandRegisterPlayerHandler(worldServiceList);
-                this.commandHandlerList[STSEngine.CommandType.CreatePlayerObject] = new Example.CommandCreatePlayerObjectHandler(worldServiceList);
-                this.commandHandlerList[STSEngine.CommandType.MoveStart] = new Example.CommandMoveObjectStartHandler(worldServiceList);
-                this.commandHandlerList[STSEngine.CommandType.MoveStop] = new Example.CommandMoveObjectStopHandler(worldServiceList);
-                this.commandHandlerList[STSEngine.CommandType.Fire] = new Example.CommandFireHandler(worldServiceList);
-            }
-        }
-        Example.CommandDispatcher = CommandDispatcher;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandFire extends Example.Command {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this._objectId = ++this.lastAttributeId;
-                this.setType(STSEngine.CommandType.Fire);
-            }
-            getObjectId() {
-                return this.attributeList.get(this._objectId);
-            }
-            setObjectId(id) {
-                this.attributeList.set(this._objectId, id);
-            }
-        }
-        Example.CommandFire = CommandFire;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var CommandType;
-    (function (CommandType) {
-        CommandType.Fire = CommandType.getNewTypeId();
-    })(CommandType = STSEngine.CommandType || (STSEngine.CommandType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandFireHandler extends STSEngine.CommandHandler {
-            constructor(worldServiceList) {
-                super(worldServiceList);
-            }
-            executeCommand(command) {
-                var process = this.worldServiceList.getProcessInitializer().createFire();
-                process.setObjectId(command.getObjectId());
-                this.startProcess(process);
-            }
-            isValidCommand(command) {
-                let playerId = command.getInitiatorId();
-                if (playerId > 0) {
-                    let objectId = command.getObjectId();
-                    let object = this.worldServiceList.getItemListService().getTyped(objectId, Example.ItemPlayer);
-                    if (object) {
-                        return (object).getPlayerId() == playerId;
-                    }
-                }
-                return command.getInitiatorId() === 0;
-            }
-            isValidCommandType(command) {
-                return command instanceof Example.CommandFire;
-            }
-        }
-        Example.CommandFireHandler = CommandFireHandler;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandInitializer extends STSEngine.CommandInitializer {
-            createByType(type, attr) {
-                switch (type) {
-                    case STSEngine.CommandType.RegisterPlayer:
-                        return this.createRegisterPlayer(attr);
-                    case STSEngine.CommandType.MoveStart:
-                        return this.createMoveObjectStart(attr);
-                    case STSEngine.CommandType.MoveStop:
-                        return this.createMoveObjectStop(attr);
-                    case STSEngine.CommandType.CreatePlayerObject:
-                        return this.createPlayerObject(attr);
-                    case STSEngine.CommandType.Fire:
-                        return this.createFire(attr);
-                }
-                throw 'Unexpected command type: ' + type;
-            }
-            createRegisterPlayer(attr) {
-                return new Example.CommandRegisterPlayer(this.createAttributeList(), attr);
-            }
-            createMoveObjectStart(attr) {
-                return new Example.CommandMoveObjectStart(this.createAttributeList(), attr);
-            }
-            createMoveObjectStop(attr) {
-                return new Example.CommandMoveObjectStop(this.createAttributeList(), attr);
-            }
-            createPlayerObject(attr) {
-                return new Example.CommandCreatePlayerObject(this.createAttributeList(), attr);
-            }
-            createFire(attr) {
-                return new Example.CommandFire(this.createAttributeList(), attr);
-            }
-            createAttributeList() {
-                return new STSEngine.AttributeListArray();
-            }
-        }
-        Example.CommandInitializer = CommandInitializer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandMoveObjectStart extends Example.Command {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this._objectId = ++this.lastAttributeId;
-                this._moveDirection = ++this.lastAttributeId;
-                this.setType(STSEngine.CommandType.MoveStart);
-            }
-            getObjectId() {
-                return this.attributeList.get(this._objectId);
-            }
-            setObjectId(id) {
-                this.attributeList.set(this._objectId, id);
-            }
-            getMoveDirection() {
-                return this.attributeList.get(this._moveDirection);
-            }
-            setMoveDirection(direction) {
-                this.attributeList.set(this._moveDirection, direction);
-            }
-        }
-        Example.CommandMoveObjectStart = CommandMoveObjectStart;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var CommandType;
-    (function (CommandType) {
-        CommandType.MoveStart = CommandType.getNewTypeId();
-    })(CommandType = STSEngine.CommandType || (STSEngine.CommandType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandMoveObjectStartHandler extends STSEngine.CommandHandler {
-            constructor(worldServiceList) {
-                super(worldServiceList);
-            }
-            executeCommand(command) {
-                var process = this.worldServiceList.getProcessInitializer().createMove();
-                process.setObjectId(command.getObjectId());
-                process.setMoveDirection(command.getMoveDirection());
-                this.startProcess(process);
-            }
-            isValidCommand(command) {
-                let playerId = command.getInitiatorId();
-                if (playerId > 0) {
-                    let objectId = command.getObjectId();
-                    let object = this.worldServiceList.getItemListService().getTyped(objectId, Example.ItemPlayer);
-                    if (object) {
-                        return (object).getPlayerId() == playerId;
-                    }
-                }
-                return command.getInitiatorId() === 0;
-            }
-            isValidCommandType(command) {
-                return command instanceof Example.CommandMoveObjectStart;
-            }
-        }
-        Example.CommandMoveObjectStartHandler = CommandMoveObjectStartHandler;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandMoveObjectStop extends Example.Command {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this._objectId = ++this.lastAttributeId;
-                this._moveDirection = ++this.lastAttributeId;
-                this.setType(STSEngine.CommandType.MoveStop);
-            }
-            getObjectId() {
-                return this.attributeList.get(this._objectId);
-            }
-            setObjectId(id) {
-                this.attributeList.set(this._objectId, id);
-            }
-            getMoveDirection() {
-                return this.attributeList.get(this._moveDirection);
-            }
-            setMoveDirection(direction) {
-                this.attributeList.set(this._moveDirection, direction);
-            }
-        }
-        Example.CommandMoveObjectStop = CommandMoveObjectStop;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var CommandType;
-    (function (CommandType) {
-        CommandType.MoveStop = CommandType.getNewTypeId();
-    })(CommandType = STSEngine.CommandType || (STSEngine.CommandType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandMoveObjectStopHandler extends STSEngine.CommandHandler {
-            constructor(worldServiceList) {
-                super(worldServiceList);
-            }
-            executeCommand(command) {
-                let processListService = this.worldServiceList.getProcessListService();
-                let objectId = command.getObjectId();
-                let moveDirection = command.getMoveDirection();
-                let processList = processListService.getAll(p => ((p instanceof Example.ProcessMoveObject) && p.getObjectId() === objectId) && p.getMoveDirection() === moveDirection);
-                for (let process of processList) {
-                    this.finishProcess(process);
-                }
-                return null;
-            }
-            isValidCommand(command) {
-                let playerId = command.getInitiatorId();
-                if (playerId > 0) {
-                    let objectId = command.getObjectId();
-                    let object = this.worldServiceList.getItemListService().getTyped(objectId, Example.ItemPlayer);
-                    if (object) {
-                        return (object).getPlayerId() == playerId;
-                    }
-                }
-                return command.getInitiatorId() === 0;
-            }
-            isValidCommandType(command) {
-                return command instanceof Example.CommandMoveObjectStop;
-            }
-        }
-        Example.CommandMoveObjectStopHandler = CommandMoveObjectStopHandler;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandRegisterPlayer extends Example.Command {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this._playerId = ++this.lastAttributeId;
-                this._playerName = ++this.lastAttributeId;
-                this.setType(STSEngine.CommandType.RegisterPlayer);
-            }
-            getPlayerId() {
-                return this.attributeList.get(this._playerId);
-            }
-            setPlayerId(id) {
-                this.attributeList.set(this._playerId, id);
-            }
-            getPlayerName() {
-                return this.attributeList.get(this._playerName);
-            }
-            setPlayerName(playerName) {
-                this.attributeList.set(this._playerName, playerName);
-            }
-        }
-        Example.CommandRegisterPlayer = CommandRegisterPlayer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var CommandType;
-    (function (CommandType) {
-        CommandType.RegisterPlayer = CommandType.getNewTypeId();
-    })(CommandType = STSEngine.CommandType || (STSEngine.CommandType = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class CommandRegisterPlayerHandler extends STSEngine.CommandHandler {
-            constructor(worldServiceList) {
-                super(worldServiceList);
-            }
-            executeCommand(command) {
-                let client = new Example.ClientActive();
-                client.setName(command.getPlayerName());
-                client.setId(command.getPlayerId());
-                this.worldServiceList.getClientListService().add(client);
-                let process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
-                process.setPlayerId(command.getPlayerId());
-                this.startProcess(process);
-            }
-            isValidCommand(command) {
-                let playerId = command.getPlayerId();
-                if (command.getInitiatorId() === 0) {
-                    var player = this.worldServiceList.getClientListService().getFirst(p => p.getId() == playerId);
-                    if (!player) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            isValidCommandType(command) {
-                return command instanceof Example.CommandRegisterPlayer;
-            }
-        }
-        Example.CommandRegisterPlayerHandler = CommandRegisterPlayerHandler;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class Point {
             constructor(x, y) {
                 this.x = x;
@@ -459,6 +76,9 @@ var STSEngine;
         class Item extends STSEngine.Item {
         }
         Example.Item = Item;
+        (function (Item) {
+            let lastTypeId = STSEngine.Item.LastTypeId;
+        })(Item = Example.Item || (Example.Item = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -539,24 +159,14 @@ var STSEngine;
         class ItemBullet extends Example.ItemRectangle {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
-                this.initDefault();
-            }
-            initDefault() {
-                this.setType(STSEngine.ItemType.Bullet);
-                if (!this.getSize()) {
-                    this.setSize([1, 1]);
-                }
+                this.setType(ItemBullet.Type);
             }
         }
         Example.ItemBullet = ItemBullet;
+        (function (ItemBullet) {
+            ItemBullet.Type = ++Example.Item.LastTypeId;
+        })(ItemBullet = Example.ItemBullet || (Example.ItemBullet = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var ItemType;
-    (function (ItemType) {
-        ItemType.Bullet = ItemType.getNewTypeId();
-    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -567,30 +177,26 @@ var STSEngine;
                 super(createIdHandler);
             }
             createByType(type, attr) {
+                let item = super.createByType(type, attr);
+                if (item) {
+                    return item;
+                }
                 switch (type) {
-                    case STSEngine.ItemType.Player:
+                    case Example.ItemPlayer.Type:
                         return this.createPlayer(attr);
-                    case STSEngine.ItemType.Bullet:
+                    case Example.ItemBullet.Type:
                         return this.createBullet(attr);
                 }
             }
             createPlayer(attr) {
                 var object = new Example.ItemPlayer(this.createAttributeList(), attr);
-                this.setItemId(object);
+                this.initId(object);
                 return object;
             }
             createBullet(attr) {
                 var object = new Example.ItemBullet(this.createAttributeList(), attr);
-                this.setItemId(object);
+                this.initId(object);
                 return object;
-            }
-            setItemId(item) {
-                if (!item.getId()) {
-                    item.setId(this.createId());
-                }
-            }
-            createAttributeList() {
-                return new STSEngine.AttributeListArray();
             }
         }
         Example.ItemInitializer = ItemInitializer;
@@ -603,27 +209,383 @@ var STSEngine;
         class ItemPlayer extends Example.ItemRectangle {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
-                this.initDefault();
-            }
-            initDefault() {
-                this.setType(STSEngine.ItemType.Player);
-                if (!this.getMoveDirection()) {
-                    this.setMoveDirection(Example.MoveDirection.Up);
-                }
-                if (!this.getSize()) {
-                    this.setSize([5, 5]);
-                }
+                this.setType(ItemPlayer.Type);
             }
         }
         Example.ItemPlayer = ItemPlayer;
+        (function (ItemPlayer) {
+            ItemPlayer.Type = ++Example.Item.LastTypeId;
+        })(ItemPlayer = Example.ItemPlayer || (Example.ItemPlayer = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
-    var ItemType;
-    (function (ItemType) {
-        ItemType.Player = ItemType.getNewTypeId();
-    })(ItemType = STSEngine.ItemType || (STSEngine.ItemType = {}));
+    var Example;
+    (function (Example) {
+        class Command extends STSEngine.Command {
+        }
+        Example.Command = Command;
+        (function (Command) {
+            let lastTypeId = STSEngine.Command.LastTypeId;
+        })(Command = Example.Command || (Example.Command = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandCreatePlayerObject extends Example.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this._playerId = ++this.lastAttributeId;
+                this.setType(CommandCreatePlayerObject.Type);
+            }
+            getPlayerId() {
+                return this.attributeList.get(this._playerId);
+            }
+            setPlayerId(id) {
+                this.attributeList.set(this._playerId, id);
+            }
+        }
+        Example.CommandCreatePlayerObject = CommandCreatePlayerObject;
+        (function (CommandCreatePlayerObject) {
+            CommandCreatePlayerObject.Type = ++Example.Command.LastTypeId;
+        })(CommandCreatePlayerObject = Example.CommandCreatePlayerObject || (Example.CommandCreatePlayerObject = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandCreatePlayerObjectHandler extends STSEngine.CommandHandler {
+            constructor(worldServiceList) {
+                super(worldServiceList);
+            }
+            executeCommand(command) {
+                var process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
+                process.setPlayerId(command.getPlayerId());
+                this.startProcess(process);
+            }
+            isValidCommand(command) {
+                return command.getPlayerId() === 0;
+            }
+            isValidCommandType(command) {
+                return command instanceof Example.CommandCreatePlayerObject;
+            }
+        }
+        Example.CommandCreatePlayerObjectHandler = CommandCreatePlayerObjectHandler;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandDispatcher extends STSEngine.CommandDispatcher {
+            constructor(worldServiceList) {
+                super();
+                this.initCommandHandlerList(worldServiceList);
+            }
+            initCommandHandlerList(worldServiceList) {
+                this.commandHandlerList[Example.CommandRegisterPlayer.Type] = new Example.CommandRegisterPlayerHandler(worldServiceList);
+                this.commandHandlerList[Example.CommandCreatePlayerObject.Type] = new Example.CommandCreatePlayerObjectHandler(worldServiceList);
+                this.commandHandlerList[Example.CommandMoveObjectStart.Type] = new Example.CommandMoveObjectStartHandler(worldServiceList);
+                this.commandHandlerList[Example.CommandMoveObjectStop.Type] = new Example.CommandMoveObjectStopHandler(worldServiceList);
+                this.commandHandlerList[Example.CommandFire.Type] = new Example.CommandFireHandler(worldServiceList);
+            }
+        }
+        Example.CommandDispatcher = CommandDispatcher;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandFire extends Example.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this._objectId = ++this.lastAttributeId;
+                this.setType(CommandFire.Type);
+            }
+            getObjectId() {
+                return this.attributeList.get(this._objectId);
+            }
+            setObjectId(id) {
+                this.attributeList.set(this._objectId, id);
+            }
+        }
+        Example.CommandFire = CommandFire;
+        (function (CommandFire) {
+            CommandFire.Type = ++Example.Command.LastTypeId;
+        })(CommandFire = Example.CommandFire || (Example.CommandFire = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandFireHandler extends STSEngine.CommandHandler {
+            constructor(worldServiceList) {
+                super(worldServiceList);
+            }
+            executeCommand(command) {
+                var process = this.worldServiceList.getProcessInitializer().createFire();
+                process.setObjectId(command.getObjectId());
+                this.startProcess(process);
+            }
+            isValidCommand(command) {
+                let playerId = command.getInitiatorId();
+                if (playerId > 0) {
+                    let objectId = command.getObjectId();
+                    let object = this.worldServiceList.getItemListService().getTyped(objectId, Example.ItemPlayer);
+                    if (object) {
+                        return (object).getPlayerId() == playerId;
+                    }
+                }
+                return command.getInitiatorId() === 0;
+            }
+            isValidCommandType(command) {
+                return command instanceof Example.CommandFire;
+            }
+        }
+        Example.CommandFireHandler = CommandFireHandler;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandInitializer extends STSEngine.CommandInitializer {
+            createByType(type, attr) {
+                let command = super.createByType(type, attr);
+                if (command) {
+                    return command;
+                }
+                switch (type) {
+                    case Example.CommandRegisterPlayer.Type:
+                        return this.createRegisterPlayer(attr);
+                    case Example.CommandMoveObjectStart.Type:
+                        return this.createMoveObjectStart(attr);
+                    case Example.CommandMoveObjectStop.Type:
+                        return this.createMoveObjectStop(attr);
+                    case Example.CommandCreatePlayerObject.Type:
+                        return this.createPlayerObject(attr);
+                    case Example.CommandFire.Type:
+                        return this.createFire(attr);
+                }
+            }
+            createRegisterPlayer(attr) {
+                return new Example.CommandRegisterPlayer(this.createAttributeList(), attr);
+            }
+            createMoveObjectStart(attr) {
+                return new Example.CommandMoveObjectStart(this.createAttributeList(), attr);
+            }
+            createMoveObjectStop(attr) {
+                return new Example.CommandMoveObjectStop(this.createAttributeList(), attr);
+            }
+            createPlayerObject(attr) {
+                return new Example.CommandCreatePlayerObject(this.createAttributeList(), attr);
+            }
+            createFire(attr) {
+                return new Example.CommandFire(this.createAttributeList(), attr);
+            }
+            createAttributeList() {
+                return new STSEngine.AttributeListArray();
+            }
+        }
+        Example.CommandInitializer = CommandInitializer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandMoveObjectStart extends Example.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this._objectId = ++this.lastAttributeId;
+                this._moveDirection = ++this.lastAttributeId;
+                this.setType(CommandMoveObjectStart.Type);
+            }
+            getObjectId() {
+                return this.attributeList.get(this._objectId);
+            }
+            setObjectId(id) {
+                this.attributeList.set(this._objectId, id);
+            }
+            getMoveDirection() {
+                return this.attributeList.get(this._moveDirection);
+            }
+            setMoveDirection(direction) {
+                this.attributeList.set(this._moveDirection, direction);
+            }
+        }
+        Example.CommandMoveObjectStart = CommandMoveObjectStart;
+        (function (CommandMoveObjectStart) {
+            CommandMoveObjectStart.Type = ++Example.Command.LastTypeId;
+        })(CommandMoveObjectStart = Example.CommandMoveObjectStart || (Example.CommandMoveObjectStart = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandMoveObjectStartHandler extends STSEngine.CommandHandler {
+            constructor(worldServiceList) {
+                super(worldServiceList);
+            }
+            executeCommand(command) {
+                var process = this.worldServiceList.getProcessInitializer().createMoveObject();
+                process.setObjectId(command.getObjectId());
+                process.setMoveDirection(command.getMoveDirection());
+                this.startProcess(process);
+            }
+            isValidCommand(command) {
+                let playerId = command.getInitiatorId();
+                if (playerId > 0) {
+                    let objectId = command.getObjectId();
+                    let object = this.worldServiceList.getItemListService().getTyped(objectId, Example.ItemPlayer);
+                    if (object) {
+                        return (object).getPlayerId() == playerId;
+                    }
+                }
+                return command.getInitiatorId() === 0;
+            }
+            isValidCommandType(command) {
+                return command instanceof Example.CommandMoveObjectStart;
+            }
+        }
+        Example.CommandMoveObjectStartHandler = CommandMoveObjectStartHandler;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandMoveObjectStop extends Example.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this._objectId = ++this.lastAttributeId;
+                this._moveDirection = ++this.lastAttributeId;
+                this.setType(CommandMoveObjectStop.Type);
+            }
+            getObjectId() {
+                return this.attributeList.get(this._objectId);
+            }
+            setObjectId(id) {
+                this.attributeList.set(this._objectId, id);
+            }
+            getMoveDirection() {
+                return this.attributeList.get(this._moveDirection);
+            }
+            setMoveDirection(direction) {
+                this.attributeList.set(this._moveDirection, direction);
+            }
+        }
+        Example.CommandMoveObjectStop = CommandMoveObjectStop;
+        (function (CommandMoveObjectStop) {
+            CommandMoveObjectStop.Type = ++Example.Command.LastTypeId;
+        })(CommandMoveObjectStop = Example.CommandMoveObjectStop || (Example.CommandMoveObjectStop = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandMoveObjectStopHandler extends STSEngine.CommandHandler {
+            constructor(worldServiceList) {
+                super(worldServiceList);
+            }
+            executeCommand(command) {
+                let processListService = this.worldServiceList.getProcessListService();
+                let objectId = command.getObjectId();
+                let moveDirection = command.getMoveDirection();
+                let processList = processListService.getAll(p => ((p instanceof Example.ProcessMoveObject) && p.getObjectId() === objectId) && p.getMoveDirection() === moveDirection);
+                for (let process of processList) {
+                    this.finishProcess(process);
+                }
+                return null;
+            }
+            isValidCommand(command) {
+                let playerId = command.getInitiatorId();
+                if (playerId > 0) {
+                    let objectId = command.getObjectId();
+                    let object = this.worldServiceList.getItemListService().getTyped(objectId, Example.ItemPlayer);
+                    if (object) {
+                        return (object).getPlayerId() == playerId;
+                    }
+                }
+                return command.getInitiatorId() === 0;
+            }
+            isValidCommandType(command) {
+                return command instanceof Example.CommandMoveObjectStop;
+            }
+        }
+        Example.CommandMoveObjectStopHandler = CommandMoveObjectStopHandler;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandRegisterPlayer extends Example.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this._playerId = ++this.lastAttributeId;
+                this._playerName = ++this.lastAttributeId;
+                this.setType(CommandRegisterPlayer.Type);
+            }
+            getPlayerId() {
+                return this.attributeList.get(this._playerId);
+            }
+            setPlayerId(id) {
+                this.attributeList.set(this._playerId, id);
+            }
+            getPlayerName() {
+                return this.attributeList.get(this._playerName);
+            }
+            setPlayerName(playerName) {
+                this.attributeList.set(this._playerName, playerName);
+            }
+        }
+        Example.CommandRegisterPlayer = CommandRegisterPlayer;
+        (function (CommandRegisterPlayer) {
+            CommandRegisterPlayer.Type = ++Example.Command.LastTypeId;
+        })(CommandRegisterPlayer = Example.CommandRegisterPlayer || (Example.CommandRegisterPlayer = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandRegisterPlayerHandler extends STSEngine.CommandHandler {
+            constructor(worldServiceList) {
+                super(worldServiceList);
+            }
+            executeCommand(command) {
+                let client = new Example.ClientActive();
+                client.setName(command.getPlayerName());
+                client.setId(command.getPlayerId());
+                this.worldServiceList.getClientListService().add(client);
+                let process = this.worldServiceList.getProcessInitializer().createCreatePlayerObject();
+                process.setPlayerId(command.getPlayerId());
+                this.startProcess(process);
+            }
+            isValidCommand(command) {
+                let playerId = command.getPlayerId();
+                if (command.getInitiatorId() === 0) {
+                    var player = this.worldServiceList.getClientListService().getFirst(p => p.getId() == playerId);
+                    if (!player) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            isValidCommandType(command) {
+                return command instanceof Example.CommandRegisterPlayer;
+            }
+        }
+        Example.CommandRegisterPlayerHandler = CommandRegisterPlayerHandler;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -751,6 +713,9 @@ var STSEngine;
         class Process extends STSEngine.Process {
         }
         Example.Process = Process;
+        (function (Process) {
+            let lastTypeId = STSEngine.Process.LastTypeId;
+        })(Process = Example.Process || (Example.Process = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -761,7 +726,7 @@ var STSEngine;
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
                 this._playerId = ++this.lastAttributeId;
-                this.setType(STSEngine.ProcessType.CreatePlayerObject);
+                this.setType(ProcessCreatePlayerObject.Type);
             }
             getPlayerId() {
                 return this.attributeList.get(this._playerId);
@@ -771,14 +736,10 @@ var STSEngine;
             }
         }
         Example.ProcessCreatePlayerObject = ProcessCreatePlayerObject;
+        (function (ProcessCreatePlayerObject) {
+            ProcessCreatePlayerObject.Type = ++Example.Item.LastTypeId;
+        })(ProcessCreatePlayerObject = Example.ProcessCreatePlayerObject || (Example.ProcessCreatePlayerObject = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var ProcessType;
-    (function (ProcessType) {
-        ProcessType.CreatePlayerObject = ProcessType.getNewTypeId();
-    })(ProcessType = STSEngine.ProcessType || (STSEngine.ProcessType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -791,10 +752,12 @@ var STSEngine;
             initProcess(process) {
                 let itemPlayer = this.worldServiceList.getItemInitializer().createPlayer();
                 itemPlayer.setPlayerId(process.getPlayerId());
+                itemPlayer.setSize([5, 5]);
+                itemPlayer.setMoveDirection(Example.MoveDirection.Up);
                 itemPlayer.setPositionPrecise([40, 40]);
                 itemPlayer.setMaxSpeed(1);
                 this.worldServiceList.getItemListService().add(itemPlayer);
-                process.setProcessStatus(STSEngine.ProcessStatus.Finished);
+                process.setStatus(STSEngine.ProcessStatus.Finished);
             }
         }
         Example.ProcessCreatePlayerObjectHandler = ProcessCreatePlayerObjectHandler;
@@ -811,9 +774,9 @@ var STSEngine;
             }
             initProcessHandlerList(worldServiceList) {
                 this.processHandlerList = [];
-                this.processHandlerList[STSEngine.ProcessType.CreatePlayerObject] = new Example.ProcessCreatePlayerObjectHandler(worldServiceList);
-                this.processHandlerList[STSEngine.ProcessType.Move] = new Example.ProcessMoveObjectHandler(worldServiceList);
-                this.processHandlerList[STSEngine.ProcessType.Fire] = new Example.ProcessFireHandler(worldServiceList);
+                this.processHandlerList[Example.ProcessCreatePlayerObject.Type] = new Example.ProcessCreatePlayerObjectHandler(worldServiceList);
+                this.processHandlerList[Example.ProcessMoveObject.Type] = new Example.ProcessMoveObjectHandler(worldServiceList);
+                this.processHandlerList[Example.ProcessFire.Type] = new Example.ProcessFireHandler(worldServiceList);
             }
         }
         Example.ProcessDispatcher = ProcessDispatcher;
@@ -827,7 +790,7 @@ var STSEngine;
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
                 this._objectId = ++this.lastAttributeId;
-                this.setType(STSEngine.ProcessType.Fire);
+                this.setType(ProcessFire.Type);
             }
             getObjectId() {
                 return this.attributeList.get(this._objectId);
@@ -837,14 +800,10 @@ var STSEngine;
             }
         }
         Example.ProcessFire = ProcessFire;
+        (function (ProcessFire) {
+            ProcessFire.Type = ++Example.Item.LastTypeId;
+        })(ProcessFire = Example.ProcessFire || (Example.ProcessFire = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var ProcessType;
-    (function (ProcessType) {
-        ProcessType.Fire = ProcessType.getNewTypeId();
-    })(ProcessType = STSEngine.ProcessType || (STSEngine.ProcessType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -854,30 +813,25 @@ var STSEngine;
             constructor(worldServiceList) {
                 super(worldServiceList);
             }
-            initProcess(process) {
-                process.setProcessStatus(STSEngine.ProcessStatus.Executing);
-            }
             executeProcess(process) {
                 let object = this.worldServiceList.getItemListService().getTyped(process.getObjectId(), Example.ItemPlayer);
                 if (object) {
                     this.fire(object);
                 }
-                process.setProcessStatus(STSEngine.ProcessStatus.Finished);
+                process.setStatus(STSEngine.ProcessStatus.Finished);
             }
             fire(object) {
                 var bullet = this.worldServiceList.getItemInitializer().createBullet();
                 bullet.setPositionPrecise([object.getPosition(0) + (object.getSize()[0] / 2), object.getPosition(1) + (object.getSize()[0] / 2)]);
                 bullet.setPlayerId(object.getPlayerId());
                 bullet.setMaxSpeed(4);
+                bullet.setSize([1, 1]);
                 bullet.setMoveDirection(object.getMoveDirection());
                 this.worldServiceList.getItemListService().add(bullet);
-                var moveProcess = this.worldServiceList.getProcessInitializer().createMove();
+                var moveProcess = this.worldServiceList.getProcessInitializer().createMoveObject();
                 moveProcess.setMoveDirection(object.getMoveDirection());
                 moveProcess.setObjectId(bullet.getId());
                 this.startProcess(moveProcess);
-            }
-            finish(process) {
-                process.setProcessStatus(STSEngine.ProcessStatus.Finished);
             }
         }
         Example.ProcessFireHandler = ProcessFireHandler;
@@ -892,9 +846,17 @@ var STSEngine;
                 super(createIdHandler);
             }
             createByType(type, attr) {
+                let process = super.createByType(type, attr);
+                if (process) {
+                    return process;
+                }
                 switch (type) {
-                    case STSEngine.ProcessType.Move:
-                        return this.createMove(attr);
+                    case Example.ProcessMoveObject.Type:
+                        return this.createMoveObject(attr);
+                    case Example.ProcessFire.Type:
+                        return this.createFire(attr);
+                    case Example.ProcessCreatePlayerObject.Type:
+                        return this.createCreatePlayerObject(attr);
                 }
             }
             setProcessId(process) {
@@ -902,7 +864,7 @@ var STSEngine;
                     process.setId(this.createId());
                 }
             }
-            createMove(attr) {
+            createMoveObject(attr) {
                 var process = new Example.ProcessMoveObject(this.createAttributeList(), attr);
                 this.setProcessId(process);
                 return process;
@@ -933,7 +895,7 @@ var STSEngine;
                 super(attributeList, kvpList);
                 this._objectId = ++this.lastAttributeId;
                 this._moveDirection = ++this.lastAttributeId;
-                this.setType(STSEngine.ProcessType.Move);
+                this.setType(ProcessMoveObject.Type);
             }
             getObjectId() {
                 return this.attributeList.get(this._objectId);
@@ -949,14 +911,10 @@ var STSEngine;
             }
         }
         Example.ProcessMoveObject = ProcessMoveObject;
+        (function (ProcessMoveObject) {
+            ProcessMoveObject.Type = ++Example.Item.LastTypeId;
+        })(ProcessMoveObject = Example.ProcessMoveObject || (Example.ProcessMoveObject = {}));
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var ProcessType;
-    (function (ProcessType) {
-        ProcessType.Move = ProcessType.getNewTypeId();
-    })(ProcessType = STSEngine.ProcessType || (STSEngine.ProcessType = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
 (function (STSEngine) {
@@ -966,19 +924,14 @@ var STSEngine;
             constructor(worldServiceList) {
                 super(worldServiceList);
             }
-            initProcess(process) {
-                process.setProcessStatus(STSEngine.ProcessStatus.Executing);
-                if (!process.getMoveDirection()) {
-                    throw new Error('Init process invalid state: move direction is not defined ' + process.getId() + ' ' + process.getObjectId());
-                }
-            }
             executeProcess(process) {
                 var object = this.worldServiceList.getItemListService().get(process.getObjectId());
                 if (object) {
-                    this.moveObject(object, process.getMoveDirection(), process.getProcessExecCount());
+                    let execCount = this.worldServiceList.getWorldAttributeList().getStepNumber() - process.getInitStep();
+                    this.moveObject(object, process.getMoveDirection(), execCount);
                 }
                 else {
-                    process.setProcessStatus(STSEngine.ProcessStatus.Finished);
+                    process.setStatus(STSEngine.ProcessStatus.Finished);
                 }
             }
             moveObject(object, direction, execCount) {
@@ -1009,9 +962,6 @@ var STSEngine;
                 }
                 object.setMoveDirection(direction);
                 this.worldServiceList.getCollisionService().processCollision(object, newPosition);
-            }
-            finish(process) {
-                process.setProcessStatus(STSEngine.ProcessStatus.Finished);
             }
         }
         Example.ProcessMoveObjectHandler = ProcessMoveObjectHandler;

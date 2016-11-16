@@ -28,7 +28,7 @@
             let list: IProcess[];
             for (let i = this.processList.length - 1; i >= 0; i--) {
                 let process = this.processList[i];
-                if (process.getProcessStatus() == ProcessStatus.Finished) {
+                if (process.getStatus() == ProcessStatus.Finished) {
                     this.processList.splice(i, 1);
                 }
             }

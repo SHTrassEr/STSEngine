@@ -11,20 +11,37 @@
         public init(process: IProcess): void {
             if (this.isValidProcessType(process)) {
                 this.initProcess(process);
+
+                this.setInitStep(process);
+
+                if (process.getStatus() === ProcessStatus.Init) {
+                    process.setStatus(ProcessStatus.Executing);
+                } else if (process.getStatus() === ProcessStatus.Finished) {
+                    this.setFinishStep(process);
+                }
             }
         }
 
         public execute(process: IProcess): void {
             if (this.isValidProcessType(process)) {
                 this.executeProcess(process);
-                process.setProcessExecCount(process.getProcessExecCount() + 1);
             }
         }
 
         public finish(process: IProcess): void {
             if (this.isValidProcessType(process)) {
                 this.finishProcess(process);
+                process.setStatus(ProcessStatus.Finished);
+                this.setFinishStep(process);
             }
+        }
+
+        protected setInitStep(process: IProcess) {
+            process.setInitStep(this.worldServiceList.getWorldAttributeList().getStepNumber());
+        }
+
+        protected setFinishStep(process: IProcess) {
+            process.setFinishStep(this.worldServiceList.getWorldAttributeList().getStepNumber());
         }
 
         protected initProcess(process: IProcess): void {

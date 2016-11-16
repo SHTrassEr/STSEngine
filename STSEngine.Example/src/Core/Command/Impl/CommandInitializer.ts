@@ -2,21 +2,25 @@
 
     export class CommandInitializer extends STSEngine.CommandInitializer implements ICommandInitializer {
 
-        public createByType(type: number, attr?: Iterable<[number, any]>): ICommand {
-            switch (type) {
-                case STSEngine.CommandType.RegisterPlayer:
-                    return this.createRegisterPlayer(attr);
-                case CommandType.MoveStart:
-                    return this.createMoveObjectStart(attr);
-                case CommandType.MoveStop:
-                    return this.createMoveObjectStop(attr);
-                case CommandType.CreatePlayerObject: 
-                    return this.createPlayerObject(attr);
-                case CommandType.Fire:
-                    return this.createFire(attr);
+        protected createByType(type: number, attr?: Iterable<[number, any]>): ICommand {
+
+            let command = super.createByType(type, attr);
+            if (command) {
+                return command;
             }
 
-            throw 'Unexpected command type: ' + type;
+            switch (type) {
+                case CommandRegisterPlayer.Type:
+                    return this.createRegisterPlayer(attr);
+                case CommandMoveObjectStart.Type:
+                    return this.createMoveObjectStart(attr);
+                case CommandMoveObjectStop.Type:
+                    return this.createMoveObjectStop(attr);
+                case CommandCreatePlayerObject.Type: 
+                    return this.createPlayerObject(attr);
+                case CommandFire.Type:
+                    return this.createFire(attr);
+            }
         }
         
 

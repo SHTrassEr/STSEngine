@@ -8,28 +8,20 @@
             super(worldServiceList);
         }
 
-        public initProcess(process: ProcessMoveObject): void {
-            process.setProcessStatus(ProcessStatus.Executing);
-
-            if (!process.getMoveDirection()) {
-                throw new Error('Init process invalid state: move direction is not defined ' + process.getId() + ' ' + process.getObjectId());
-            }
-        }
-
         public executeProcess(process: ProcessMoveObject): void {
             var object = this.worldServiceList.getItemListService().get(process.getObjectId());
             if (object) {
-                this.moveObject((<IItemRectangle>object), process.getMoveDirection(), process.getProcessExecCount());
+
+                let execCount = this.worldServiceList.getWorldAttributeList().getStepNumber() - process.getInitStep();
+                this.moveObject((<IItemRectangle>object), process.getMoveDirection(), execCount);
             } else {
-                process.setProcessStatus(ProcessStatus.Finished);
+                process.setStatus(ProcessStatus.Finished);
             }
         }
 
         protected moveObject(object: IItemRectangle, direction: MoveDirection, execCount: number): void {
             let position = object.getPositionPrecise();
             var speed = object.getMaxSpeed();
-
-            
 
             if (execCount < 50) {
                 speed =  Math.floor((speed * (execCount + 10) / 20) * 100) / 100;
@@ -62,8 +54,5 @@
 
         }
 
-        public finish(process: IProcess): void {
-            process.setProcessStatus(ProcessStatus.Finished);
-        }
     }
 }

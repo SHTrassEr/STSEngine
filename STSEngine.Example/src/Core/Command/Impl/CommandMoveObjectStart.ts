@@ -10,7 +10,7 @@ namespace STSEngine.Example {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setType(CommandType.MoveStart);
+            this.setType(CommandMoveObjectStart.Type);
         }
 
         public getObjectId(): number {
@@ -29,11 +29,8 @@ namespace STSEngine.Example {
             this.attributeList.set(this._moveDirection, direction);
         }
     }
-}
 
-namespace STSEngine {
-
-    export module CommandType {
-        export const MoveStart = getNewTypeId();
+    export module CommandMoveObjectStart {
+        export const Type = ++Command.LastTypeId;
     }
 }

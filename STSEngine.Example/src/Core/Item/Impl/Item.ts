@@ -1,6 +1,10 @@
 ﻿namespace STSEngine.Example {
 
-    export class Item extends STSEngine.Item implements IItem {
+    export abstract class Item extends STSEngine.Item implements IItem {
 
+    }
+
+    export module Item {
+        let lastTypeId = STSEngine.Item.LastTypeId;
     }
 }

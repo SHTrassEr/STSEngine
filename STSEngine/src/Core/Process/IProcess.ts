@@ -7,11 +7,14 @@
         getType(): number;
         setType(processType: number): void
 
-        getProcessExecCount(): number;
-        setProcessExecCount(execCount: number): void
+        getInitStep(): number;
+        setInitStep(initStep: number): void
 
-        getProcessStatus(): ProcessStatus;
-        setProcessStatus(processStatus: ProcessStatus): void;
+        getFinishStep(): number;
+        setFinishStep(finishStep: number): void
+
+        getStatus(): ProcessStatus;
+        setStatus(processStatus: ProcessStatus): void;
 
         getAttributeList(): IAttributeList;
     }

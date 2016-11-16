@@ -7,9 +7,18 @@
         }
 
         protected createByType(type: number, attr?: Iterable<[number, any]>): IProcess {
+            let process = super.createByType(type, attr);
+            if (process) {
+                return process;
+            }
+
             switch (type) {
-                case ProcessType.Move:
-                    return this.createMove(attr);
+                case ProcessMoveObject.Type:
+                    return this.createMoveObject(attr);
+                case ProcessFire.Type:
+                    return this.createFire(attr);
+                case ProcessCreatePlayerObject.Type:
+                    return this.createCreatePlayerObject(attr);
             }
         }
          
@@ -19,7 +28,7 @@
             }
         }
 
-        public createMove(attr?: Iterable<[number, any]>): ProcessMoveObject {
+        public createMoveObject(attr?: Iterable<[number, any]>): ProcessMoveObject {
             var process = new ProcessMoveObject(this.createAttributeList(), attr);
             this.setProcessId(process);
             return process;

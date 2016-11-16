@@ -9,9 +9,9 @@
 
         protected initProcessHandlerList(worldServiceList: IWorldServiceList) {
             this.processHandlerList = [];
-            this.processHandlerList[ProcessType.CreatePlayerObject] = new ProcessCreatePlayerObjectHandler(worldServiceList);
-            this.processHandlerList[ProcessType.Move] = new ProcessMoveObjectHandler(worldServiceList);
-            this.processHandlerList[ProcessType.Fire] = new ProcessFireHandler(worldServiceList);
+            this.processHandlerList[ProcessCreatePlayerObject.Type] = new ProcessCreatePlayerObjectHandler(worldServiceList);
+            this.processHandlerList[ProcessMoveObject.Type] = new ProcessMoveObjectHandler(worldServiceList);
+            this.processHandlerList[ProcessFire.Type] = new ProcessFireHandler(worldServiceList);
         }
         
     }

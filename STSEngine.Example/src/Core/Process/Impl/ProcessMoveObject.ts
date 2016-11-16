@@ -9,7 +9,7 @@ namespace STSEngine.Example {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ProcessType.Move);
+            this.setType(ProcessMoveObject.Type);
         }
 
         public getObjectId(): number {
@@ -28,11 +28,8 @@ namespace STSEngine.Example {
             this.attributeList.set(this._moveDirection, direction);
         }
     }
-}
 
-namespace STSEngine {
-
-    export module ProcessType {
-        export const Move = getNewTypeId();
+    export module ProcessMoveObject {
+        export const Type = ++Item.LastTypeId;
     }
 }

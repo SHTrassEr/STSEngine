@@ -6,23 +6,11 @@ namespace STSEngine.Example {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.initDefault();
-        }
-
-        protected initDefault() {
-            this.setType(ItemType.Bullet);
-
-            if (!this.getSize()) {
-                this.setSize([1, 1]);
-            }
-            
+            this.setType(ItemBullet.Type);
         }
     }
-}
 
-namespace STSEngine {
-
-    export module ItemType {
-        export const Bullet = getNewTypeId();
+    export module ItemBullet {
+        export const Type = ++Item.LastTypeId;
     }
 }

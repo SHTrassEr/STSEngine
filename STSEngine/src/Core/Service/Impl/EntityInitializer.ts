@@ -11,11 +11,18 @@ namespace STSEngine {
         }
 
         public create(attr: Iterable<[number, any]> | number): T {
+            let o: T;
             if (attr instanceof Number) {
-                return this.createByType(attr);
+                o = this.createByType(attr);
+            } else {
+                o = this.createByAttr(<Iterable<[number, any]>>attr);
             }
 
-            return this.createByAttr(<Iterable<[number, any]>>attr);
+            if (!o) {
+                throw new Error(JSON.stringify(attr));
+            }
+
+            return o;
         }
 
         protected getItemType(attr: Iterable<[number, any]>): number {
@@ -43,6 +50,16 @@ namespace STSEngine {
 
         protected createId() {
             return this.createIdHandler();
+        }
+
+        protected initId(entity: IEntity) {
+            if (this.createIdHandler && !entity.getId()) {
+                entity.setId(this.createId());
+            }
+        }
+
+        protected createAttributeList(): IAttributeList {
+            return new AttributeListArray();
         }
     }
 }

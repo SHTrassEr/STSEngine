@@ -23,146 +23,6 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class Command extends STSEngine.Command implements ICommand {
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandCreatePlayerObject extends Command {
-        private _playerId;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        getPlayerId(): number;
-        setPlayerId(id: number): void;
-    }
-}
-declare namespace STSEngine {
-    module CommandType {
-        const CreatePlayerObject: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandCreatePlayerObjectHandler extends STSEngine.CommandHandler {
-        protected worldServiceList: IWorldServiceList;
-        constructor(worldServiceList: IWorldServiceList);
-        protected executeCommand(command: CommandCreatePlayerObject): void;
-        protected isValidCommand(command: CommandCreatePlayerObject): boolean;
-        protected isValidCommandType(command: ICommand): boolean;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandDispatcher extends STSEngine.CommandDispatcher {
-        constructor(worldServiceList: IWorldServiceList);
-        protected initCommandHandlerList(worldServiceList: IWorldServiceList): void;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandFire extends Command {
-        private _objectId;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        getObjectId(): number;
-        setObjectId(id: number): void;
-    }
-}
-declare namespace STSEngine {
-    module CommandType {
-        const Fire: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandFireHandler extends STSEngine.CommandHandler {
-        protected worldServiceList: IWorldServiceList;
-        constructor(worldServiceList: IWorldServiceList);
-        protected executeCommand(command: CommandFire): void;
-        protected isValidCommand(command: CommandFire): boolean;
-        protected isValidCommandType(command: ICommand): boolean;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandInitializer extends STSEngine.CommandInitializer implements ICommandInitializer {
-        createByType(type: number, attr?: Iterable<[number, any]>): ICommand;
-        createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
-        createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
-        createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
-        createPlayerObject(attr?: Iterable<[number, any]>): CommandCreatePlayerObject;
-        createFire(attr?: Iterable<[number, any]>): CommandFire;
-        protected createAttributeList(): IAttributeList;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandMoveObjectStart extends Command {
-        private _objectId;
-        private _moveDirection;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        getObjectId(): number;
-        setObjectId(id: number): void;
-        getMoveDirection(): MoveDirection;
-        setMoveDirection(direction: MoveDirection): void;
-    }
-}
-declare namespace STSEngine {
-    module CommandType {
-        const MoveStart: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandMoveObjectStartHandler extends STSEngine.CommandHandler {
-        protected worldServiceList: IWorldServiceList;
-        constructor(worldServiceList: IWorldServiceList);
-        protected executeCommand(command: CommandMoveObjectStart): void;
-        protected isValidCommand(command: CommandMoveObjectStart): boolean;
-        protected isValidCommandType(command: ICommand): boolean;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandMoveObjectStop extends Command {
-        private _objectId;
-        private _moveDirection;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        getObjectId(): number;
-        setObjectId(id: number): void;
-        getMoveDirection(): MoveDirection;
-        setMoveDirection(direction: MoveDirection): void;
-    }
-}
-declare namespace STSEngine {
-    module CommandType {
-        const MoveStop: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandMoveObjectStopHandler extends STSEngine.CommandHandler {
-        protected worldServiceList: IWorldServiceList;
-        constructor(worldServiceList: IWorldServiceList);
-        protected executeCommand(command: CommandMoveObjectStop): Iterable<IProcess>;
-        protected isValidCommand(command: CommandMoveObjectStop): boolean;
-        protected isValidCommandType(command: ICommand): boolean;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandRegisterPlayer extends Command {
-        private _playerId;
-        private _playerName;
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        getPlayerId(): number;
-        setPlayerId(id: number): void;
-        getPlayerName(): string;
-        setPlayerName(playerName: string): void;
-    }
-}
-declare namespace STSEngine {
-    module CommandType {
-        const RegisterPlayer: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class CommandRegisterPlayerHandler extends STSEngine.CommandHandler {
-        protected worldServiceList: IWorldServiceList;
-        constructor(worldServiceList: IWorldServiceList);
-        protected executeCommand(command: CommandRegisterPlayer): void;
-        protected isValidCommand(command: CommandRegisterPlayer): boolean;
-        protected isValidCommandType(command: ICommand): boolean;
-    }
-}
-declare namespace STSEngine.Example {
     class Point implements IPoint {
         x: number;
         y: number;
@@ -170,7 +30,9 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class Item extends STSEngine.Item implements IItem {
+    abstract class Item extends STSEngine.Item implements IItem {
+    }
+    module Item {
     }
 }
 declare namespace STSEngine.Example {
@@ -204,12 +66,9 @@ declare namespace STSEngine.Example {
 declare namespace STSEngine.Example {
     class ItemBullet extends ItemRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        protected initDefault(): void;
     }
-}
-declare namespace STSEngine {
-    module ItemType {
-        const Bullet: number;
+    module ItemBullet {
+        const Type: number;
     }
 }
 declare namespace STSEngine.Example {
@@ -218,19 +77,146 @@ declare namespace STSEngine.Example {
         protected createByType(type: number, attr?: Iterable<[number, any]>): IItem;
         createPlayer(attr?: Iterable<[number, any]>): ItemPlayer;
         createBullet(attr?: Iterable<[number, any]>): ItemBullet;
-        protected setItemId(item: IItem): void;
-        protected createAttributeList(): IAttributeList;
     }
 }
 declare namespace STSEngine.Example {
     class ItemPlayer extends ItemRectangle {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-        protected initDefault(): void;
+    }
+    module ItemPlayer {
+        const Type: number;
     }
 }
-declare namespace STSEngine {
-    module ItemType {
-        const Player: number;
+declare namespace STSEngine.Example {
+    abstract class Command extends STSEngine.Command implements ICommand {
+    }
+    module Command {
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandCreatePlayerObject extends Command {
+        private _playerId;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getPlayerId(): number;
+        setPlayerId(id: number): void;
+    }
+    module CommandCreatePlayerObject {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandCreatePlayerObjectHandler extends STSEngine.CommandHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        protected executeCommand(command: CommandCreatePlayerObject): void;
+        protected isValidCommand(command: CommandCreatePlayerObject): boolean;
+        protected isValidCommandType(command: ICommand): boolean;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandDispatcher extends STSEngine.CommandDispatcher {
+        constructor(worldServiceList: IWorldServiceList);
+        protected initCommandHandlerList(worldServiceList: IWorldServiceList): void;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandFire extends Command {
+        private _objectId;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getObjectId(): number;
+        setObjectId(id: number): void;
+    }
+    module CommandFire {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandFireHandler extends STSEngine.CommandHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        protected executeCommand(command: CommandFire): void;
+        protected isValidCommand(command: CommandFire): boolean;
+        protected isValidCommandType(command: ICommand): boolean;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandInitializer extends STSEngine.CommandInitializer implements ICommandInitializer {
+        protected createByType(type: number, attr?: Iterable<[number, any]>): ICommand;
+        createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
+        createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
+        createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
+        createPlayerObject(attr?: Iterable<[number, any]>): CommandCreatePlayerObject;
+        createFire(attr?: Iterable<[number, any]>): CommandFire;
+        protected createAttributeList(): IAttributeList;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandMoveObjectStart extends Command {
+        private _objectId;
+        private _moveDirection;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getObjectId(): number;
+        setObjectId(id: number): void;
+        getMoveDirection(): MoveDirection;
+        setMoveDirection(direction: MoveDirection): void;
+    }
+    module CommandMoveObjectStart {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandMoveObjectStartHandler extends STSEngine.CommandHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        protected executeCommand(command: CommandMoveObjectStart): void;
+        protected isValidCommand(command: CommandMoveObjectStart): boolean;
+        protected isValidCommandType(command: ICommand): boolean;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandMoveObjectStop extends Command {
+        private _objectId;
+        private _moveDirection;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getObjectId(): number;
+        setObjectId(id: number): void;
+        getMoveDirection(): MoveDirection;
+        setMoveDirection(direction: MoveDirection): void;
+    }
+    module CommandMoveObjectStop {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandMoveObjectStopHandler extends STSEngine.CommandHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        protected executeCommand(command: CommandMoveObjectStop): Iterable<IProcess>;
+        protected isValidCommand(command: CommandMoveObjectStop): boolean;
+        protected isValidCommandType(command: ICommand): boolean;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandRegisterPlayer extends Command {
+        private _playerId;
+        private _playerName;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getPlayerId(): number;
+        setPlayerId(id: number): void;
+        getPlayerName(): string;
+        setPlayerName(playerName: string): void;
+    }
+    module CommandRegisterPlayer {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandRegisterPlayerHandler extends STSEngine.CommandHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        protected executeCommand(command: CommandRegisterPlayer): void;
+        protected isValidCommand(command: CommandRegisterPlayer): boolean;
+        protected isValidCommandType(command: ICommand): boolean;
     }
 }
 declare namespace STSEngine.Example {
@@ -249,7 +235,9 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class Process extends STSEngine.Process implements IProcess {
+    abstract class Process extends STSEngine.Process implements IProcess {
+    }
+    module Process {
     }
 }
 declare namespace STSEngine.Example {
@@ -259,10 +247,8 @@ declare namespace STSEngine.Example {
         getPlayerId(): number;
         setPlayerId(id: number): void;
     }
-}
-declare namespace STSEngine {
-    module ProcessType {
-        const CreatePlayerObject: number;
+    module ProcessCreatePlayerObject {
+        const Type: number;
     }
 }
 declare namespace STSEngine.Example {
@@ -285,20 +271,16 @@ declare namespace STSEngine.Example {
         getObjectId(): number;
         setObjectId(id: number): void;
     }
-}
-declare namespace STSEngine {
-    module ProcessType {
-        const Fire: number;
+    module ProcessFire {
+        const Type: number;
     }
 }
 declare namespace STSEngine.Example {
     class ProcessFireHandler extends STSEngine.ProcessHandler {
         protected worldServiceList: IWorldServiceList;
         constructor(worldServiceList: IWorldServiceList);
-        initProcess(process: ProcessFire): void;
         executeProcess(process: ProcessFire): void;
         protected fire(object: ItemPlayer): void;
-        finish(process: IProcess): void;
     }
 }
 declare namespace STSEngine.Example {
@@ -306,7 +288,7 @@ declare namespace STSEngine.Example {
         constructor(createIdHandler: () => number);
         protected createByType(type: number, attr?: Iterable<[number, any]>): IProcess;
         protected setProcessId(process: IProcess): void;
-        createMove(attr?: Iterable<[number, any]>): ProcessMoveObject;
+        createMoveObject(attr?: Iterable<[number, any]>): ProcessMoveObject;
         createFire(attr?: Iterable<[number, any]>): ProcessFire;
         createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject;
         protected createAttributeList(): IAttributeList;
@@ -322,20 +304,16 @@ declare namespace STSEngine.Example {
         getMoveDirection(): MoveDirection;
         setMoveDirection(direction: MoveDirection): void;
     }
-}
-declare namespace STSEngine {
-    module ProcessType {
-        const Move: number;
+    module ProcessMoveObject {
+        const Type: number;
     }
 }
 declare namespace STSEngine.Example {
     class ProcessMoveObjectHandler extends STSEngine.ProcessHandler {
         protected worldServiceList: IWorldServiceList;
         constructor(worldServiceList: IWorldServiceList);
-        initProcess(process: ProcessMoveObject): void;
         executeProcess(process: ProcessMoveObject): void;
         protected moveObject(object: IItemRectangle, direction: MoveDirection, execCount: number): void;
-        finish(process: IProcess): void;
     }
 }
 declare namespace STSEngine.Example {
@@ -387,14 +365,6 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    interface ICommandInitializer extends STSEngine.ICommandInitializer {
-        createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
-        createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
-        createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
-        createFire(attr?: Iterable<[number, any]>): CommandFire;
-    }
-}
-declare namespace STSEngine.Example {
     interface IPoint {
         x: number;
         y: number;
@@ -434,15 +404,23 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    interface ICollisionService {
-        processCollision(moveItem: IItem, newPosition: [number, number]): void;
+    interface ICommandInitializer extends STSEngine.ICommandInitializer {
+        createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
+        createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
+        createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
+        createFire(attr?: Iterable<[number, any]>): CommandFire;
     }
 }
 declare namespace STSEngine.Example {
     interface IProcessInitializer extends STSEngine.IProcessInitializer {
-        createMove(attr?: Iterable<[number, any]>): ProcessMoveObject;
+        createMoveObject(attr?: Iterable<[number, any]>): ProcessMoveObject;
         createFire(attr?: Iterable<[number, any]>): ProcessFire;
         createCreatePlayerObject(attr?: Iterable<[number, any]>): ProcessCreatePlayerObject;
+    }
+}
+declare namespace STSEngine.Example {
+    interface ICollisionService {
+        processCollision(moveItem: IItem, newPosition: [number, number]): void;
     }
 }
 declare namespace STSEngine.Example {

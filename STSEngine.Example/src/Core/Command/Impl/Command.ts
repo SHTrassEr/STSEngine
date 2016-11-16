@@ -1,6 +1,10 @@
 ﻿namespace STSEngine.Example {
 
-    export class Command extends STSEngine.Command implements ICommand {
+    export abstract class Command extends STSEngine.Command implements ICommand {
 
+    }
+
+    export module Command {
+        let lastTypeId = STSEngine.Command.LastTypeId;
     }
 }

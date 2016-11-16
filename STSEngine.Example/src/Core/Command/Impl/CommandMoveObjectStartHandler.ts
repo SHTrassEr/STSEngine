@@ -9,7 +9,7 @@
         }
 
         protected executeCommand(command: CommandMoveObjectStart): void {
-            var process = this.worldServiceList.getProcessInitializer().createMove();
+            var process = this.worldServiceList.getProcessInitializer().createMoveObject();
             process.setObjectId(command.getObjectId());
             process.setMoveDirection(command.getMoveDirection());
             this.startProcess(process);

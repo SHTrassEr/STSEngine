@@ -9,7 +9,7 @@ namespace STSEngine.Example {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setType(CommandType.Fire);
+            this.setType(CommandFire.Type);
         }
 
         public getObjectId(): number {
@@ -20,11 +20,8 @@ namespace STSEngine.Example {
             this.attributeList.set(this._objectId, id);
         }
     }
-}
 
-namespace STSEngine {
-
-    export module CommandType {
-        export const Fire = getNewTypeId();
+    export module CommandFire {
+        export const Type = ++Command.LastTypeId;
     }
 }

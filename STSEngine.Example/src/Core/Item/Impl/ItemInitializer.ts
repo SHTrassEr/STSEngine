@@ -7,35 +7,31 @@
         }
 
         protected createByType(type: number, attr?: Iterable<[number, any]>): IItem {
+            let item = super.createByType(type, attr);
+            if (item) {
+                return item;
+            }
+
             switch (type) {
-                case ItemType.Player:
+                case ItemPlayer.Type:
                     return this.createPlayer(attr);
-                case ItemType.Bullet:
+                case ItemBullet.Type:
                     return this.createBullet(attr);
             }
         }
 
         public createPlayer(attr?: Iterable<[number, any]>): ItemPlayer {
             var object = new ItemPlayer(this.createAttributeList(), attr);
-            this.setItemId(object);
+            this.initId(object);
             return object;
         }
 
         public createBullet(attr?: Iterable<[number, any]>): ItemBullet {
             var object = new ItemBullet(this.createAttributeList(), attr);
-            this.setItemId(object);
+            this.initId(object);
             return object;
         }
 
-        protected setItemId(item: IItem) {
-            if (!item.getId()) {
-                item.setId(this.createId());
-            }
-        }
-
-        protected createAttributeList(): IAttributeList {
-            return new AttributeListArray();
-        }
     }
 }
 

@@ -8,7 +8,7 @@ namespace STSEngine.Example {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ProcessType.Fire);
+            this.setType(ProcessFire.Type);
         }
 
         public getObjectId(): number {
@@ -18,13 +18,9 @@ namespace STSEngine.Example {
         public setObjectId(id: number): void {
             this.attributeList.set(this._objectId, id);
         }
-
     }
-}
 
-namespace STSEngine {
-
-    export module ProcessType {
-        export const Fire = getNewTypeId();
+    export module ProcessFire {
+        export const Type = ++Item.LastTypeId;
     }
 }
