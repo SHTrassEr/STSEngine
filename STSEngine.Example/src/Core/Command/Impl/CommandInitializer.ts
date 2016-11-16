@@ -12,10 +12,6 @@
             switch (type) {
                 case CommandRegisterClient.Type:
                     return this.createRegisterClient(attr);
-                case CommandMoveObjectStart.Type:
-                    return this.createMoveObjectStart(attr);
-                case CommandMoveObjectStop.Type:
-                    return this.createMoveObjectStop(attr);
                 case CommandCreateClientItemTank.Type: 
                     return this.createClientItemTank(attr);
                 case CommandFire.Type:
@@ -30,14 +26,6 @@
 
         public createRegisterClient(attr?: Iterable<[number, any]>): CommandRegisterClient {
             return new CommandRegisterClient(this.createAttributeList(), attr);
-        }
-
-        public createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart {
-            return new CommandMoveObjectStart(this.createAttributeList(), attr);
-        }
-
-        public createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop {
-            return new CommandMoveObjectStop(this.createAttributeList(), attr);
         }
 
         public createClientItemTank(attr?: Iterable<[number, any]>): CommandCreateClientItemTank {

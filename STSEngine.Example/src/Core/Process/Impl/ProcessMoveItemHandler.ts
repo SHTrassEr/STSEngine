@@ -29,10 +29,11 @@
             moveVector[0] += (forceVector[0] + frictionForce[0]) / mass;
             moveVector[1] += (forceVector[1] + frictionForce[1]) / mass;
 
-            position = VectorHelper.sum(position, moveVector);
-
             item.setMoveVector(moveVector);
-            item.setPosition(position);
+
+            this.worldServiceList.getCollisionService().processCollision(item);
+
+            item.setPosition(VectorHelper.sum(position, moveVector));
         }
 
     }

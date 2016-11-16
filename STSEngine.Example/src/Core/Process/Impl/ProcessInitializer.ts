@@ -13,8 +13,6 @@
             }
 
             switch (type) {
-                case ProcessMoveObject.Type:
-                    return this.createMoveObject(attr);
                 case ProcessFire.Type:
                     return this.createFire(attr);
                 case ProcessCreateClientItemTank.Type:
@@ -28,12 +26,6 @@
             if (!process.getId()) {
                 process.setId(this.createId());
             }
-        }
-
-        public createMoveObject(attr?: Iterable<[number, any]>): ProcessMoveObject {
-            var process = new ProcessMoveObject(this.createAttributeList(), attr);
-            this.setProcessId(process);
-            return process;
         }
 
         public createFire(attr?: Iterable<[number, any]>): ProcessFire {

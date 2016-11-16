@@ -12,18 +12,18 @@
             this.itemListService = itemListService;
         }
 
-        public processCollision(moveItem: IItem, newPosition: [number, number]): void {
+        public processCollision(moveItem: IItem): void {
             if (moveItem instanceof ItemTank) {
-                this.processCollisionTank(moveItem, newPosition);
+                this.processCollisionTank(moveItem);
             } else if (moveItem instanceof ItemBullet) {
-                this.processCollisionObjectBullet(moveItem, newPosition);
+                this.processCollisionObjectBullet(moveItem);
             }
         }
 
-        protected processCollisionTank(moveItem: ItemTank, newPosition: [number, number]) {
-            this.processCollisionObjectRectangleWorld(moveItem, newPosition);
+        protected processCollisionTank(moveItem: ItemTank) {
+            this.processCollisionObjectRectangleWorld(moveItem);
 
-            let objectList = this.itemListService.getIterator();
+            /*let objectList = this.itemListService.getIterator();
             for (var o of objectList) {
                 if (moveItem.getId() != o.getId()) {
                     if (o instanceof ItemTank) {
@@ -31,17 +31,15 @@
                     }
 
                 }
-            }
-
-            moveItem.setPosition(newPosition);
+            }*/
         }
 
-        protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]) {
-            if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
+        protected processCollisionObjectBullet(moveItem: ItemBullet) {
+            if (this.processCollisionObjectRectangleWorld(moveItem)) {
                 this.itemListService.remove(moveItem.getId());
             }
 
-            let objectList = this.itemListService.getIterator();
+            /*let objectList = this.itemListService.getIterator();
             for (var o of objectList) {
                 if (moveItem.getId() != o.getId()) {
                     if (o instanceof ItemTank) {
@@ -49,9 +47,7 @@
                     } 
 
                 }
-            }
-
-            moveItem.setPosition(newPosition);
+            }*/
         }
 
         protected processCollisionTankTank(moveItem: ItemTank, newPosition: [number, number], o: ItemTank): boolean {
@@ -108,24 +104,20 @@
         }
 
 
-        protected processCollisionObjectRectangleWorld(moveItem: IItem, newPosition: [number, number]): boolean {
-            if (newPosition[0] < 0) {
-                newPosition[0] = 0;
+        protected processCollisionObjectRectangleWorld(moveItem: IItem): boolean {
+
+            let position = moveItem.getPosition();
+            let moveVector = moveItem.getMoveVector();
+
+            if (position[0] + moveVector[0] < 0) {
+                moveVector[0] = - position[0];
                 return true;
             }
-            if (newPosition[1] < 0) {
-                newPosition[1] = 0;
+            if (position[1] + moveVector[1] < 0) {
+                moveVector[1] = - position[1];
                 return true;
             }
 
-            if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
-                newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
-                return true;
-            }
-            if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
-                newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
-                return true;
-            }
 
             return false;
         }
