@@ -1,8 +1,8 @@
 ﻿namespace STSEngine.Example {
 
-    export class PlayerAction extends STSEngine.PlayerAction implements IPlayerAction {
+    export class ClientAction extends STSEngine.ClientAction implements IClientAction {
 
-        protected onActionHandler: (playerAction: IPlayerAction) => void;
+        protected onActionHandler: (clientAction: IClientAction) => void;
         protected commandInitializer: CommandInitializer;
 
         constructor() {
@@ -78,10 +78,10 @@
             this.addCommand(command);
         }
 
-        public changePlayerName(playerId: number, name: string): void {
-            var command = this.commandInitializer.createChangePlayerName();
-            command.setPlayerId(playerId);
-            command.setPlayerName(name);
+        public changeClientName(clientId: number, name: string): void {
+            var command = this.commandInitializer.createChangeClientName();
+            command.setClientId(clientId);
+            command.setClientName(name);
             this.addCommand(command);
         }
     }

@@ -12,7 +12,7 @@
         protected isStarted: boolean;
 
         protected world: IWorld;
-        protected playerId: number;
+        protected clientId: number;
 
         constructor(rootElement: HTMLDivElement, world: IWorld) {
             this.world = world;
@@ -29,8 +29,8 @@
             this.isStarted = false;
         }
 
-        public setPlayerId(playerId: number) {
-            this.playerId = playerId;
+        public setClientId(clientId: number) {
+            this.clientId = clientId;
         }
 
         protected clearHtmlElement(element: HTMLElement) {

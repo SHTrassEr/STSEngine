@@ -10,8 +10,8 @@
             }
 
             switch (type) {
-                case CommandRegisterPlayer.Type:
-                    return this.createRegisterPlayer(attr);
+                case CommandRegisterClient.Type:
+                    return this.createRegisterClient(attr);
                 case CommandMoveObjectStart.Type:
                     return this.createMoveObjectStart(attr);
                 case CommandMoveObjectStop.Type:
@@ -20,14 +20,14 @@
                     return this.createPlayerObject(attr);
                 case CommandFire.Type:
                     return this.createFire(attr);
-                case CommandChangePlayerName.Type:
-                    return this.createChangePlayerName(attr);
+                case CommandChangeClientName.Type:
+                    return this.createChangeClientName(attr);
             }
         }
         
 
-        public createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer {
-            return new CommandRegisterPlayer(this.createAttributeList(), attr);
+        public createRegisterClient(attr?: Iterable<[number, any]>): CommandRegisterClient {
+            return new CommandRegisterClient(this.createAttributeList(), attr);
         }
 
         public createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart {
@@ -46,8 +46,8 @@
             return new CommandFire(this.createAttributeList(), attr);
         }
 
-        public createChangePlayerName(attr?: Iterable<[number, any]>): CommandChangePlayerName {
-            return new CommandChangePlayerName(this.createAttributeList(), attr);
+        public createChangeClientName(attr?: Iterable<[number, any]>): CommandChangeClientName {
+            return new CommandChangeClientName(this.createAttributeList(), attr);
         }
 
     }

@@ -8,12 +8,12 @@
         }
 
         protected initCommandHandlerList(worldServiceList: IWorldServiceList) {
-            this.commandHandlerList[CommandRegisterPlayer.Type] = new CommandRegisterPlayerHandler(worldServiceList);
+            this.commandHandlerList[CommandRegisterClient.Type] = new CommandRegisterClientHandler(worldServiceList);
             this.commandHandlerList[CommandCreatePlayerObject.Type] = new CommandCreatePlayerObjectHandler(worldServiceList);
             this.commandHandlerList[CommandMoveObjectStart.Type] = new CommandMoveObjectStartHandler(worldServiceList);
             this.commandHandlerList[CommandMoveObjectStop.Type] = new CommandMoveObjectStopHandler(worldServiceList);
             this.commandHandlerList[CommandFire.Type] = new CommandFireHandler(worldServiceList);
-            this.commandHandlerList[CommandChangePlayerName.Type] = new CommandChangePlayerNameHandler(worldServiceList);
+            this.commandHandlerList[CommandChangeClientName.Type] = new CommandChangeClientNameHandler(worldServiceList);
         }
 
     }

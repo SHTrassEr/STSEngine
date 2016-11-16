@@ -10,7 +10,7 @@
 
         public initProcess(process: ProcessCreatePlayerObject): void {
             let itemPlayer = this.worldServiceList.getItemInitializer().createPlayer();
-            itemPlayer.setPlayerId(process.getPlayerId());
+            itemPlayer.setClientId(process.getPlayerId());
             itemPlayer.setSize([5, 5]);
             itemPlayer.setMoveDirection(MoveDirection.Up);
             itemPlayer.setPositionPrecise([40, 40]);

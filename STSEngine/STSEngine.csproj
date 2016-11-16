@@ -77,8 +77,8 @@
     <TypeScriptCompile Include="src\Test\Core\Entity\AttributeListSpec.ts" />
     <TypeScriptCompile Include="src\Client\Service\Impl\WebSocketGameClient.ts" />
     <TypeScriptCompile Include="src\Client\Service\IWebSocketGameClient.ts" />
-    <TypeScriptCompile Include="src\Client\Action\Impl\PlayerAction.ts" />
-    <TypeScriptCompile Include="src\Client\Action\IPlayerAction.ts" />
+    <TypeScriptCompile Include="src\Client\Action\Impl\ClientAction.ts" />
+    <TypeScriptCompile Include="src\Client\Action\IClientAction.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommand.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommandDispatcher.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommandHandler.ts" />

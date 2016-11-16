@@ -3,7 +3,7 @@
     export class WebSocketClient implements IWebSocketClient {
 
         protected id: number;
-        protected playerId: number;
+        protected clientId: number;
         protected status: WebSocketClientStatus;
         protected client: any;
         protected sid: string;
@@ -73,12 +73,12 @@
             this.sid = sid;
         }
 
-        public getPlayerId(): number {
-            return this.playerId;
+        public getClientId(): number {
+            return this.clientId;
         }
 
-        public setPlayerId(playerId: number): void {
-            this.playerId = playerId;
+        public setClientId(clientId: number): void {
+            this.clientId = clientId;
         }
 
         public sendMessage(attr: IClientServerMessage): void {

@@ -1,9 +1,9 @@
 ﻿namespace STSEngine {
 
-    export class PlayerAction implements IPlayerAction {
+    export class ClientAction implements IClientAction {
 
         protected commandListService: ICommandListService;
-        protected onActionHandler: (playerAction: IPlayerAction) => void;
+        protected onActionHandler: (clientAction: IClientAction) => void;
 
         constructor() {
             this.commandListService = new CommandListService();
@@ -17,7 +17,7 @@
             this.commandListService.clear();
         }
 
-        public setOnAction(handler: (playerAction: IPlayerAction) => void) {
+        public setOnAction(handler: (clientAction: IClientAction) => void) {
             this.onActionHandler = handler;
         }
 
@@ -28,6 +28,3 @@
         }
     }
 }
-
-//export = STSEngine;
-

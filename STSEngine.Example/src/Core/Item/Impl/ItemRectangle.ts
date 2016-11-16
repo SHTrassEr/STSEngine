@@ -6,7 +6,7 @@ namespace STSEngine.Example {
 
         private _position: number = ++this.lastAttributeId;
         private _positionPrecise: number = ++this.lastAttributeId;
-        private _playerId: number = ++this.lastAttributeId;
+        private _clientId: number = ++this.lastAttributeId;
         private _minSpeed: number = ++this.lastAttributeId;
         private _maxSpeed: number = ++this.lastAttributeId;
         private _size: number = ++this.lastAttributeId;
@@ -42,12 +42,12 @@ namespace STSEngine.Example {
             this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
         }
 
-        public getPlayerId(): number {
-            return this.attributeList.get(this._playerId);
+        public getClientId(): number {
+            return this.attributeList.get(this._clientId);
         }
 
-        public setPlayerId(playerId: number): void {
-            this.attributeList.set(this._playerId, playerId);
+        public setClientId(clientId: number): void {
+            this.attributeList.set(this._clientId, clientId);
         }
 
         public getMinSpeed(): number {

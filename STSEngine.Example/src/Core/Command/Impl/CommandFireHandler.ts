@@ -19,9 +19,9 @@
             let playerId = command.getInitiatorId();
             if (playerId > 0) {
                 let objectId = command.getObjectId();
-                let object = this.worldServiceList.getItemListService().getTyped<ItemPlayer>(objectId, ItemPlayer);
+                let object = this.worldServiceList.getItemListService().getTyped<ItemTank>(objectId, ItemTank);
                 if (object) {
-                    return (object).getPlayerId() == playerId;
+                    return (object).getClientId() == playerId;
                 }
             }
 

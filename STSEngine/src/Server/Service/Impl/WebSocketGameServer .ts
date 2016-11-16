@@ -47,9 +47,9 @@
 
         protected onClientConnected(client: IWebSocketClient): void {
             let clientId = this.getClientIdBySID(client.getSID());
-            client.setPlayerId(clientId);
+            client.setClientId(clientId);
             let messageInit = new ClientServerMessageInit();
-            messageInit.setPlayerId(clientId);
+            messageInit.setClientId(clientId);
             client.sendMessage(messageInit);
 
             let messageWorldFullInfo = new ClientServerMessageWorldFullInfo();
@@ -85,9 +85,9 @@
         } 
 
         protected * initCommandList(webSocketClient: IWebSocketClient, commandList: Iterable<ICommand>): Iterable<ICommand> {
-            var playerId = webSocketClient.getPlayerId();
+            var clientId = webSocketClient.getClientId();
             for (let command of commandList) {
-                command.setInitiatorId(playerId);
+                command.setInitiatorId(clientId);
                 yield command;
             }
         }

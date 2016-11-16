@@ -37,7 +37,7 @@ function ready() {
     var loc = window.location;
 
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
-    var playerAction = new STSEngine.Example.PlayerAction();
+    var playerAction = new STSEngine.Example.ClientAction();
     var client = new STSEngine.Example.WebSocketGameClient(socket, sid, playerAction);
     client.setOnConnected(onClientConnected);
 
@@ -49,7 +49,7 @@ function ready() {
 
     var view = new STSEngine.Example.View(<HTMLDivElement>content, <any>(world));
     function onClientConnected(client: STSEngine.IWebSocketGameClient) {
-        view.setPlayerId(client.getPlayerId());
+        view.setClientId(client.getClientId());
         view.start();
 
         setInterval(updateScore, 1000);
@@ -75,7 +75,7 @@ function ready() {
     var up: boolean, down: boolean, left: boolean, right: boolean, fire: boolean;
 
     function getPlayerObjectId() {
-        var o = objectListService.getFirst(o => (<STSEngine.Example.ItemPlayer>(<any>o)).getPlayerId() == client.getPlayerId());
+        var o = objectListService.getFirst(o => (<STSEngine.Example.ItemTank>(<any>o)).getClientId() == client.getClientId());
         return o.getId();
     }
 
@@ -151,7 +151,7 @@ function ready() {
 
     let nameInput = <HTMLInputElement>(document.getElementById("name-input"));
     nameInput.onchange = (event) => {
-        playerAction.changePlayerName(client.getPlayerId(), nameInput.value);
+        playerAction.changeClientName(client.getClientId(), nameInput.value);
 
     };
     

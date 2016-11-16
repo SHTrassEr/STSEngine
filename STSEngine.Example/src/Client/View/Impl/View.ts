@@ -86,7 +86,7 @@
 
             var graphics = new PIXI.Graphics();
 
-            if (o.getPlayerId() == this.playerId) {
+            if (o.getClientId() == this.clientId) {
                 graphics.beginFill(0xFFFF00);
                 graphics.lineStyle(1, 0x0000AA);
             } else {
@@ -153,7 +153,7 @@
                     let x = this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x;
                     let y = this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y;
 
-                    if (o instanceof ItemPlayer && o.getPlayerId() == this.playerId) {
+                    if (o instanceof ItemTank && o.getClientId() == this.clientId) {
                         this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
 
                         this.grid.position.set(x - this.width / 2, y - this.height / 2);

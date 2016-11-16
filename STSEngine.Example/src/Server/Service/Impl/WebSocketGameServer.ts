@@ -27,7 +27,7 @@
             } else {
                 this.lastPlayerId = this.lastPlayerId + 1;
                 playerId = this.lastPlayerId;
-                var command = new CommandRegisterPlayer();
+                var command = new CommandRegisterClient();
                 command.setInitiatorId(0);
                 command.setPlayerId(playerId);
                 this.commandListService.add(command); 

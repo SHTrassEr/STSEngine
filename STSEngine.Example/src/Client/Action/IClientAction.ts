@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IPlayerAction extends STSEngine.IPlayerAction {
+    export interface IClientAction extends STSEngine.IClientAction {
 
         startMoveRight(objectId: number): void;
         startMoveLeft(objectId: number): void;
@@ -11,6 +11,6 @@
         stopMoveUp(objectId: number): void;
         stopMoveDown(objectId: number): void;
 
-        changePlayerName(playerId: number, name: string): void;
+        changeClientName(clientId: number, name: string): void;
     }
 }

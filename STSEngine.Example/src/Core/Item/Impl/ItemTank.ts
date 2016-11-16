@@ -2,14 +2,14 @@
 
 namespace STSEngine.Example {
 
-    export class ItemPlayer extends ItemRectangle  {
+    export class ItemTank extends ItemRectangle  {
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ItemPlayer.Type);
+            this.setType(ItemTank.Type);
         }
     }
 
-    export module ItemPlayer {
+    export module ItemTank {
         export const Type = ++Item.LastTypeId;
     }
 }

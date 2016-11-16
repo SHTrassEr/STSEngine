@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class CommandRegisterPlayerHandler extends STSEngine.CommandHandler {
+    export class CommandRegisterClientHandler extends STSEngine.CommandHandler {
 
         protected worldServiceList: IWorldServiceList;
 
@@ -8,7 +8,7 @@
             super(worldServiceList);
         }
 
-        protected executeCommand(command: CommandRegisterPlayer): void {
+        protected executeCommand(command: CommandRegisterClient): void {
             let client = new ClientActive();
             client.setName(command.getPlayerName());
             client.setId(command.getPlayerId());
@@ -19,7 +19,7 @@
             this.startProcess(process);
         }
 
-        protected isValidCommand(command: CommandRegisterPlayer): boolean {
+        protected isValidCommand(command: CommandRegisterClient): boolean {
             let playerId = command.getPlayerId();
             if (command.getInitiatorId() === 0) {
                 var player = this.worldServiceList.getClientListService().getFirst(p => p.getId() == playerId);
@@ -32,7 +32,7 @@
         }
 
         protected isValidCommandType(command: ICommand): boolean {
-            return command instanceof CommandRegisterPlayer;
+            return command instanceof CommandRegisterClient;
         }
     }
 }

@@ -6,27 +6,27 @@
         protected socket: WebSocket;
         protected sid: string;
         protected engine: IEngine;
-        protected playerAction: IPlayerAction;
-        protected playerId: number;
+        protected clientAction: IClientAction;
+        protected clientId: number;
         protected clientSeverMessageInitializer: IClientServerMessageInitializer;
 
         protected onConnectedHandler: (webSocketClient: IWebSocketGameClient) => void;
 
         protected worldServiceList: IWorldServiceList;
 
-        constructor(socket: WebSocket, sid: string, playerAction: IPlayerAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
+        constructor(socket: WebSocket, sid: string, clientAction: IClientAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
             this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.worldServiceList = worldServiceList;
             this.commandListService = new CommandListService();
             this.socket = socket;
-            this.playerAction = playerAction;
+            this.clientAction = clientAction;
             this.sid = sid;
-            this.playerAction.setOnAction(this.onPlayerAction.bind(this));
+            this.clientAction.setOnAction(this.onClientAction.bind(this));
             this.init();
         }
 
-        public getPlayerId(): number {
-            return this.playerId
+        public getClientId(): number {
+            return this.clientId
         }
 
         public setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void {
@@ -57,9 +57,9 @@
             return this.engine.getWorld();
         }
 
-        protected onPlayerAction(playerAction: IPlayerAction) {
-            let commandList = playerAction.getCommandKeyValuePairList();
-            playerAction.clear();
+        protected onClientAction(clientAction: IClientAction) {
+            let commandList = clientAction.getCommandKeyValuePairList();
+            clientAction.clear();
             var message = new ClientServerMessageCommandList();
             message.setCommandList(commandList);
             this.sendMessage(message);
@@ -131,7 +131,7 @@
         }
 
         protected processInit(message: ClientServerMessageInit) {
-            this.playerId = message.getPlayerId();
+            this.clientId = message.getClientId();
             if (this.onConnectedHandler) {
                 this.onConnectedHandler(this);
             }

@@ -3,7 +3,7 @@
     export interface IWebSocketGameClient {
 
         getWorld(): IWorld;
-        getPlayerId(): number;
+        getClientId(): number;
         setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void;
     }
 }
