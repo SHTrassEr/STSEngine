@@ -30,67 +30,32 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    abstract class Item extends STSEngine.Item implements IItem {
-    }
-    module Item {
-    }
-}
-declare namespace STSEngine.Example {
-    abstract class ItemRectangle extends Item implements IItemRectangle {
-        private _position;
-        private _positionPrecise;
-        private _playerId;
-        private _minSpeed;
-        private _maxSpeed;
-        private _size;
-        private _moveDirection;
-        getPosition(): [number, number];
-        getPosition(d: number): number;
-        protected setPosition(position: [number, number]): void;
-        getPositionPrecise(): [number, number];
-        getPositionPrecise(d: number): number;
-        setPositionPrecise(position: [number, number]): void;
-        getPlayerId(): number;
-        setPlayerId(playerId: number): void;
-        getMinSpeed(): number;
-        setMinSpeed(speed: number): void;
-        getMaxSpeed(): number;
-        setMaxSpeed(speed: number): void;
-        getSize(): [number, number];
-        getSize(d: number): number;
-        setSize(size: [number, number]): void;
-        getMoveDirection(): MoveDirection;
-        setMoveDirection(direction: MoveDirection): void;
-    }
-}
-declare namespace STSEngine.Example {
-    class ItemBullet extends ItemRectangle {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-    module ItemBullet {
-        const Type: number;
-    }
-}
-declare namespace STSEngine.Example {
-    class ItemInitializer extends STSEngine.ItemInitializer implements IItemInitializer {
-        constructor(createIdHandler: () => number);
-        protected createByType(type: number, attr?: Iterable<[number, any]>): IItem;
-        createPlayer(attr?: Iterable<[number, any]>): ItemPlayer;
-        createBullet(attr?: Iterable<[number, any]>): ItemBullet;
-    }
-}
-declare namespace STSEngine.Example {
-    class ItemPlayer extends ItemRectangle {
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
-    }
-    module ItemPlayer {
-        const Type: number;
-    }
-}
-declare namespace STSEngine.Example {
     abstract class Command extends STSEngine.Command implements ICommand {
     }
     module Command {
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandChangePlayerName extends Command {
+        private _playerName;
+        private _playerId;
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+        getPlayerName(): string;
+        setPlayerName(name: string): void;
+        getPlayerId(): number;
+        setPlayerId(id: number): void;
+    }
+    module CommandChangePlayerName {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class CommandChangePlayerNameHandler extends STSEngine.CommandHandler {
+        protected worldServiceList: IWorldServiceList;
+        constructor(worldServiceList: IWorldServiceList);
+        protected executeCommand(command: CommandChangePlayerName): void;
+        protected isValidCommand(command: CommandChangePlayerName): boolean;
+        protected isValidCommandType(command: ICommand): boolean;
     }
 }
 declare namespace STSEngine.Example {
@@ -147,7 +112,7 @@ declare namespace STSEngine.Example {
         createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
         createPlayerObject(attr?: Iterable<[number, any]>): CommandCreatePlayerObject;
         createFire(attr?: Iterable<[number, any]>): CommandFire;
-        protected createAttributeList(): IAttributeList;
+        createChangePlayerName(attr?: Iterable<[number, any]>): CommandChangePlayerName;
     }
 }
 declare namespace STSEngine.Example {
@@ -220,18 +185,73 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    class CollisionService implements ICollisionService {
-        protected itemListService: IItemListService;
-        protected worldAttributeList: IWorldAttributeList;
-        protected clientListService: IClientListService;
-        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService, clientListService: IClientListService);
-        processCollision(moveItem: IItem, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number]): void;
-        protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]): void;
-        protected processCollisionObjectPlayerObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number], o: ItemPlayer): boolean;
-        protected processCollisionObjectBulletObjectPlayer(moveItem: ItemBullet, newPosition: [number, number], o: ItemPlayer): boolean;
-        protected processCollisionObjectRectangleWorld(moveItem: IItemRectangle, newPosition: [number, number]): boolean;
-        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
+    abstract class Item extends STSEngine.Item implements IItem {
+    }
+    module Item {
+    }
+}
+declare namespace STSEngine.Example {
+    abstract class ItemRectangle extends Item implements IItemRectangle {
+        private _position;
+        private _positionPrecise;
+        private _playerId;
+        private _minSpeed;
+        private _maxSpeed;
+        private _size;
+        private _moveDirection;
+        getPosition(): [number, number];
+        getPosition(d: number): number;
+        protected setPosition(position: [number, number]): void;
+        getPositionPrecise(): [number, number];
+        getPositionPrecise(d: number): number;
+        setPositionPrecise(position: [number, number]): void;
+        getPlayerId(): number;
+        setPlayerId(playerId: number): void;
+        getMinSpeed(): number;
+        setMinSpeed(speed: number): void;
+        getMaxSpeed(): number;
+        setMaxSpeed(speed: number): void;
+        getSize(): [number, number];
+        getSize(d: number): number;
+        setSize(size: [number, number]): void;
+        getMoveDirection(): MoveDirection;
+        setMoveDirection(direction: MoveDirection): void;
+    }
+}
+declare namespace STSEngine.Example {
+    class ItemBullet extends ItemRectangle {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+    }
+    module ItemBullet {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class ItemInitializer extends STSEngine.ItemInitializer implements IItemInitializer {
+        constructor(createIdHandler: () => number);
+        protected createByType(type: number, attr?: Iterable<[number, any]>): IItem;
+        createPlayer(attr?: Iterable<[number, any]>): ItemPlayer;
+        createBullet(attr?: Iterable<[number, any]>): ItemBullet;
+    }
+}
+declare namespace STSEngine.Example {
+    class ItemPlayer extends ItemRectangle {
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
+    }
+    module ItemPlayer {
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    abstract class ClientServerMessage extends STSEngine.ClientServerMessage implements IClientServerMessage {
+    }
+    module ClientServerMessage {
+        let LastTypeId: number;
+        const Type: number;
+    }
+}
+declare namespace STSEngine.Example {
+    class ClientServerMessageInitializer extends STSEngine.ClientServerMessageInitializer implements IClientServerMessageInitializer {
     }
 }
 declare namespace STSEngine.Example {
@@ -317,6 +337,21 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    class CollisionService implements ICollisionService {
+        protected itemListService: IItemListService;
+        protected worldAttributeList: IWorldAttributeList;
+        protected clientListService: IClientListService;
+        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService, clientListService: IClientListService);
+        processCollision(moveItem: IItem, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number]): void;
+        protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]): void;
+        protected processCollisionObjectPlayerObjectPlayer(moveItem: ItemPlayer, newPosition: [number, number], o: ItemPlayer): boolean;
+        protected processCollisionObjectBulletObjectPlayer(moveItem: ItemBullet, newPosition: [number, number], o: ItemPlayer): boolean;
+        protected processCollisionObjectRectangleWorld(moveItem: IItemRectangle, newPosition: [number, number]): boolean;
+        protected isRectangleObjectCollision(pos1: [number, number], size1: [number, number], pos2: [number, number], size2: [number, number]): boolean;
+    }
+}
+declare namespace STSEngine.Example {
     class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
         private _worldSize;
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>);
@@ -380,6 +415,14 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
+    interface ICommandInitializer extends STSEngine.ICommandInitializer {
+        createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
+        createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
+        createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
+        createFire(attr?: Iterable<[number, any]>): CommandFire;
+    }
+}
+declare namespace STSEngine.Example {
     interface IItemInitializer extends STSEngine.IItemInitializer {
         createPlayer(attr?: Iterable<[number, any]>): ItemPlayer;
         createBullet(attr?: Iterable<[number, any]>): ItemBullet;
@@ -404,11 +447,7 @@ declare namespace STSEngine.Example {
     }
 }
 declare namespace STSEngine.Example {
-    interface ICommandInitializer extends STSEngine.ICommandInitializer {
-        createRegisterPlayer(attr?: Iterable<[number, any]>): CommandRegisterPlayer;
-        createMoveObjectStart(attr?: Iterable<[number, any]>): CommandMoveObjectStart;
-        createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
-        createFire(attr?: Iterable<[number, any]>): CommandFire;
+    interface IClientServerMessageInitializer extends STSEngine.IClientServerMessageInitializer {
     }
 }
 declare namespace STSEngine.Example {

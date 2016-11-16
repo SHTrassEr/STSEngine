@@ -42,6 +42,8 @@
     <TypeScriptCompile Include="src\Core\Client\Impl\ClientInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Command\ICommandInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\Command.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandChangePlayerName.ts" />
+    <TypeScriptCompile Include="src\Core\Command\Impl\CommandChangePlayerNameHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandFire.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandFireHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandMoveObjectStop.ts" />
@@ -63,6 +65,9 @@
     <TypeScriptCompile Include="src\Core\Item\IItemRectangle.ts" />
     <TypeScriptCompile Include="src\Core\Client\Impl\ClientActive.ts" />
     <TypeScriptCompile Include="src\Core\Client\IClientActive.ts" />
+    <TypeScriptCompile Include="src\Core\Message\IClientServerMessageInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessage.ts" />
+    <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\Process.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\Point.ts" />

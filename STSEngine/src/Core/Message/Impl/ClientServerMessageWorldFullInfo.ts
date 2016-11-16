@@ -1,4 +1,6 @@
-﻿namespace STSEngine {
+﻿/// <reference path="ClientServerMessage.ts" />
+
+namespace STSEngine {
 
     export class ClientServerMessageWorldFullInfo extends ClientServerMessage {
 
@@ -9,7 +11,7 @@
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ClientServerMessageType.WorldFullInfo);
+            this.setType(ClientServerMessageWorldFullInfo.Type);
         }
 
         public setWorld(world: IWorld): void {
@@ -54,7 +56,7 @@
         }
     }
 
-    export module ClientServerMessageType {
-        export const WorldFullInfo = ClientServerMessageType.getNewTypeId();
+    export module ClientServerMessageWorldFullInfo {
+        export const Type = ++ClientServerMessage.LastTypeId;
     }
 }

@@ -77,19 +77,19 @@
             let message = this.clientSeverMessageInitializer.create(attr);
 
             switch (message.getType()) {
-                case ClientServerMessageType.RequestAuthentication:
+                case ClientServerMessageRequestAuthentication.Type:
                     this.sendAuthentication();
                     break;
-                case ClientServerMessageType.Init:
+                case ClientServerMessageInit.Type:
                     this.processInit(<ClientServerMessageInit>message);
                     break;
-                case ClientServerMessageType.Step:
+                case ClientServerMessageStep.Type:
                     this.processStep(<ClientServerMessageStep>message);
                     break;
-                case ClientServerMessageType.StepList:
+                case ClientServerMessageStepList.Type:
                     this.processStepList(<ClientServerMessageStepList>message);
                     break;
-                case ClientServerMessageType.WorldFullInfo:
+                case ClientServerMessageWorldFullInfo.Type:
                     this.processWorldFullInfo(<ClientServerMessageWorldFullInfo>message);
                     break;
             }

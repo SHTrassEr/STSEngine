@@ -1,4 +1,6 @@
-﻿namespace STSEngine {
+﻿/// <reference path="ClientServerMessage.ts" />
+
+namespace STSEngine {
 
     export class ClientServerMessageStepList extends ClientServerMessage {
 
@@ -6,7 +8,7 @@
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ClientServerMessageType.StepList);
+            this.setType(ClientServerMessageStepList.Type);
         }
 
         public setStepList(stepList: IEntity[]): void {
@@ -25,7 +27,7 @@
         }
     }
 
-    export module ClientServerMessageType {
-        export const StepList = ClientServerMessageType.getNewTypeId();
+    export module ClientServerMessageStepList {
+        export const Type = ++ClientServerMessage.LastTypeId;
     }
 }

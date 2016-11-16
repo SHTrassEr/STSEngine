@@ -73,161 +73,69 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class Item extends STSEngine.Item {
-        }
-        Example.Item = Item;
-        (function (Item) {
-            let lastTypeId = STSEngine.Item.LastTypeId;
-        })(Item = Example.Item || (Example.Item = {}));
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemRectangle extends Example.Item {
-            constructor() {
-                super(...arguments);
-                this._position = ++this.lastAttributeId;
-                this._positionPrecise = ++this.lastAttributeId;
-                this._playerId = ++this.lastAttributeId;
-                this._minSpeed = ++this.lastAttributeId;
-                this._maxSpeed = ++this.lastAttributeId;
-                this._size = ++this.lastAttributeId;
-                this._moveDirection = ++this.lastAttributeId;
-            }
-            getPosition(d) {
-                if (typeof d == 'number') {
-                    return this.attributeList.get(this._position)[d];
-                }
-                return this.attributeList.get(this._position);
-            }
-            setPosition(position) {
-                this.attributeList.set(this._position, position);
-            }
-            getPositionPrecise(d) {
-                if (typeof d == 'number') {
-                    return this.attributeList.get(this._positionPrecise)[d];
-                }
-                return this.attributeList.get(this._positionPrecise);
-            }
-            setPositionPrecise(position) {
-                this.attributeList.set(this._positionPrecise, position);
-                this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
-            }
-            getPlayerId() {
-                return this.attributeList.get(this._playerId);
-            }
-            setPlayerId(playerId) {
-                this.attributeList.set(this._playerId, playerId);
-            }
-            getMinSpeed() {
-                return this.attributeList.get(this._minSpeed);
-            }
-            setMinSpeed(speed) {
-                this.attributeList.set(this._minSpeed, speed);
-            }
-            getMaxSpeed() {
-                return this.attributeList.get(this._maxSpeed);
-            }
-            setMaxSpeed(speed) {
-                this.attributeList.set(this._maxSpeed, speed);
-            }
-            getSize(d) {
-                if (d) {
-                    return this.attributeList.get(this._size)[d];
-                }
-                return this.attributeList.get(this._size);
-            }
-            setSize(size) {
-                this.attributeList.set(this._size, size);
-            }
-            getMoveDirection() {
-                return this.attributeList.get(this._moveDirection);
-            }
-            setMoveDirection(direction) {
-                this.attributeList.set(this._moveDirection, direction);
-            }
-        }
-        Example.ItemRectangle = ItemRectangle;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemBullet extends Example.ItemRectangle {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setType(ItemBullet.Type);
-            }
-        }
-        Example.ItemBullet = ItemBullet;
-        (function (ItemBullet) {
-            ItemBullet.Type = ++Example.Item.LastTypeId;
-        })(ItemBullet = Example.ItemBullet || (Example.ItemBullet = {}));
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemInitializer extends STSEngine.ItemInitializer {
-            constructor(createIdHandler) {
-                super(createIdHandler);
-            }
-            createByType(type, attr) {
-                let item = super.createByType(type, attr);
-                if (item) {
-                    return item;
-                }
-                switch (type) {
-                    case Example.ItemPlayer.Type:
-                        return this.createPlayer(attr);
-                    case Example.ItemBullet.Type:
-                        return this.createBullet(attr);
-                }
-            }
-            createPlayer(attr) {
-                var object = new Example.ItemPlayer(this.createAttributeList(), attr);
-                this.initId(object);
-                return object;
-            }
-            createBullet(attr) {
-                var object = new Example.ItemBullet(this.createAttributeList(), attr);
-                this.initId(object);
-                return object;
-            }
-        }
-        Example.ItemInitializer = ItemInitializer;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class ItemPlayer extends Example.ItemRectangle {
-            constructor(attributeList, kvpList) {
-                super(attributeList, kvpList);
-                this.setType(ItemPlayer.Type);
-            }
-        }
-        Example.ItemPlayer = ItemPlayer;
-        (function (ItemPlayer) {
-            ItemPlayer.Type = ++Example.Item.LastTypeId;
-        })(ItemPlayer = Example.ItemPlayer || (Example.ItemPlayer = {}));
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
         class Command extends STSEngine.Command {
         }
         Example.Command = Command;
         (function (Command) {
             let lastTypeId = STSEngine.Command.LastTypeId;
         })(Command = Example.Command || (Example.Command = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandChangePlayerName extends Example.Command {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this._playerName = ++this.lastAttributeId;
+                this._playerId = ++this.lastAttributeId;
+                this.setType(CommandChangePlayerName.Type);
+            }
+            getPlayerName() {
+                return this.attributeList.get(this._playerName);
+            }
+            setPlayerName(name) {
+                this.attributeList.set(this._playerName, name);
+            }
+            getPlayerId() {
+                return this.attributeList.get(this._playerId);
+            }
+            setPlayerId(id) {
+                this.attributeList.set(this._playerId, id);
+            }
+        }
+        Example.CommandChangePlayerName = CommandChangePlayerName;
+        (function (CommandChangePlayerName) {
+            CommandChangePlayerName.Type = ++Example.Command.LastTypeId;
+        })(CommandChangePlayerName = Example.CommandChangePlayerName || (Example.CommandChangePlayerName = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class CommandChangePlayerNameHandler extends STSEngine.CommandHandler {
+            constructor(worldServiceList) {
+                super(worldServiceList);
+            }
+            executeCommand(command) {
+                var client = this.worldServiceList.getClientListService().getTyped(command.getPlayerId(), Example.Client);
+                if (client) {
+                    client.setName(command.getPlayerName());
+                }
+            }
+            isValidCommand(command) {
+                if (command.getInitiatorId() === 0) {
+                    return true;
+                }
+                return command.getPlayerId() === command.getInitiatorId();
+            }
+            isValidCommandType(command) {
+                return command instanceof Example.CommandChangePlayerName;
+            }
+        }
+        Example.CommandChangePlayerNameHandler = CommandChangePlayerNameHandler;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -267,7 +175,7 @@ var STSEngine;
                 this.startProcess(process);
             }
             isValidCommand(command) {
-                return command.getPlayerId() === 0;
+                return command.getInitiatorId() === 0;
             }
             isValidCommandType(command) {
                 return command instanceof Example.CommandCreatePlayerObject;
@@ -291,6 +199,7 @@ var STSEngine;
                 this.commandHandlerList[Example.CommandMoveObjectStart.Type] = new Example.CommandMoveObjectStartHandler(worldServiceList);
                 this.commandHandlerList[Example.CommandMoveObjectStop.Type] = new Example.CommandMoveObjectStopHandler(worldServiceList);
                 this.commandHandlerList[Example.CommandFire.Type] = new Example.CommandFireHandler(worldServiceList);
+                this.commandHandlerList[Example.CommandChangePlayerName.Type] = new Example.CommandChangePlayerNameHandler(worldServiceList);
             }
         }
         Example.CommandDispatcher = CommandDispatcher;
@@ -371,6 +280,8 @@ var STSEngine;
                         return this.createPlayerObject(attr);
                     case Example.CommandFire.Type:
                         return this.createFire(attr);
+                    case Example.CommandChangePlayerName.Type:
+                        return this.createChangePlayerName(attr);
                 }
             }
             createRegisterPlayer(attr) {
@@ -388,8 +299,8 @@ var STSEngine;
             createFire(attr) {
                 return new Example.CommandFire(this.createAttributeList(), attr);
             }
-            createAttributeList() {
-                return new STSEngine.AttributeListArray();
+            createChangePlayerName(attr) {
+                return new Example.CommandChangePlayerName(this.createAttributeList(), attr);
             }
         }
         Example.CommandInitializer = CommandInitializer;
@@ -591,119 +502,171 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
-        class CollisionService {
-            constructor(worldAttributeList, itemListService, clientListService) {
-                this.clientListService = clientListService;
-                this.worldAttributeList = worldAttributeList;
-                this.itemListService = itemListService;
+        class Item extends STSEngine.Item {
+        }
+        Example.Item = Item;
+        (function (Item) {
+            let lastTypeId = STSEngine.Item.LastTypeId;
+        })(Item = Example.Item || (Example.Item = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemRectangle extends Example.Item {
+            constructor() {
+                super(...arguments);
+                this._position = ++this.lastAttributeId;
+                this._positionPrecise = ++this.lastAttributeId;
+                this._playerId = ++this.lastAttributeId;
+                this._minSpeed = ++this.lastAttributeId;
+                this._maxSpeed = ++this.lastAttributeId;
+                this._size = ++this.lastAttributeId;
+                this._moveDirection = ++this.lastAttributeId;
             }
-            processCollision(moveItem, newPosition) {
-                if (moveItem instanceof Example.ItemPlayer) {
-                    this.processCollisionObjectPlayer(moveItem, newPosition);
+            getPosition(d) {
+                if (typeof d == 'number') {
+                    return this.attributeList.get(this._position)[d];
                 }
-                else if (moveItem instanceof Example.ItemBullet) {
-                    this.processCollisionObjectBullet(moveItem, newPosition);
-                }
+                return this.attributeList.get(this._position);
             }
-            processCollisionObjectPlayer(moveItem, newPosition) {
-                this.processCollisionObjectRectangleWorld(moveItem, newPosition);
-                let objectList = this.itemListService.getIterator();
-                for (var o of objectList) {
-                    if (moveItem.getId() != o.getId()) {
-                        if (o instanceof Example.ItemPlayer) {
-                            this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
-                        }
-                    }
-                }
-                moveItem.setPositionPrecise(newPosition);
+            setPosition(position) {
+                this.attributeList.set(this._position, position);
             }
-            processCollisionObjectBullet(moveItem, newPosition) {
-                if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
-                    this.itemListService.remove(moveItem.getId());
+            getPositionPrecise(d) {
+                if (typeof d == 'number') {
+                    return this.attributeList.get(this._positionPrecise)[d];
                 }
-                let objectList = this.itemListService.getIterator();
-                for (var o of objectList) {
-                    if (moveItem.getId() != o.getId()) {
-                        if (o instanceof Example.ItemPlayer) {
-                            this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
-                        }
-                    }
-                }
-                moveItem.setPositionPrecise(newPosition);
+                return this.attributeList.get(this._positionPrecise);
             }
-            processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o) {
-                let position = moveItem.getPositionPrecise();
-                let oPosition = o.getPositionPrecise();
-                let moveItemSize = moveItem.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
-                        if (position[0] < newPosition[0]) {
-                            newPosition[0] = oPosition[0] - moveItemSize[0];
-                            return true;
-                        }
-                        else if (position[0] > newPosition[0]) {
-                            newPosition[0] = oPosition[0] + oSize[0];
-                            return true;
-                        }
-                        else if (position[1] < newPosition[1]) {
-                            newPosition[1] = oPosition[1] - moveItemSize[1];
-                            return true;
-                        }
-                        else if (position[1] > newPosition[1]) {
-                            newPosition[1] = oPosition[1] + oSize[1];
-                            return true;
-                        }
-                    }
-                }
-                return false;
+            setPositionPrecise(position) {
+                this.attributeList.set(this._positionPrecise, position);
+                this.setPosition([Math.floor(position[0]), Math.floor(position[1])]);
             }
-            processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o) {
-                let position = moveItem.getPositionPrecise();
-                let oPosition = o.getPositionPrecise();
-                let moveItemSize = moveItem.getSize();
-                let oSize = o.getSize();
-                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
-                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
-                        this.itemListService.remove(moveItem.getId());
-                        let playerId = moveItem.getPlayerId();
-                        let client = this.clientListService.getTyped(playerId, Example.ClientActive);
-                        client.setScore(client.getScore() + 10);
-                        return true;
-                    }
-                }
-                return false;
+            getPlayerId() {
+                return this.attributeList.get(this._playerId);
             }
-            processCollisionObjectRectangleWorld(moveItem, newPosition) {
-                if (newPosition[0] < 0) {
-                    newPosition[0] = 0;
-                    return true;
-                }
-                if (newPosition[1] < 0) {
-                    newPosition[1] = 0;
-                    return true;
-                }
-                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
-                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
-                    return true;
-                }
-                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
-                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
-                    return true;
-                }
-                return false;
+            setPlayerId(playerId) {
+                this.attributeList.set(this._playerId, playerId);
             }
-            isRectangleObjectCollision(pos1, size1, pos2, size2) {
-                if ((pos2[0] + size2[0] <= pos1[0]) ||
-                    (pos2[1] + size2[1] <= pos1[1]) ||
-                    (pos2[0] >= pos1[0] + size1[0]) ||
-                    (pos2[1] >= pos1[1] + size1[1])) {
-                    return false;
+            getMinSpeed() {
+                return this.attributeList.get(this._minSpeed);
+            }
+            setMinSpeed(speed) {
+                this.attributeList.set(this._minSpeed, speed);
+            }
+            getMaxSpeed() {
+                return this.attributeList.get(this._maxSpeed);
+            }
+            setMaxSpeed(speed) {
+                this.attributeList.set(this._maxSpeed, speed);
+            }
+            getSize(d) {
+                if (d) {
+                    return this.attributeList.get(this._size)[d];
                 }
-                return true;
+                return this.attributeList.get(this._size);
+            }
+            setSize(size) {
+                this.attributeList.set(this._size, size);
+            }
+            getMoveDirection() {
+                return this.attributeList.get(this._moveDirection);
+            }
+            setMoveDirection(direction) {
+                this.attributeList.set(this._moveDirection, direction);
             }
         }
-        Example.CollisionService = CollisionService;
+        Example.ItemRectangle = ItemRectangle;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemBullet extends Example.ItemRectangle {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setType(ItemBullet.Type);
+            }
+        }
+        Example.ItemBullet = ItemBullet;
+        (function (ItemBullet) {
+            ItemBullet.Type = ++Example.Item.LastTypeId;
+        })(ItemBullet = Example.ItemBullet || (Example.ItemBullet = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemInitializer extends STSEngine.ItemInitializer {
+            constructor(createIdHandler) {
+                super(createIdHandler);
+            }
+            createByType(type, attr) {
+                let item = super.createByType(type, attr);
+                if (item) {
+                    return item;
+                }
+                switch (type) {
+                    case Example.ItemPlayer.Type:
+                        return this.createPlayer(attr);
+                    case Example.ItemBullet.Type:
+                        return this.createBullet(attr);
+                }
+            }
+            createPlayer(attr) {
+                var object = new Example.ItemPlayer(this.createAttributeList(), attr);
+                this.initId(object);
+                return object;
+            }
+            createBullet(attr) {
+                var object = new Example.ItemBullet(this.createAttributeList(), attr);
+                this.initId(object);
+                return object;
+            }
+        }
+        Example.ItemInitializer = ItemInitializer;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ItemPlayer extends Example.ItemRectangle {
+            constructor(attributeList, kvpList) {
+                super(attributeList, kvpList);
+                this.setType(ItemPlayer.Type);
+            }
+        }
+        Example.ItemPlayer = ItemPlayer;
+        (function (ItemPlayer) {
+            ItemPlayer.Type = ++Example.Item.LastTypeId;
+        })(ItemPlayer = Example.ItemPlayer || (Example.ItemPlayer = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ClientServerMessage extends STSEngine.ClientServerMessage {
+        }
+        Example.ClientServerMessage = ClientServerMessage;
+        (function (ClientServerMessage) {
+            ClientServerMessage.LastTypeId = 0;
+            ClientServerMessage.Type = ++ClientServerMessage.LastTypeId;
+        })(ClientServerMessage = Example.ClientServerMessage || (Example.ClientServerMessage = {}));
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class ClientServerMessageInitializer extends STSEngine.ClientServerMessageInitializer {
+        }
+        Example.ClientServerMessageInitializer = ClientServerMessageInitializer;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -971,6 +934,125 @@ var STSEngine;
 (function (STSEngine) {
     var Example;
     (function (Example) {
+        class CollisionService {
+            constructor(worldAttributeList, itemListService, clientListService) {
+                this.clientListService = clientListService;
+                this.worldAttributeList = worldAttributeList;
+                this.itemListService = itemListService;
+            }
+            processCollision(moveItem, newPosition) {
+                if (moveItem instanceof Example.ItemPlayer) {
+                    this.processCollisionObjectPlayer(moveItem, newPosition);
+                }
+                else if (moveItem instanceof Example.ItemBullet) {
+                    this.processCollisionObjectBullet(moveItem, newPosition);
+                }
+            }
+            processCollisionObjectPlayer(moveItem, newPosition) {
+                this.processCollisionObjectRectangleWorld(moveItem, newPosition);
+                let objectList = this.itemListService.getIterator();
+                for (var o of objectList) {
+                    if (moveItem.getId() != o.getId()) {
+                        if (o instanceof Example.ItemPlayer) {
+                            this.processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o);
+                        }
+                    }
+                }
+                moveItem.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectBullet(moveItem, newPosition) {
+                if (this.processCollisionObjectRectangleWorld(moveItem, newPosition)) {
+                    this.itemListService.remove(moveItem.getId());
+                }
+                let objectList = this.itemListService.getIterator();
+                for (var o of objectList) {
+                    if (moveItem.getId() != o.getId()) {
+                        if (o instanceof Example.ItemPlayer) {
+                            this.processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o);
+                        }
+                    }
+                }
+                moveItem.setPositionPrecise(newPosition);
+            }
+            processCollisionObjectPlayerObjectPlayer(moveItem, newPosition, o) {
+                let position = moveItem.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveItemSize = moveItem.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                        if (position[0] < newPosition[0]) {
+                            newPosition[0] = oPosition[0] - moveItemSize[0];
+                            return true;
+                        }
+                        else if (position[0] > newPosition[0]) {
+                            newPosition[0] = oPosition[0] + oSize[0];
+                            return true;
+                        }
+                        else if (position[1] < newPosition[1]) {
+                            newPosition[1] = oPosition[1] - moveItemSize[1];
+                            return true;
+                        }
+                        else if (position[1] > newPosition[1]) {
+                            newPosition[1] = oPosition[1] + oSize[1];
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectBulletObjectPlayer(moveItem, newPosition, o) {
+                let position = moveItem.getPositionPrecise();
+                let oPosition = o.getPositionPrecise();
+                let moveItemSize = moveItem.getSize();
+                let oSize = o.getSize();
+                if (!this.isRectangleObjectCollision(position, moveItemSize, oPosition, oSize)) {
+                    if (this.isRectangleObjectCollision(newPosition, moveItemSize, oPosition, oSize)) {
+                        this.itemListService.remove(moveItem.getId());
+                        let playerId = moveItem.getPlayerId();
+                        let client = this.clientListService.getTyped(playerId, Example.ClientActive);
+                        client.setScore(client.getScore() + 10);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            processCollisionObjectRectangleWorld(moveItem, newPosition) {
+                if (newPosition[0] < 0) {
+                    newPosition[0] = 0;
+                    return true;
+                }
+                if (newPosition[1] < 0) {
+                    newPosition[1] = 0;
+                    return true;
+                }
+                if (newPosition[0] > this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0]) {
+                    newPosition[0] = this.worldAttributeList.getWorldSize()[0] - moveItem.getSize()[0];
+                    return true;
+                }
+                if (newPosition[1] > this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1]) {
+                    newPosition[1] = this.worldAttributeList.getWorldSize()[1] - moveItem.getSize()[1];
+                    return true;
+                }
+                return false;
+            }
+            isRectangleObjectCollision(pos1, size1, pos2, size2) {
+                if ((pos2[0] + size2[0] <= pos1[0]) ||
+                    (pos2[1] + size2[1] <= pos1[1]) ||
+                    (pos2[0] >= pos1[0] + size1[0]) ||
+                    (pos2[1] >= pos1[1] + size1[1])) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        Example.CollisionService = CollisionService;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
         class WorldAttributeList extends STSEngine.WorldAttributeList {
             constructor(attributeList, kvpList) {
                 super(attributeList, kvpList);
@@ -1132,8 +1214,29 @@ var STSEngine;
                 command.setObjectId(objectId);
                 this.addCommand(command);
             }
+            changePlayerName(playerId, name) {
+                var command = this.commandInitializer.createChangePlayerName();
+                command.setPlayerId(playerId);
+                command.setPlayerName(name);
+                this.addCommand(command);
+            }
         }
         Example.PlayerAction = PlayerAction;
+    })(Example = STSEngine.Example || (STSEngine.Example = {}));
+})(STSEngine || (STSEngine = {}));
+var STSEngine;
+(function (STSEngine) {
+    var Example;
+    (function (Example) {
+        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
+            constructor(socket, sid, playerAction) {
+                let clientServerMessageInitializer = new Example.ClientServerMessageInitializer();
+                let worldAttributeList = new Example.WorldAttributeList();
+                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
+                super(socket, sid, playerAction, worldServiceList, clientServerMessageInitializer);
+            }
+        }
+        Example.WebSocketGameClient = WebSocketGameClient;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));
 var STSEngine;
@@ -1307,20 +1410,5 @@ var STSEngine;
             }
         }
         Example.View = View;
-    })(Example = STSEngine.Example || (STSEngine.Example = {}));
-})(STSEngine || (STSEngine = {}));
-var STSEngine;
-(function (STSEngine) {
-    var Example;
-    (function (Example) {
-        class WebSocketGameClient extends STSEngine.WebSocketGameClient {
-            constructor(socket, sid, playerAction) {
-                let clientServerMessageInitializer = new STSEngine.ClientServerMessageInitializer();
-                let worldAttributeList = new Example.WorldAttributeList();
-                let worldServiceList = new Example.WorldServiceList(worldAttributeList);
-                super(socket, sid, playerAction, worldServiceList, clientServerMessageInitializer);
-            }
-        }
-        Example.WebSocketGameClient = WebSocketGameClient;
     })(Example = STSEngine.Example || (STSEngine.Example = {}));
 })(STSEngine || (STSEngine = {}));

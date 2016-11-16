@@ -1,4 +1,6 @@
-﻿namespace STSEngine {
+﻿/// <reference path="ClientServerMessage.ts" />
+
+namespace STSEngine {
 
     export class ClientServerMessageInit extends ClientServerMessage {
 
@@ -6,7 +8,7 @@
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ClientServerMessageType.Init);
+            this.setType(ClientServerMessageInit.Type);
         }
 
         public setPlayerId(playerId: number): void {
@@ -18,7 +20,7 @@
         }
     }
 
-    export module ClientServerMessageType {
-        export const Init = ClientServerMessageType.getNewTypeId();
+    export module ClientServerMessageInit {
+        export const Type = ++ClientServerMessage.LastTypeId;
     }
 }

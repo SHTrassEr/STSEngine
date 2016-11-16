@@ -15,7 +15,7 @@
         }
 
         protected isValidCommand(command: CommandCreatePlayerObject): boolean {
-            return command.getPlayerId() === 0;
+            return command.getInitiatorId() === 0;
         }
 
         protected isValidCommandType(command: ICommand): boolean {

@@ -10,5 +10,7 @@
         stopMoveLeft(objectId: number): void;
         stopMoveUp(objectId: number): void;
         stopMoveDown(objectId: number): void;
+
+        changePlayerName(playerId: number, name: string): void;
     }
 }

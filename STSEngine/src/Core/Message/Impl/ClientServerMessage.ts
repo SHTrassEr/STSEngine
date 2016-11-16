@@ -2,16 +2,16 @@
 
 namespace STSEngine {
 
-    export abstract class ClientServerMessage extends Entity implements IClientServerMessage {
+    export class ClientServerMessage extends Entity implements IClientServerMessage {
 
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
+            super(attributeList, kvpList);
+            this.setType(ClientServerMessage.Type);
+        }
     }
 
-    export module ClientServerMessageType {
-
-        let lastTypeId = 0;
-
-        export function getNewTypeId(): number {
-            return ++lastTypeId
-        }
+    export module ClientServerMessage {
+        export let LastTypeId = 0;
+        export const Type = ++LastTypeId;
     }
 }

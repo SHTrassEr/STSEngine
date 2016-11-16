@@ -20,6 +20,8 @@
                     return this.createPlayerObject(attr);
                 case CommandFire.Type:
                     return this.createFire(attr);
+                case CommandChangePlayerName.Type:
+                    return this.createChangePlayerName(attr);
             }
         }
         
@@ -44,9 +46,10 @@
             return new CommandFire(this.createAttributeList(), attr);
         }
 
-        protected createAttributeList(): IAttributeList {
-            return new AttributeListArray();
+        public createChangePlayerName(attr?: Iterable<[number, any]>): CommandChangePlayerName {
+            return new CommandChangePlayerName(this.createAttributeList(), attr);
         }
+
     }
 }
 

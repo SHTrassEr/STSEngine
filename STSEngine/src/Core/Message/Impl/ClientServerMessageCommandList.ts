@@ -1,4 +1,6 @@
-﻿namespace STSEngine {
+﻿/// <reference path="ClientServerMessage.ts" />
+
+namespace STSEngine {
 
     export class ClientServerMessageCommandList extends ClientServerMessage {
 
@@ -6,7 +8,7 @@
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ClientServerMessageType.CommandList);
+            this.setType(ClientServerMessageCommandList.Type);
         }
 
         public setCommandList(commandList: [number, any][][]): void {
@@ -18,7 +20,7 @@
         }
     }
 
-    export module ClientServerMessageType {
-        export const CommandList = ClientServerMessageType.getNewTypeId();
+    export module ClientServerMessageCommandList {
+        export const Type = ++ClientServerMessage.LastTypeId;
     }
 }

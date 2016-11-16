@@ -1,4 +1,6 @@
-﻿namespace STSEngine {
+﻿/// <reference path="ClientServerMessage.ts" />
+
+namespace STSEngine {
 
     export class ClientServerMessageResponseAuthentication extends ClientServerMessage {
 
@@ -6,7 +8,7 @@
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-            this.setType(ClientServerMessageType.ResponseAuthentication);
+            this.setType(ClientServerMessageResponseAuthentication.Type);
         }
 
         public setSID(sid: string): void {
@@ -18,7 +20,7 @@
         }
     }
 
-    export module ClientServerMessageType {
-        export const ResponseAuthentication = ClientServerMessageType.getNewTypeId();
+    export module ClientServerMessageResponseAuthentication {
+        export const Type = ++ClientServerMessage.LastTypeId;
     }
 }

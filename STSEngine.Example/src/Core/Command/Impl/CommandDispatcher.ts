@@ -13,6 +13,7 @@
             this.commandHandlerList[CommandMoveObjectStart.Type] = new CommandMoveObjectStartHandler(worldServiceList);
             this.commandHandlerList[CommandMoveObjectStop.Type] = new CommandMoveObjectStopHandler(worldServiceList);
             this.commandHandlerList[CommandFire.Type] = new CommandFireHandler(worldServiceList);
+            this.commandHandlerList[CommandChangePlayerName.Type] = new CommandChangePlayerNameHandler(worldServiceList);
         }
 
     }

@@ -6,23 +6,21 @@ namespace STSEngine {
 
         public createByType(type: number, attr?: Iterable<[number, any]>): IClientServerMessage {
             switch (type) {
-                case ClientServerMessageType.CommandList:
+                case ClientServerMessageCommandList.Type:
                     return this.createCommandList(attr);
-                case ClientServerMessageType.RequestAuthentication:
+                case ClientServerMessageRequestAuthentication.Type:
                     return this.createRequestAuthentication(attr);
-                case ClientServerMessageType.ResponseAuthentication:
+                case ClientServerMessageResponseAuthentication.Type:
                     return this.createResponseAuthentication(attr);
-                case ClientServerMessageType.Step:
+                case ClientServerMessageStep.Type:
                     return this.createStep(attr);
-                case ClientServerMessageType.StepList:
+                case ClientServerMessageStepList.Type:
                     return this.createStepList(attr);
-                case ClientServerMessageType.Init:
+                case ClientServerMessageInit.Type:
                     return this.createInit(attr);
-                case ClientServerMessageType.WorldFullInfo:
+                case ClientServerMessageWorldFullInfo.Type:
                     return this.createWorldFullInfo(attr);
             }
-
-            throw  'Unexpected command type: ' + type;
         }
 
         public createCommandList(attr?: Iterable<[number, any]>): ClientServerMessageCommandList {

@@ -62,7 +62,7 @@ function ready() {
         let str = '';
         for (let client of clientList) {
             if (client instanceof STSEngine.Example.ClientActive) {
-                str += client.getId() + " " + client.getScore() + "<br>";
+                str += client.getName() + " (" + client.getId() + ") " + client.getScore() + "<br>";
             }
         }
 
@@ -149,6 +149,12 @@ function ready() {
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
 
+    let nameInput = <HTMLInputElement>(document.getElementById("name-input"));
+    nameInput.onchange = (event) => {
+        playerAction.changePlayerName(client.getPlayerId(), nameInput.value);
+
+    };
+    
 
    /*
     var socket = new WebSocket('ws://localhost:62785');

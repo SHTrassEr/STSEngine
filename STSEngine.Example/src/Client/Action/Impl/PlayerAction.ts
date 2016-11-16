@@ -77,5 +77,12 @@
             command.setObjectId(objectId);
             this.addCommand(command);
         }
+
+        public changePlayerName(playerId: number, name: string): void {
+            var command = this.commandInitializer.createChangePlayerName();
+            command.setPlayerId(playerId);
+            command.setPlayerName(name);
+            this.addCommand(command);
+        }
     }
 }
