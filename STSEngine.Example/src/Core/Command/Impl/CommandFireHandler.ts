@@ -1,8 +1,9 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="CommandHandler.ts" />
 
-    export class CommandFireHandler extends STSEngine.CommandHandler {
+namespace STSEngine.Example {
 
-        protected worldServiceList: IWorldServiceList;
+    export class CommandFireHandler extends CommandHandler {
+
 
         constructor(worldServiceList: IWorldServiceList) {
             super(worldServiceList);
@@ -10,22 +11,13 @@
 
         protected executeCommand(command: CommandFire): void {
             var process = this.worldServiceList.getProcessInitializer().createFire();
-            process.setObjectId(command.getObjectId());
+            process.setObjectId(command.getItemId());
             this.startProcess(process);
         }
 
 
         protected isValidCommand(command: CommandFire): boolean {
-            let initiatorId = command.getInitiatorId();
-            if (initiatorId > 0) {
-                let objectId = command.getObjectId();
-                let object = this.worldServiceList.getItemListService().getTyped<ItemTank>(objectId, ItemTank);
-                if (object) {
-                    return (object).getClientId() == initiatorId;
-                }
-            }
-
-            return command.getInitiatorId() === 0;
+            return this.isCommandInitiatorIdEqualsItemClientId(command, command.getItemId());
         }
 
 

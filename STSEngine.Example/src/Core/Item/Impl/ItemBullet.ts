@@ -1,8 +1,8 @@
-﻿/// <reference path="ItemRectangle.ts" />
+﻿/// <reference path="Item.ts" />
 
 namespace STSEngine.Example {
 
-    export class ItemBullet extends ItemRectangle  {
+    export class ItemBullet extends Item  {
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);

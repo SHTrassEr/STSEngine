@@ -45,7 +45,6 @@
     <TypeScriptCompile Include="src\Core\Entity\IEntity.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IterableKeyValuePair.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItemListService.ts" />
-    <TypeScriptCompile Include="src\Core\Item\Impl\ItemListService.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Message\IClientServerMessageInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageInit.ts" />

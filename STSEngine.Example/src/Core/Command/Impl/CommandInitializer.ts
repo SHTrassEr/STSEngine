@@ -22,6 +22,8 @@
                     return this.createFire(attr);
                 case CommandChangeClientName.Type:
                     return this.createChangeClientName(attr);
+                case CommandSetClientForceVector.Type:
+                    return this.createSetClientForceVector(attr);
             }
         }
         
@@ -48,6 +50,10 @@
 
         public createChangeClientName(attr?: Iterable<[number, any]>): CommandChangeClientName {
             return new CommandChangeClientName(this.createAttributeList(), attr);
+        }
+
+        public createSetClientForceVector(attr?: Iterable<[number, any]>): CommandSetClientForceVector {
+            return new CommandSetClientForceVector(this.createAttributeList(), attr);
         }
 
     }

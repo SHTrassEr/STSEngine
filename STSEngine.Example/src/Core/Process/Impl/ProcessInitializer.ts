@@ -19,6 +19,8 @@
                     return this.createFire(attr);
                 case ProcessCreateClientItemTank.Type:
                     return this.createCreateClientItemTank(attr);
+                case ProcessMoveItem.Type:
+                    return this.createMoveItem(attr);
             }
         }
          
@@ -42,6 +44,12 @@
 
         public createCreateClientItemTank(attr?: Iterable<[number, any]>): ProcessCreateClientItemTank {
             var process = new ProcessCreateClientItemTank(this.createAttributeList(), attr);
+            this.setProcessId(process);
+            return process;
+        }
+
+        public createMoveItem(attr?: Iterable<[number, any]>): ProcessMoveItem {
+            var process = new ProcessMoveItem(this.createAttributeList(), attr);
             this.setProcessId(process);
             return process;
         }

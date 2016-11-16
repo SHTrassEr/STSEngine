@@ -6,7 +6,7 @@
             super(createIdHandler);
         }
 
-        protected createByType(type: number, attr?: Iterable<[number, any]>): IItem {
+        protected createByType(type: number, attr?: Iterable<[number, any]>): STSEngine.IItem {
             let item = super.createByType(type, attr);
             if (item) {
                 return item;

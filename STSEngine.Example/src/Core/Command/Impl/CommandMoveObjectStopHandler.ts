@@ -1,8 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="CommandHandler.ts" />
 
-    export class CommandMoveObjectStopHandler extends STSEngine.CommandHandler {
+namespace STSEngine.Example {
 
-        protected worldServiceList: IWorldServiceList;
+    export class CommandMoveObjectStopHandler extends CommandHandler {
 
         constructor(worldServiceList: IWorldServiceList) {
             super(worldServiceList);

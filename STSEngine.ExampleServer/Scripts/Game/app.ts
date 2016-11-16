@@ -84,26 +84,26 @@ function ready() {
 
         if (e.keyCode == 87) {
             if (!up) {
-                playerAction.startMoveUp(playerObjectId);
                 up = true;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 83) {
             if (!down) {
-                playerAction.startMoveDown(playerObjectId);
                 down = true;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 68) {
             if (!right) {
-                playerAction.startMoveRight(playerObjectId);
                 right = true;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 65) {
             if (!left) {
-                playerAction.startMoveLeft(playerObjectId);
                 left = true;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 32) {
@@ -117,27 +117,26 @@ function ready() {
         var playerObjectId = getPlayerObjectId();
         if (e.keyCode == 87) {
             if (up) {
-                playerAction.stopMoveUp(playerObjectId);
                 up = false;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 83) {
             if (down) {
-                playerAction.stopMoveDown(playerObjectId);
                 down = false;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 68) {
             if (right) {
-                playerAction.stopMoveRight(playerObjectId);
                 right = false;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
-            playerAction.stopMoveRight(playerObjectId);
         }
         else if (e.keyCode == 65) {
             if (left) {
-                playerAction.stopMoveLeft(playerObjectId);
                 left = false;
+                playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
         else if (e.keyCode == 32) {

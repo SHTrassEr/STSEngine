@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="CommandHandler.ts" />
 
-    export class CommandRegisterClientHandler extends STSEngine.CommandHandler {
+namespace STSEngine.Example {
+
+    export class CommandRegisterClientHandler extends CommandHandler {
 
         protected worldServiceList: IWorldServiceList;
 
@@ -20,9 +22,9 @@
         }
 
         protected isValidCommand(command: CommandRegisterClient): boolean {
-            let clientId = command.getClientId();
-            if (command.getInitiatorId() === 0) {
-                var client = this.worldServiceList.getClientListService().getFirst(p => p.getId() == clientId);
+
+            if (this.isSystemCommand(command)) {
+                var client = this.worldServiceList.getClientListService().getFirst(p => p.getId() == command.getClientId());
                 if (!client) {
                     return true;
                 }

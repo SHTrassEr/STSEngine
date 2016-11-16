@@ -16,65 +16,34 @@
             this.onAction();
         }
 
-        public startMoveRight(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStart();
-            command.setMoveDirection(MoveDirection.Right);
-            command.setObjectId(objectId);
+        public setClientForce(itemId: number, up: boolean, right: boolean, down: boolean, left: boolean): void {
+            let force: [number, number] = [0, 0];
+
+            if (up) {
+                force[1] -= 1;
+            }
+
+            if (down) {
+                force[1] += 1;
+            }
+
+            if (left) {
+                force[0] -= 1;
+            }
+
+            if (right) {
+                force[0] += 1;
+            }
+            
+            var command = this.commandInitializer.createSetClientForceVector();
+            command.setItemId(itemId);
+            command.setClientForceVector(force);
             this.addCommand(command);
         }
-
-        public startMoveLeft(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStart();
-            command.setMoveDirection(MoveDirection.Left);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public startMoveUp(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStart();
-            command.setMoveDirection(MoveDirection.Up);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public startMoveDown(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStart();
-            command.setMoveDirection(MoveDirection.Down);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public stopMoveRight(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStop();
-            command.setMoveDirection(MoveDirection.Right);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public stopMoveLeft(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStop();
-            command.setMoveDirection(MoveDirection.Left);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public stopMoveUp(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStop();
-            command.setMoveDirection(MoveDirection.Up);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public stopMoveDown(objectId: number): void {
-            var command = this.commandInitializer.createMoveObjectStop();
-            command.setMoveDirection(MoveDirection.Down);
-            command.setObjectId(objectId);
-            this.addCommand(command);
-        }
-
-        public fire(objectId: number): void {
+        
+        public fire(itemId: number): void {
             var command = this.commandInitializer.createFire();
-            command.setObjectId(objectId);
+            command.setItemId(itemId);
             this.addCommand(command);
         }
 

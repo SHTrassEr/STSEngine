@@ -1,8 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="CommandHandler.ts" />
 
-    export class CommandChangeClientNameHandler extends STSEngine.CommandHandler {
+namespace STSEngine.Example {
 
-        protected worldServiceList: IWorldServiceList;
+    export class CommandChangeClientNameHandler extends CommandHandler {
 
         constructor(worldServiceList: IWorldServiceList) {
             super(worldServiceList);
@@ -16,11 +16,7 @@
         }
 
         protected isValidCommand(command: CommandChangeClientName): boolean {
-            if (command.getInitiatorId() === 0) {
-                return true;
-            }
-
-            return command.getClientId() === command.getInitiatorId();
+            return this.isSystemCommand(command) || (command.getClientId() === command.getInitiatorId());
         }
 
         protected isValidCommandType(command: ICommand): boolean {

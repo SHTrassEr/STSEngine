@@ -12,10 +12,19 @@
             let itemTank = this.worldServiceList.getItemInitializer().createTank();
             itemTank.setClientId(process.getClientId());
             itemTank.setSize([5, 5]);
-            itemTank.setMoveDirection(MoveDirection.Up);
-            itemTank.setPositionPrecise([40, 40]);
-            itemTank.setMaxSpeed(1);
+            itemTank.setPosition([40, 40]);
+            itemTank.setFrictionModifier(1);
+            itemTank.setClientForceModifier(3);
+            itemTank.setClientForceVector([0, 0]);
+            itemTank.setMoveVector([0, 0]);
+            itemTank.setMass(50);
+
             this.worldServiceList.getItemListService().add(itemTank);
+
+            var moveProcess = this.worldServiceList.getProcessInitializer().createMoveItem();
+            moveProcess.setItemId(itemTank.getId());
+            this.startProcess(moveProcess);
+
             process.setStatus(ProcessStatus.Finished);
         }
     }

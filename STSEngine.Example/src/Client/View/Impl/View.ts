@@ -77,7 +77,7 @@
             }
         }
 
-        protected drawObjectRectangle(o: ItemRectangle): PIXI.Graphics {
+        protected drawObjectRectangle(o: IItem): PIXI.Graphics {
             let position = o.getPosition();
             let size = o.getSize();
             let cellSize = this.cellSize;
@@ -112,7 +112,7 @@
             return graphics;
         }
 
-        protected getObjectSprite(o: ItemRectangle): PIXI.Graphics {
+        protected getObjectSprite(o: IItem): PIXI.Graphics {
 
             var objectSprite: PIXI.Graphics = this.objectMap.get(o.getId());
             if (!objectSprite) {
@@ -148,10 +148,10 @@
             this.clearStage();
 
             for (let o of iterator) {
-                if (o instanceof ItemRectangle) {
+                if (o instanceof Item) {
                     let objectSprite = this.getObjectSprite(o);
-                    let x = this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x;
-                    let y = this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y;
+                    let x = Math.round(this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x);
+                    let y = Math.round(this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y);
 
                     if (o instanceof ItemTank && o.getClientId() == this.clientId) {
                         this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
@@ -192,7 +192,7 @@
         }
 
         protected getDrawPoint(p: number): number {
-            return Math.floor(p) * this.cellSize;
+            return p * this.cellSize;
         }
 
         protected drawWordLimit(): PIXI.Graphics {
@@ -213,7 +213,7 @@
             graphics.lineStyle(0);
             graphics.drawRect(0, 0, this.width, this.height);
 
-            graphics.lineStyle(1, 0xCCCCCC, 0.5);
+/*            graphics.lineStyle(1, 0xCCCCCC, 0.5);
             let cellSize = this.cellSize;
 
             var x = ((this.width) % this.cellSize) / 2;
@@ -236,7 +236,7 @@
                 graphics.moveTo(0, y);
                 graphics.lineTo(this.width, y);
                 y += cellSize;
-            }
+            }*/
 
             var noiseFilter = new PIXI.filters.NoiseFilter();
             noiseFilter.noise = 0.1;

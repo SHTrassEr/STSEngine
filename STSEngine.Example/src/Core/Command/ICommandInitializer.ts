@@ -6,6 +6,7 @@
         createMoveObjectStop(attr?: Iterable<[number, any]>): CommandMoveObjectStop;
         createFire(attr?: Iterable<[number, any]>): CommandFire;
         createChangeClientName(attr?: Iterable<[number, any]>): CommandChangeClientName;
+        createSetClientForceVector(attr?: Iterable<[number, any]>): CommandSetClientForceVector;
     }
 }
 

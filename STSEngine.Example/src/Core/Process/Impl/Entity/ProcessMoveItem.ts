@@ -1,15 +1,15 @@
-﻿/// <reference path="Command.ts" />
+﻿/// <reference path="Process.ts" />
 
 namespace STSEngine.Example {
 
-    export class CommandFire extends Command {
+    export class ProcessMoveItem extends Process {
 
         private _itemId: number = ++this.lastAttributeId;
+        private _moveDirection: number = ++this.lastAttributeId;
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
-
-            this.setType(CommandFire.Type);
+            this.setType(ProcessMoveItem.Type);
         }
 
         public getItemId(): number {
@@ -19,9 +19,10 @@ namespace STSEngine.Example {
         public setItemId(id: number): void {
             this.attributeList.set(this._itemId, id);
         }
+
     }
 
-    export module CommandFire {
-        export const Type = ++Command.LastTypeId;
+    export module ProcessMoveItem {
+        export const Type = ++Item.LastTypeId;
     }
 }

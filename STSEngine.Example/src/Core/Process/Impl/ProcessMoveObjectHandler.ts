@@ -13,15 +13,15 @@
             if (object) {
 
                 let execCount = this.worldServiceList.getWorldAttributeList().getStepNumber() - process.getInitStep();
-                this.moveObject((<IItemRectangle>object), process.getMoveDirection(), execCount);
+                this.moveObject((<IItem>object), process.getMoveDirection(), execCount);
             } else {
                 process.setStatus(ProcessStatus.Finished);
             }
         }
 
-        protected moveObject(object: IItemRectangle, direction: MoveDirection, execCount: number): void {
-            let position = object.getPositionPrecise();
-            var speed = object.getMaxSpeed();
+        protected moveObject(object: IItem, direction: MoveDirection, execCount: number): void {
+            let position = object.getPosition();
+            var speed = 1;
 
             if (execCount < 50) {
                 speed =  Math.floor((speed * (execCount + 10) / 20) * 100) / 100;

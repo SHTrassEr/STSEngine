@@ -1,6 +1,8 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="CommandHandler.ts" />
 
-    export class CommandCreateClientItemTankHandler extends STSEngine.CommandHandler {
+namespace STSEngine.Example {
+
+    export class CommandCreateClientItemTankHandler extends CommandHandler {
 
         protected worldServiceList: IWorldServiceList;
 
@@ -15,7 +17,7 @@
         }
 
         protected isValidCommand(command: CommandCreateClientItemTank): boolean {
-            return command.getInitiatorId() === 0;
+            return this.isSystemCommand(command);
         }
 
         protected isValidCommandType(command: ICommand): boolean {

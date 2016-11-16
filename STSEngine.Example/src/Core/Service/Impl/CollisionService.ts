@@ -33,7 +33,7 @@
                 }
             }
 
-            moveItem.setPositionPrecise(newPosition);
+            moveItem.setPosition(newPosition);
         }
 
         protected processCollisionObjectBullet(moveItem: ItemBullet, newPosition: [number, number]) {
@@ -51,13 +51,13 @@
                 }
             }
 
-            moveItem.setPositionPrecise(newPosition);
+            moveItem.setPosition(newPosition);
         }
 
         protected processCollisionTankTank(moveItem: ItemTank, newPosition: [number, number], o: ItemTank): boolean {
 
-            let position = moveItem.getPositionPrecise();
-            let oPosition = o.getPositionPrecise();
+            let position = moveItem.getPosition();
+            let oPosition = o.getPosition();
             let moveItemSize = moveItem.getSize();
             let oSize = o.getSize();
 
@@ -85,8 +85,8 @@
 
         protected processCollisionBulletTank(moveItem: ItemBullet, newPosition: [number, number], o: ItemTank): boolean {
 
-            let position = moveItem.getPositionPrecise();
-            let oPosition = o.getPositionPrecise();
+            let position = moveItem.getPosition();
+            let oPosition = o.getPosition();
             let moveItemSize = moveItem.getSize();
             let oSize = o.getSize();
 
@@ -108,7 +108,7 @@
         }
 
 
-        protected processCollisionObjectRectangleWorld(moveItem: IItemRectangle, newPosition: [number, number]): boolean {
+        protected processCollisionObjectRectangleWorld(moveItem: IItem, newPosition: [number, number]): boolean {
             if (newPosition[0] < 0) {
                 newPosition[0] = 0;
                 return true;
