@@ -19,17 +19,14 @@
 
         protected fire(object: ItemTank): void {
             var bullet = this.worldServiceList.getItemInitializer().createBullet();
-            bullet.setPosition([object.getPosition(0) + (object.getSize()[0] / 2) - 1/2, object.getPosition(1) + (object.getSize()[0] / 2) + 1/2]);
+            bullet.setPosition([object.getPosition(0), object.getPosition(1)]);
             bullet.setClientId(object.getClientId());
-            bullet.setSize([1, 1]);
+
             bullet.setFrictionModifier(0.1);
 
             bullet.setMoveVector(VectorHelper.copy(object.getMoveVector()));
-            bullet.setForceVector([0, -2]);
+            bullet.setForceVector([0, 0]);
             bullet.setMass(5);
-
-
-            bullet.setMoveDirection(object.getMoveDirection());
 
             this.worldServiceList.getItemListService().add(bullet);
 

@@ -7,7 +7,7 @@ var insert = require('gulp-insert');
 var nodeJsModuleDeclaration = '\ndeclare module \'stsEngine.example/server\' { export default STSEngine.Example; }';
 var useStrict = '\'use strict\';\n';
 
-var importJsModule = 'var STSEngine = require(\'stsEngine/server\');';
+var importJsModule = 'var STSEngine = require(\'stsEngine/server\');\nvar Matter = require(\'matter-js/build/matter.js\');\nlet CircularJSON = require(\'circular-json\');\n';
 
 
 var srcCorePath = 'src/Core/**/*.ts';

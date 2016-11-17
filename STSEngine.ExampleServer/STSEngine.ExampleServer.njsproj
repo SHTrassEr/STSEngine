@@ -38,6 +38,7 @@
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\matter-js\matter-js.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\pixi.js\pixi.js.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\STSEngine.Example\client.d.ts" />
@@ -49,7 +50,6 @@
   <ItemGroup>
     <Content Include="public\javascripts\bootstrap.js" />
     <Content Include="public\javascripts\bootstrap.min.js" />
-    <Content Include="public\javascripts\tsconfig1.json" />
     <Content Include="public\javascripts\jquery-1.10.2.intellisense.js" />
     <Content Include="public\javascripts\jquery-1.10.2.js" />
     <Content Include="public\javascripts\jquery-1.10.2.min.js" />
@@ -95,6 +95,7 @@
     <Folder Include="Scripts\typings\" />
     <Folder Include="Scripts\typings\express\" />
     <Folder Include="Scripts\typings\jquery\" />
+    <Folder Include="Scripts\typings\matter-js\" />
     <Folder Include="Scripts\typings\node\" />
     <Folder Include="Scripts\typings\pixi.js\" />
     <Folder Include="Scripts\typings\STSEngine.Example\" />
@@ -113,6 +114,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="public\javascripts\STSEngine.Example\client.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="public\javascripts\matter.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="public\javascripts\circular-json.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

@@ -12,6 +12,18 @@ namespace STSEngine.Example {
             this.setType(ItemTank.Type);
         }
 
+        protected createBody(): Matter.Body {
+            let body = Matter.Bodies.rectangle(200, 200, 50, 50, { density: 0.001, friction: 0.1, frictionAir: 0.1, frictionStatic: 0.5, inertia: Infinity });
+            //Matter.Body.setMass(body, 1000);
+            //Matter.Body.setInertia(body, 1000000);
+
+            return body;
+        }
+
+        public getSize(): [number, number] {
+            return [50, 50];
+        }
+
         public getClientForceModifier(): number {
             return this.attributeList.get(this._clientForceModifier);
         }
@@ -31,7 +43,7 @@ namespace STSEngine.Example {
         }
 
         public setClientForceVector(clientForceVector: [number, number]): void {
-
+            
             var forceVector = this.getForceVector();
             if (!forceVector) {
                 forceVector = [0, 0];

@@ -11,7 +11,6 @@
         public initProcess(process: ProcessCreateClientItemTank): void {
             let itemTank = this.worldServiceList.getItemInitializer().createTank();
             itemTank.setClientId(process.getClientId());
-            itemTank.setSize([5, 5]);
             itemTank.setPosition([40, 40]);
             itemTank.setFrictionModifier(1);
             itemTank.setClientForceModifier(3);

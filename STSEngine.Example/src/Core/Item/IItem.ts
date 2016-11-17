@@ -15,8 +15,6 @@
         setForceVector(moveVector: [number, number]): void;
 
         getSize(): [number, number];
-        getSize(d: number): number;
-        setSize(size: [number, number]);
 
         getFrictionModifier(): number;
         setFrictionModifier(frictionModifier: number): void;
@@ -24,10 +22,9 @@
         getMass(): number;
         setMass(speed: number): void;
 
-        getMoveDirection(): MoveDirection;
-        setMoveDirection(direction: MoveDirection): void;
-
         getClientId(): number;
         setClientId(clientId: number);
+
+        getBody(): Matter.Body;
     }
 }

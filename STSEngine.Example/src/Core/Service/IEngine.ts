@@ -1,6 +1,6 @@
-﻿namespace STSEngine {
+﻿namespace STSEngine.Example {
 
-    export interface IEngine {
+    export interface IEngine extends STSEngine.IEngine {
         getWorld(): IWorld;
         getCommandListService(): ICommandListService;
         step(): void;

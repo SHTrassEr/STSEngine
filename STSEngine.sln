@@ -11,10 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STSEngine.Example", "STSEng
 	EndProjectSection
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "STSEngine.ExampleServer", "STSEngine.ExampleServer\STSEngine.ExampleServer.njsproj", "{5F7E3099-C0D3-4008-B2FE-A8775521B0A3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8AAC3B4F-DB42-4A4D-BFD4-D7BED1FEFB01} = {8AAC3B4F-DB42-4A4D-BFD4-D7BED1FEFB01}
-		{B164A357-DA6C-4ECC-B955-07BD851C7008} = {B164A357-DA6C-4ECC-B955-07BD851C7008}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

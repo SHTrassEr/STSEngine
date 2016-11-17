@@ -7,8 +7,10 @@
     "name": "User"
   },
   "dependencies": {
+    "circular-json": "^0.3.1",
     "express": "3.4.4",
     "jade": "*",
+    "matter-js": "^0.11.1",
     "stylus": "*",
     "ws": "^1.1.1"
   }

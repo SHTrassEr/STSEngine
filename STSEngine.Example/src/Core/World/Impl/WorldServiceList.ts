@@ -14,11 +14,15 @@
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
         protected collisionService: ICollisionService;
+        protected matterEngine: Matter.Engine;
 
         constructor(worldAttributeList: WorldAttributeList) {
+
+            this.initMatterEngine(worldAttributeList);
+
             this.worldAttributeList = worldAttributeList;
             this.clientInitializer = new ClientInitializer();
-            this.itemListService = new ItemListService();
+            this.itemListService = new ItemListService(this.matterEngine);
             this.processListService = new ProcessListService();
             this.clientListService = new ClientListService();
             this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
@@ -28,6 +32,26 @@
             this.processInitializer = new ProcessInitializer(this.getProcessId.bind(this));
             this.commandDispatcher = new CommandDispatcher(this);
             this.processDispatcher = new ProcessDispatcher(this);
+
+        }
+
+        protected initMatterEngine(worldAttributeList: WorldAttributeList) {
+            let size = worldAttributeList.getWorldSize();
+
+
+            this.matterEngine = Matter.Engine.create();
+            this.matterEngine.world.gravity.x = 0;
+            this.matterEngine.world.gravity.y = 0;
+
+            let w = 100;
+
+
+            Matter.World.addBody(this.matterEngine.world, Matter.Bodies.rectangle(size[0] / 2, -w, size[0] + w, w * 2, { isStatic: true }));
+            Matter.World.addBody(this.matterEngine.world, Matter.Bodies.rectangle(size[0] / 2, size[1] + w, size[0] + w, w * 2, { isStatic: true }));
+
+            Matter.World.addBody(this.matterEngine.world, Matter.Bodies.rectangle(-w, size[1] / 2, w * 2, size[1] + w, { isStatic: true }));
+            Matter.World.addBody(this.matterEngine.world, Matter.Bodies.rectangle(size[0] + w, size[1] / 2, w * 2, size[1] + w, { isStatic: true }));
+
 
         }
 
@@ -73,6 +97,10 @@
 
         public getClientInitializer(): IClientInitializer {
             return this.clientInitializer;
+        }
+
+        public getMatterEngine(): Matter.Engine {
+            return this.matterEngine;
         }
 
         protected getObjectId(): number {

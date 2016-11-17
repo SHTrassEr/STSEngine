@@ -12,5 +12,6 @@
         getClientInitializer(): IClientInitializer;
         getClientListService(): IClientListService;
         getCollisionService(): ICollisionService;
+        getMatterEngine(): Matter.Engine;
     }
 }

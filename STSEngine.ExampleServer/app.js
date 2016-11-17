@@ -7,6 +7,8 @@
     }
 })(function (require, exports) {
     "use strict";
+    let Matter = require('matter-js/build/matter.js');
+    let CircularJSON = require('circular-json');
     const express = require('express');
     const routes = require('./routes/index');
     const http = require('http');

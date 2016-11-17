@@ -109,17 +109,19 @@
             let position = moveItem.getPosition();
             let moveVector = moveItem.getMoveVector();
 
+            let res = false;
+
             if (position[0] + moveVector[0] < 0) {
                 moveVector[0] = - position[0];
-                return true;
+                res = true;
             }
             if (position[1] + moveVector[1] < 0) {
                 moveVector[1] = - position[1];
-                return true;
+                res = true;
             }
 
 
-            return false;
+            return res;
         }
 
 

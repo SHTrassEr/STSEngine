@@ -2,7 +2,6 @@
 
     export class WebSocketGameClient implements IWebSocketGameClient {
 
-        protected commandListService: ICommandListService;
         protected socket: WebSocket;
         protected sid: string;
         protected engine: IEngine;
@@ -12,12 +11,9 @@
 
         protected onConnectedHandler: (webSocketClient: IWebSocketGameClient) => void;
 
-        protected worldServiceList: IWorldServiceList;
-
-        constructor(socket: WebSocket, sid: string, clientAction: IClientAction, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
+        constructor(socket: WebSocket, sid: string, clientAction: IClientAction, engine: IEngine, clientSeverMessageInitializer: IClientServerMessageInitializer) {
             this.clientSeverMessageInitializer = clientSeverMessageInitializer;
-            this.worldServiceList = worldServiceList;
-            this.commandListService = new CommandListService();
+            this.engine = engine;
             this.socket = socket;
             this.clientAction = clientAction;
             this.sid = sid;
@@ -27,6 +23,10 @@
 
         public getClientId(): number {
             return this.clientId
+        }
+
+        public getEngine(): IEngine {
+            return this.engine;
         }
 
         public setOnConnected(handler: (webSocketClient: IWebSocketGameClient) => void): void {
@@ -39,22 +39,10 @@
         }
 
         protected init() {
-            let world = this.createWorld();
-            this.engine = new Engine(world, this.commandListService);
-
             this.socket.onopen = this.onOpen.bind(this);
             this.socket.onmessage = this.onMessage.bind(this);
             this.socket.onclose = this.onClose.bind(this);
             this.socket.onerror = this.onError.bind(this);
-        }
-
-        protected createWorld(): IWorld {
-            return new World(this.worldServiceList);
-        }
-
-
-        public getWorld(): IWorld {
-            return this.engine.getWorld();
         }
 
         protected onClientAction(clientAction: IClientAction) {
@@ -103,8 +91,8 @@
 
         protected processStep(message: ClientServerMessageStep) {
             let commandListAttr = message.getCommandList();
-            let commandList = this.worldServiceList.getCommandInitializer().createList(commandListAttr);
-            this.commandListService.setCommandList(commandList);
+            let commandList = this.engine.getWorld().getServiceList().getCommandInitializer().createList(commandListAttr);
+            this.engine.getCommandListService().setCommandList(commandList);
             this.engine.step();
         }
 
@@ -117,16 +105,17 @@
         }
 
         protected processWorldFullInfo(message: ClientServerMessageWorldFullInfo) {
-            this.worldServiceList.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
+            let worldServiceList = this.engine.getWorld().getServiceList();
+            worldServiceList.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
 
-            let itemList = this.worldServiceList.getItemInitializer().createList(message.getItemListService());
-            this.worldServiceList.getItemListService().setList(itemList, true);
+            let itemList = worldServiceList.getItemInitializer().createList(message.getItemListService());
+            worldServiceList.getItemListService().setList(itemList, true);
 
-            let processList = this.worldServiceList.getProcessInitializer().createList(message.getProcessListService());
-            this.worldServiceList.getProcessListService().setList(processList, true);
+            let processList = worldServiceList.getProcessInitializer().createList(message.getProcessListService());
+            worldServiceList.getProcessListService().setList(processList, true);
 
-            let clientList = this.worldServiceList.getClientInitializer().createList(message.getClientListService());
-            this.worldServiceList.getClientListService().setList(clientList, true);
+            let clientList = worldServiceList.getClientInitializer().createList(message.getClientListService());
+            worldServiceList.getClientListService().setList(clientList, true);
 
         }
 

@@ -9,6 +9,7 @@
   },
 
   "files": [
+    "Scripts/typings/matter-js/matter-js.d.ts",
     "Scripts/typings/express/express.d.ts",
     "Scripts/typings/node/node.d.ts",
     "Scripts/typings/stylus/stylus.d.ts",

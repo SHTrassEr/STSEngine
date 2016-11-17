@@ -44,15 +44,49 @@ function ready() {
 
     var content = document.getElementById("content");
 
-    var world = client.getWorld();
+    var world = client.getEngine().getWorld();
     world.getServiceList();
 
-    var view = new STSEngine.Example.View(<HTMLDivElement>content, <any>(world));
+    var view = new STSEngine.Example.View(<HTMLDivElement>content, world);
     function onClientConnected(client: STSEngine.IWebSocketGameClient) {
+
+        /*var render = Matter.Render.create({
+            element: content,
+            engine: world.getServiceList().getMatterEngine(),
+            options: <any>{
+                width: 800,
+                height: 600,
+                wireframeBackground: '#222',
+                hasBounds: false,
+                enabled: true,
+                wireframes: true,
+                showSleeping: true,
+                showDebug: true,
+                showBroadphase: true,
+                showBounds: true,
+                showVelocity: true,
+                showCollisions: true,
+                showSeparations: true,
+                showAxes: true,
+                showPositions: true,
+                showAngleIndicator: true,
+                showIds: true,
+                showShadows: true,
+                showVertexNumbers: true,
+                showConvexHulls: true,
+                showInternalEdges: true,
+                showMousePosition: false
+            }
+            
+        });
+
+        Matter.Render.run(render);*/
+
+
         view.setClientId(client.getClientId());
         view.start();
 
-        setInterval(updateScore, 1000);
+        setInterval(updateScore, 500);
     }
 
     let scoreDiv = document.getElementById("score");
@@ -65,11 +99,19 @@ function ready() {
                 str += client.getName() + " (" + client.getId() + ") " + client.getScore() + "<br>";
             }
         }
+        /*
+        var itemList = world.getServiceList().getItemListService().getIterator();
+
+        for (let item of itemList) {
+            str += item.getId() + " (" + item.getBody().position.x + "; " + item.getBody().position.y + ") " + item.getBody().speed + "<br>";
+            
+
+        }*/
 
         scoreDiv.innerHTML = str;
     }
 
-    var world = client.getWorld();
+    var world = client.getEngine().getWorld();
     var objectListService = world.getServiceList().getItemListService();
 
     var up: boolean, down: boolean, left: boolean, right: boolean, fire: boolean;

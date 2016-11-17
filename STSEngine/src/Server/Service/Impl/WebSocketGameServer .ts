@@ -3,34 +3,25 @@
     export abstract class WebSocketGameServer implements IWebSocketGameServer {
 
         protected webSocketServer: IWebSocketServer;
-        protected world: IWorld;
-        protected commandListService: ICommandListService;
         protected gameServer: IGameServer;
-        protected worldServiceList: IWorldServiceList;
+        protected engine: IEngine;
         protected clientSeverMessageInitializer: IClientServerMessageInitializer;
 
 
-        constructor(server: any, worldServiceList: IWorldServiceList, clientSeverMessageInitializer: IClientServerMessageInitializer) {
+        constructor(server: any, engine: IEngine, clientSeverMessageInitializer: IClientServerMessageInitializer) {
             this.webSocketServer = new WebSocketServer(server, clientSeverMessageInitializer);
 
-            this.worldServiceList = worldServiceList;
+            this.engine = engine;
 
-            this.commandListService = new CommandListService();
             this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.init();
         }
 
         protected init() {
-            this.world = this.createWorld();
-            let engine = new Engine(this.world, this.commandListService);
-            this.gameServer = new GameServer(engine);
+            this.gameServer = new GameServer(this.engine);
             this.gameServer.setOnUpdateWorld(this.onUpdateWorld.bind(this));
             this.webSocketServer.setOnClientConnected(this.onClientConnected.bind(this));
             this.webSocketServer.setOnClientMessage(this.onClientMessage.bind(this));
-        }
-
-        protected createWorld(): IWorld {
-            return new World(this.worldServiceList);
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
@@ -53,7 +44,7 @@
             client.sendMessage(messageInit);
 
             let messageWorldFullInfo = new ClientServerMessageWorldFullInfo();
-            messageWorldFullInfo.setWorld(this.world);
+            messageWorldFullInfo.setWorld(this.engine.getWorld());
 
             client.sendMessage(messageWorldFullInfo);
             
@@ -80,8 +71,8 @@
         }
 
         protected processCommandList(webSocketClient: IWebSocketClient, message: ClientServerMessageCommandList) {
-            let commandList = this.worldServiceList.getCommandInitializer().createList(message.getCommandList());
-            this.commandListService.setCommandList(this.initCommandList(webSocketClient, commandList));
+            let commandList = this.engine.getWorld().getServiceList().getCommandInitializer().createList(message.getCommandList());
+            this.engine.getCommandListService().setCommandList(this.initCommandList(webSocketClient, commandList));
         } 
 
         protected * initCommandList(webSocketClient: IWebSocketClient, commandList: Iterable<ICommand>): Iterable<ICommand> {

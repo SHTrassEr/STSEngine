@@ -27,9 +27,9 @@
         constructor(rootElement: HTMLDivElement, world: IWorld) {
             super(rootElement, world);
 
-            this.cellSize = 8;
+            this.cellSize = 1;
             this.width = rootElement.clientWidth;
-            this.height = 59 * this.cellSize;
+            this.height = 800;
             
             this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
             this.renderer.roundPixels = true;
@@ -150,8 +150,8 @@
             for (let o of iterator) {
                 if (o instanceof Item) {
                     let objectSprite = this.getObjectSprite(o);
-                    let x = Math.round(this.getDrawPoint(o.getPosition(0)) + objectSprite.pivot.x);
-                    let y = Math.round(this.getDrawPoint(o.getPosition(1)) + objectSprite.pivot.y);
+                    let x = Math.round(this.getDrawPoint(o.getPosition(0)));
+                    let y = Math.round(this.getDrawPoint(o.getPosition(1)));
 
                     if (o instanceof ItemTank && o.getClientId() == this.clientId) {
                         this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
@@ -160,29 +160,12 @@
 
                     }
 
-                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurX = Math.abs(objectSprite.position.x - x) / 10;
-                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurY = Math.abs(objectSprite.position.y - y) / 10;
+                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurX = Math.abs(objectSprite.position.x - x) / 20;
+                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurY = Math.abs(objectSprite.position.y - y) / 20;
 
                     objectSprite.position.x = x;
                     objectSprite.position.y = y;
 
-                    switch (o.getMoveDirection()) {
-                        case MoveDirection.Up:
-                            objectSprite.rotation = 0;
-                            break;
-                        case MoveDirection.Right:
-                            objectSprite.rotation = Math.PI / 2;
-                            break;
-                        case MoveDirection.Down:
-                            objectSprite.rotation = Math.PI;
-                            break;
-                        case MoveDirection.Left:
-                            objectSprite.rotation = Math.PI / 2 * 3;
-                            break;
-
-                    }
-
-                    objectSprite.rotation
                 }
             }
 
@@ -200,8 +183,17 @@
 
             var size = this.worldAttributeList.getWorldSize();
 
+            graphics.beginFill(0xFFFFFF);
+            graphics.lineStyle(0);
+            graphics.drawRect(0, 0, this.width, this.height);
+
             graphics.lineStyle(2, 0x000000);
             graphics.drawRect(0, 0, size[0] * this.cellSize, size[1] * this.cellSize);
+
+            var noiseFilter = new PIXI.filters.NoiseFilter();
+            noiseFilter.noise = 0.1;
+
+            graphics.filters = [noiseFilter];
 
             return graphics;
         }
@@ -209,9 +201,9 @@
         protected drawGrid(): PIXI.Graphics {
             var graphics = new PIXI.Graphics();
 
-            graphics.beginFill(0xFFFFFF);
+            /*graphics.beginFill(0xFFFFFF);
             graphics.lineStyle(0);
-            graphics.drawRect(0, 0, this.width, this.height);
+            graphics.drawRect(0, 0, this.width, this.height);*/
 
 /*            graphics.lineStyle(1, 0xCCCCCC, 0.5);
             let cellSize = this.cellSize;
@@ -238,10 +230,7 @@
                 y += cellSize;
             }*/
 
-            var noiseFilter = new PIXI.filters.NoiseFilter();
-            noiseFilter.noise = 0.1;
 
-            graphics.filters = [noiseFilter];
 
             return graphics;
         }

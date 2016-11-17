@@ -1,4 +1,6 @@
-﻿
+﻿let Matter = require('matter-js/build/matter.js');
+
+let CircularJSON = require('circular-json');
 import express = require('express');
 import routes = require('./routes/index');
 import http = require('http');

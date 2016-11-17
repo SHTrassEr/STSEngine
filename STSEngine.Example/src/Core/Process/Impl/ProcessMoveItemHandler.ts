@@ -19,6 +19,27 @@
 
         protected moveItem(item: IItem): void {
 
+            let f = Matter.Vector.create(item.getForceVector()[0] / 600, item.getForceVector()[1] / 600);
+            let p = Matter.Vector.create(item.getBody().position.x, item.getBody().position.y);
+
+            let body = item.getBody();
+
+            if (f.x != 0 || f.y != 0) {
+                Matter.Body.applyForce(body, p, f);
+            }
+
+            
+            
+            Matter.Body.setPosition(body, { x: MathHelper.round(body.position.x), y: MathHelper.round(body.position.y) });
+            Matter.Body.setVelocity(body, { x: MathHelper.round(body.velocity.x, 0.1), y: MathHelper.round(body.velocity.y, 0.1) });
+
+            
+
+            
+            /*
+
+            item.getBody().
+
             let mass = item.getMass();
             
             let forceVector = item.getForceVector();
@@ -33,7 +54,7 @@
 
             this.worldServiceList.getCollisionService().processCollision(item);
 
-            item.setPosition(VectorHelper.sum(position, moveVector));
+            item.setPosition(VectorHelper.sum(position, moveVector));*/
         }
 
     }

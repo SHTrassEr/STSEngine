@@ -19,6 +19,10 @@
             return this.world;
         }
 
+        public getCommandListService(): ICommandListService {
+            return this.commandListService;
+        }
+
         public step() {
             this.increaseStepNumber();
             this.processCommandList();

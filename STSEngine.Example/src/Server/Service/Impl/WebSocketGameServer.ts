@@ -11,8 +11,13 @@
             let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
             let worldServiceList = new WorldServiceList(worldAttributeList);
+
+            let world = new World(worldServiceList);
+
+            let commandListService = new CommandListService();
+            let engine = new Engine(world, commandListService);
             
-            super(socket, worldServiceList, clientServerMessageInitializer);
+            super(socket, engine, clientServerMessageInitializer);
 
             this.lastClientId = 0;
             this.connectedClientList = new Map<string, number>();
@@ -30,7 +35,7 @@
                 var command = new CommandRegisterClient();
                 command.setInitiatorId(0);
                 command.setClientId(clientId);
-                this.commandListService.add(command); 
+                this.engine.getCommandListService().add(command); 
 
                 this.connectedClientList.set(sid, clientId);
             }

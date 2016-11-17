@@ -1,29 +1,50 @@
 ﻿namespace STSEngine.Example {
 
     export abstract class Item extends STSEngine.Item implements IItem {
-        private _position: number = ++this.lastAttributeId;
-        private _positionPrecise: number = ++this.lastAttributeId;
+
         private _clientId: number = ++this.lastAttributeId;
         private _mass: number = ++this.lastAttributeId;
         private _frictionModifier: number = ++this.lastAttributeId;
         private _size: number = ++this.lastAttributeId;
-        private _moveDirection: number = ++this.lastAttributeId;
         private _moveVector: number = ++this.lastAttributeId;
         private _forceVector: number = ++this.lastAttributeId;
+        private _bodyJSON: number = ++this.lastAttributeId;
+
+        protected body: Matter.Body;
+
+        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
+            super(attributeList, kvpList);
+
+            let body = this.createBody();
+
+            if (kvpList && this.getBodyJSON()) {
+                let o = CircularJSON.parse(this.getBodyJSON());
+                o.inertia = Infinity;
+                Matter.Body.set(body, o);
+            }
+
+            this.setBody(body);
+        }
+
+        protected abstract createBody(): Matter.Body;
 
 
         public getPosition(): [number, number];
         public getPosition(d: number): number;
         public getPosition(d?: number): [number, number] | number {
             if (typeof d == 'number') {
-                return this.attributeList.get(this._position)[d];
+                if (d === 0) {
+                    return this.body.position.x;
+                } else if (d === 1) {
+                    return this.body.position.y;
+                }
             }
 
-            return this.attributeList.get(this._position);
+            return [this.body.position.x, this.body.position.y];
         }
 
         public setPosition(position: [number, number]): void {
-            this.attributeList.set(this._position, position);
+            Matter.Body.setPosition(this.body, {x: position[0], y: position[1]});
         }
 
         public getMoveVector(): [number, number];
@@ -78,28 +99,29 @@
             this.attributeList.set(this._frictionModifier, frictionModifier);
         }
 
-        public getSize(): [number, number];
-        public getSize(d: number): number;
-        public getSize(d?: number): [number, number] | number {
+        public abstract getSize(): [number, number];
 
-            if (d) {
-                return this.attributeList.get(this._size)[d];
-            }
-
-            return this.attributeList.get(this._size);
+        public getBody(): Matter.Body {
+            return this.body;
         }
 
-        public setSize(size: [number, number]): void {
-            this.attributeList.set(this._size, size);
+        protected setBody(body: Matter.Body): void {
+            this.body = body;
         }
 
-        public getMoveDirection(): MoveDirection {
-            return this.attributeList.get(this._moveDirection);
+        public getBodyJSON(): string {
+            return this.attributeList.get(this._bodyJSON);
         }
 
-        public setMoveDirection(direction: MoveDirection): void {
-            this.attributeList.set(this._moveDirection, direction);
+        protected setBodyJSON(bodyJSON: string): void {
+            this.attributeList.set(this._bodyJSON, bodyJSON);
         }
+
+        public getList(): [number, any][] {
+            this.setBodyJSON(CircularJSON.stringify(this.body));
+            return super.getList();
+        }
+
     }
 
     export module Item {
