@@ -62,6 +62,8 @@
     <TypeScriptCompile Include="src\Core\Client\Impl\ClientListService.ts" />
     <TypeScriptCompile Include="src\Core\Client\IClientListService.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Service\ILiteEvent.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\LiteEvent.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\EntityListService.ts" />
     <TypeScriptCompile Include="src\Core\Service\IEntityListService.ts" />
     <TypeScriptCompile Include="src\Core\Client\Impl\Client.ts" />

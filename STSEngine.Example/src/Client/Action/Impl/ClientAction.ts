@@ -41,9 +41,10 @@
             this.addCommand(command);
         }
         
-        public fire(itemId: number): void {
+        public fire(itemId: number, position: [number, number]): void {
             var command = this.commandInitializer.createFire();
             command.setItemId(itemId);
+            command.setPosition(position);
             this.addCommand(command);
         }
 

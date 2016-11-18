@@ -5,6 +5,7 @@ namespace STSEngine.Example {
     export class ProcessFire extends Process {
 
         private _objectId: number = ++this.lastAttributeId;
+        private _position: number = ++this.lastAttributeId;
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
@@ -17,6 +18,14 @@ namespace STSEngine.Example {
 
         public setObjectId(id: number): void {
             this.attributeList.set(this._objectId, id);
+        }
+
+        public getPosition(): [number, number] {
+            return this.attributeList.get(this._position);
+        }
+
+        public setPosition(position: [number, number]): void {
+            this.attributeList.set(this._position, position);
         }
     }
 

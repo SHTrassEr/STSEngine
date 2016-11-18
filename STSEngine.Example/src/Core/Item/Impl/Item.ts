@@ -24,6 +24,7 @@
             }
 
             this.setBody(body);
+            this.setId(body.id);
         }
 
         protected abstract createBody(): Matter.Body;
@@ -50,15 +51,19 @@
         public getMoveVector(): [number, number];
         public getMoveVector(d: number): number;
         public getMoveVector(d?: number): [number, number] | number {
-            if (d) {
-                return this.attributeList.get(this._moveVector)[d];
+            if (typeof d == 'number') {
+                if (d === 0) {
+                    return this.body.velocity.x;
+                } else if (d === 1) {
+                    return this.body.velocity.y;
+                }
             }
 
-            return this.attributeList.get(this._moveVector);
+            return [this.body.velocity.x, this.body.velocity.y];
         }
 
         public setMoveVector(moveVector: [number, number]): void {
-            this.attributeList.set(this._moveVector, moveVector);
+            Matter.Body.setVelocity(this.body, { x: moveVector[0], y: moveVector[1] });
         }
 
         public getForceVector(): [number, number];

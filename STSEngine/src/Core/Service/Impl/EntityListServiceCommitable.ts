@@ -2,56 +2,59 @@
 namespace STSEngine {
 
     export class EntityListServiceCommitable<T extends IEntity> implements IEntityListService<T>, ICommitable {
-        protected objectListService: IEntityListService<T>;
-        protected deletedObjectIdList: Set<number>;
-        protected newObjectIdList: Set<number>;
+        protected itemListService: IEntityListService<T>;
+        protected deletedItemIdList: Set<number>;
+        protected newItemIdList: Set<number>;
         protected filterService: IFilterService<T>;
+        private onBeforeAdd = new LiteEvent<T>();
+        private onBeforeRemove = new LiteEvent<T>();   
 
         constructor() {
-            this.deletedObjectIdList = new Set<number>();
-            this.objectListService = new EntityListService<T>();
+            this.deletedItemIdList = new Set<number>();
+            this.itemListService = new EntityListService<T>();
             this.filterService = new FilterService<T>();
         }
 
-        public init(objectList: Iterable<T>): void {
+        public init(itemList: Iterable<T>): void {
             this.clear();
-            this.objectListService.init(objectList);
+            this.itemListService.init(itemList);
         }
 
         public get(id: number): T {
-            if (!this.deletedObjectIdList.has(id)) {
-                return this.objectListService.get(id);
+            if (!this.deletedItemIdList.has(id)) {
+                return this.itemListService.get(id);
             }
 
             return undefined;
         }
 
         public has(id: number): boolean {
-            if (!this.deletedObjectIdList.has(id)) {
-                return this.objectListService.has(id);
+            if (!this.deletedItemIdList.has(id)) {
+                return this.itemListService.has(id);
             }
 
             return false;
         }
 
         public getSize(): number {
-            return (this.objectListService.getSize() - this.deletedObjectIdList.size);
+            return (this.itemListService.getSize() - this.deletedItemIdList.size);
         }
 
-        public add(object: T): void {
-            this.objectListService.add(object);
-            this.newObjectIdList.add(object.getId());
+        public add(item: T): void {
+            this.onBeforeAdd.trigger(this, item);
+            this.itemListService.add(item);
+            this.newItemIdList.add(item.getId());
         }
 
-        protected isObjectNotDeleted(object: T): boolean {
-            return !this.deletedObjectIdList.has(object.getId());
+        protected isItemNotDeleted(item: T): boolean {
+            return !this.deletedItemIdList.has(item.getId());
         }
 
         public getIterator(): IterableIterator<T> {
-            return this.filterService.getAll(this.objectListService.getIterator(), this.isObjectNotDeleted.bind(this));
+            return this.filterService.getAll(this.itemListService.getIterator(), this.isItemNotDeleted.bind(this));
         }
 
-        public getList(): [number, any][][] {
+        public serialize(): [number, any][][] {
             let iterator = this.getIterator();
             let list: [number, any][][] = [];
             for (let entity of iterator) {
@@ -72,52 +75,52 @@ namespace STSEngine {
         }
 
         public remove(id: number): void {
-            if (this.objectListService.has(id) && !this.deletedObjectIdList.has(id)) {
-                this.deletedObjectIdList.add(id);
+            if (this.itemListService.has(id) && !this.deletedItemIdList.has(id)) {
+                this.deletedItemIdList.add(id);
             }
         }
 
         public clear() {
-            this.objectListService.clear();
-            this.deletedObjectIdList.clear();
-            this.newObjectIdList.clear();
+            this.itemListService.clear();
+            this.deletedItemIdList.clear();
+            this.newItemIdList.clear();
         }
 
         public commit(): void {
-            for (let objectId of this.deletedObjectIdList) {
-                this.objectListService.remove(objectId);
+            for (let itemId of this.deletedItemIdList) {
+                this.itemListService.remove(itemId);
             }
 
-            this.newObjectIdList.clear();
-            this.deletedObjectIdList.clear();
+            this.newItemIdList.clear();
+            this.deletedItemIdList.clear();
 
-            for (let o of this.objectListService.getIterator()) {
+            for (let o of this.itemListService.getIterator()) {
                 o.getAttributeList().commit();
             }
         }
 
         public rollback(): void {
-            for (let objectId of this.newObjectIdList) {
-                this.objectListService.remove(objectId);
+            for (let itemId of this.newItemIdList) {
+                this.itemListService.remove(itemId);
             }
 
-            this.newObjectIdList.clear();
-            this.deletedObjectIdList.clear();
-            for (let o of this.objectListService.getIterator()) {
+            this.newItemIdList.clear();
+            this.deletedItemIdList.clear();
+            for (let o of this.itemListService.getIterator()) {
                 o.getAttributeList().rollback();
             }
         }
 
         public isDirty(): boolean {
-            if (this.newObjectIdList.size > 0) {
+            if (this.newItemIdList.size > 0) {
                 return true;
             }
 
-            if (this.deletedObjectIdList.size > 0) {
+            if (this.deletedItemIdList.size > 0) {
                 return true;
             }
 
-            for (let o of this.objectListService.getIterator()) {
+            for (let o of this.itemListService.getIterator()) {
                 if (o.getAttributeList().isDirty()) {
                     return true;
                 }
@@ -134,13 +137,22 @@ namespace STSEngine {
             return this.filterService.getFirst(this.getIterator(), condition);
         }
 
-        public getTyped<V extends T>(objectId: number, type: any): V {
-            let object = <any>this.get(objectId);
-            if (object instanceof type) {
-                return <V>object;
+        public getTyped<V extends T>(itemId: number, type: any): V {
+            let item = <any>this.get(itemId);
+            if (item instanceof type) {
+                return <V>item;
             }
 
             return undefined;
+        }
+
+        public beforeAdd(): ILiteEvent<T> {
+            return this.onBeforeAdd;
+
+        }
+
+        public beforeRemove(): ILiteEvent<T> {
+            return this.onBeforeRemove;
         }
     }
 }

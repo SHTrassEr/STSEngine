@@ -85,8 +85,10 @@
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveItemHandler.ts" />
     <TypeScriptCompile Include="src\Core\Process\IProcessInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Service\ICollisionService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\IPhysicsEngine.ts" />
     <TypeScriptCompile Include="src\Core\Service\IEngine.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\CollisionService.ts" />
+    <TypeScriptCompile Include="src\Core\Service\Impl\PhysicsEngine.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\Engine.ts" />
     <TypeScriptCompile Include="src\Core\Util\MathHelper.ts" />
     <TypeScriptCompile Include="src\Core\Util\VectorHelper.ts" />

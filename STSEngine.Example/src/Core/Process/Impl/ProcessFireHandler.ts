@@ -9,23 +9,28 @@
         }
 
         public executeProcess(process: ProcessFire): void {
-            let object = this.worldServiceList.getItemListService().getTyped<ItemTank>(process.getObjectId(), ItemTank); 
-            if (object) {
-                this.fire(object);
+            let item = this.worldServiceList.getItemListService().getTyped<ItemTank>(process.getObjectId(), ItemTank); 
+            if (item) {
+                this.fire(process, item);
             }
 
             process.setStatus(ProcessStatus.Finished);
         }
 
-        protected fire(object: ItemTank): void {
+        protected fire(process: ProcessFire, item: ItemTank): void {
             var bullet = this.worldServiceList.getItemInitializer().createBullet();
-            bullet.setPosition([object.getPosition(0), object.getPosition(1)]);
-            bullet.setClientId(object.getClientId());
+            bullet.setPosition([item.getPosition(0), item.getPosition(1)]);
+            bullet.setClientId(item.getClientId());
 
             bullet.setFrictionModifier(0.1);
 
-            bullet.setMoveVector(VectorHelper.copy(object.getMoveVector()));
-            bullet.setForceVector([0, 0]);
+            var v = VectorHelper.normalize(VectorHelper.substract(process.getPosition(), item.getPosition()));
+
+            v = VectorHelper.multScalar(v, 0.08);
+
+
+            bullet.setForceVector(v);
+            bullet.setMoveVector(VectorHelper.copy(item.getMoveVector()));
             bullet.setMass(5);
 
             this.worldServiceList.getItemListService().add(bullet);
@@ -37,5 +42,6 @@
             this.startProcess(moveProcess);
 
         }
+
     }
 }

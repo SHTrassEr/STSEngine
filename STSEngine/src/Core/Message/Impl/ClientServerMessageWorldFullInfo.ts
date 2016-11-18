@@ -32,7 +32,7 @@ namespace STSEngine {
         }
 
         public setClientListService(clientListService: IClientListService) {
-            this.attributeList.set(this._clientListService, clientListService.getList());
+            this.attributeList.set(this._clientListService, clientListService.serialize());
         }
 
         public getClientListService(): [number, any][][] {
@@ -40,7 +40,7 @@ namespace STSEngine {
         }
 
         public setItemListService(itemListService: IItemListService) {
-            this.attributeList.set(this._itemListService, itemListService.getList());
+            this.attributeList.set(this._itemListService, itemListService.serialize());
         }
 
         public getItemListService(): [number, any][][] {

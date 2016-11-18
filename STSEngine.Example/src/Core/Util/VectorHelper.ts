@@ -27,6 +27,10 @@
             return [v1[0] + v2[0], v1[1] + v2[1]];
         }
 
+        export function substract(v1: [number, number], v2: [number, number]): [number, number] {
+            return [v1[0] - v2[0], v1[1] - v2[1]];
+        }
+
         export function round(n: [number, number]): [number, number] {
             return [MathHelper.round(n[0]), MathHelper.round(n[1])];
         }

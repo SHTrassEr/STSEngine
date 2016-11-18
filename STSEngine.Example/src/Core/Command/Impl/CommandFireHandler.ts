@@ -12,6 +12,7 @@ namespace STSEngine.Example {
         protected executeCommand(command: CommandFire): void {
             var process = this.worldServiceList.getProcessInitializer().createFire();
             process.setObjectId(command.getItemId());
+            process.setPosition(command.getPosition());
             this.startProcess(process);
         }
 

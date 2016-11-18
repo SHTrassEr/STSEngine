@@ -22,6 +22,8 @@
 
         protected clientListService: IClientListService;
 
+        private onMouseClick = new LiteEvent<PIXI.Point>();   
+
         
 
         constructor(rootElement: HTMLDivElement, world: IWorld) {
@@ -32,6 +34,7 @@
             this.height = 800;
             
             this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+            //this.renderer.
             this.renderer.roundPixels = true;
             this.rootElement.appendChild(this.renderer.view);
 
@@ -39,6 +42,10 @@
             this.clientInfoTextMap = new Map<number, PIXI.Text>();
 
             this.stage = new PIXI.Container();
+            this.stage.interactive = true;
+
+            this.stage.on('mousedown', this.onStageMouseClick.bind(this));
+
 
             this.grid = this.drawGrid();
             this.worldLimit = this.drawWordLimit();
@@ -46,6 +53,13 @@
             this.stage.addChild(this.worldLimit);
             this.stepNumber = -1;
         }
+
+        protected onStageMouseClick(event) {
+            let p = event.data.getLocalPosition(this.stage);
+            this.onMouseClick.trigger(this, p);
+        }
+
+        
 
         protected getClientInfoText(client: IClient) {
 
@@ -95,17 +109,21 @@
             }
 
 
+
             graphics.pivot.x = objectWidth * cellSize / 2;
             graphics.pivot.y = objectHeight * cellSize / 2;
 
 
             graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
 
-            graphics.drawRect((objectWidth - 1) * cellSize / 2, 0, 1 * cellSize, 1 * cellSize);
+            //graphics.drawRect((objectWidth - 1) * cellSize / 2, 0, 1 * cellSize, 1 * cellSize);
 
             graphics.pivot.x = objectWidth * cellSize / 2;
             graphics.pivot.y = objectHeight * cellSize / 2;
 
+            let ppp = new Point(1, 1);
+
+            graphics.pivot.set();
             
             graphics.filters = [new PIXI.filters.BlurFilter()];
 
@@ -184,9 +202,6 @@
             var size = this.worldAttributeList.getWorldSize();
 
             graphics.beginFill(0xFFFFFF);
-            graphics.lineStyle(0);
-            graphics.drawRect(0, 0, this.width, this.height);
-
             graphics.lineStyle(2, 0x000000);
             graphics.drawRect(0, 0, size[0] * this.cellSize, size[1] * this.cellSize);
 
@@ -233,6 +248,13 @@
 
 
             return graphics;
+        }
+
+
+
+        public mouseClick(): ILiteEvent<PIXI.Point> {
+            return this.onMouseClick;
+
         }
        
     }

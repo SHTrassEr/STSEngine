@@ -50,43 +50,17 @@ function ready() {
     var view = new STSEngine.Example.View(<HTMLDivElement>content, world);
     function onClientConnected(client: STSEngine.IWebSocketGameClient) {
 
-        /*var render = Matter.Render.create({
-            element: content,
-            engine: world.getServiceList().getMatterEngine(),
-            options: <any>{
-                width: 800,
-                height: 600,
-                wireframeBackground: '#222',
-                hasBounds: false,
-                enabled: true,
-                wireframes: true,
-                showSleeping: true,
-                showDebug: true,
-                showBroadphase: true,
-                showBounds: true,
-                showVelocity: true,
-                showCollisions: true,
-                showSeparations: true,
-                showAxes: true,
-                showPositions: true,
-                showAngleIndicator: true,
-                showIds: true,
-                showShadows: true,
-                showVertexNumbers: true,
-                showConvexHulls: true,
-                showInternalEdges: true,
-                showMousePosition: false
-            }
-            
-        });
-
-        Matter.Render.run(render);*/
-
-
         view.setClientId(client.getClientId());
         view.start();
+        view.mouseClick().on(onStageMouseClick);
+        
 
         setInterval(updateScore, 500);
+    }
+
+    function onStageMouseClick(s, p: PIXI.Point) {
+        
+        playerAction.fire(getPlayerObjectId(), [p.x, p.y]);
     }
 
     let scoreDiv = document.getElementById("score");
@@ -114,7 +88,7 @@ function ready() {
     var world = client.getEngine().getWorld();
     var objectListService = world.getServiceList().getItemListService();
 
-    var up: boolean, down: boolean, left: boolean, right: boolean, fire: boolean;
+    var up: boolean, down: boolean, left: boolean, right: boolean;//, fire: boolean;
 
     function getPlayerObjectId() {
         var o = objectListService.getFirst(o => (<STSEngine.Example.ItemTank>(<any>o)).getClientId() == client.getClientId());
@@ -148,12 +122,6 @@ function ready() {
                 playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
         }
-        else if (e.keyCode == 32) {
-            if (!fire) {
-                playerAction.fire(playerObjectId);
-                fire = true;
-            }
-        }
     }
     function keyUpHandler(e: any) {
         var playerObjectId = getPlayerObjectId();
@@ -180,9 +148,6 @@ function ready() {
                 left = false;
                 playerAction.setClientForce(playerObjectId, up, right, down, left);
             }
-        }
-        else if (e.keyCode == 32) {
-            fire = false;
         }
     }
 

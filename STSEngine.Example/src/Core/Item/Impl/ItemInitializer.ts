@@ -2,10 +2,6 @@
 
     export class ItemInitializer extends STSEngine.ItemInitializer implements IItemInitializer {
 
-        constructor(createIdHandler: () => number) {
-            super(createIdHandler);
-        }
-
         protected createByType(type: number, attr?: Iterable<[number, any]>): STSEngine.IItem {
             let item = super.createByType(type, attr);
             if (item) {

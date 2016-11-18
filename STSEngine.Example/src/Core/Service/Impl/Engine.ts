@@ -10,11 +10,9 @@
 
         public step() {
             super.step();
-            let engine = this.world.getServiceList().getMatterEngine();
+            let engine = this.world.getServiceList().getPhysicsEngine();
             let tickLength = this.world.getServiceList().getWorldAttributeList().getTickLength();
-            //Matter.Events.trigger(engine, 'tick', <any>{ timestamp: engine.timing.timestamp });
-            Matter.Engine.update(engine, tickLength);
-            //Matter.Events.trigger(engine, 'afterTick', <any>{ timestamp: engine.timing.timestamp });
+            engine.update(tickLength);
         }
         
     }
