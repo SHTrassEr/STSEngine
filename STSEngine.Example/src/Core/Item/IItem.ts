@@ -2,22 +2,21 @@
 
     export interface IItem extends STSEngine.IItem {
 
-        getPosition(): [number, number];
-        getPosition(d: number): number;
-        setPosition(position: [number, number]): void;
+        getPosition(): IVector;
+        setPosition(position: IVector): void;
 
-        getMoveVector(): [number, number];
-        getMoveVector(d: number): number;
-        setMoveVector(moveVector: [number, number]): void;
+        getForce(): IVector;
+        setForce(force: IVector): void;
+        applyForce(): void;
 
-        getForceVector(): [number, number];
-        getForceVector(d: number): number;
-        setForceVector(moveVector: [number, number]): void;
+        getForceScale(): number;
+        setForceScale(scale: number): void;
 
-        getSize(): [number, number];
+        getVelocity(): IVector;
+        setVelocity(velocity: IVector): void;
 
-        getFrictionModifier(): number;
-        setFrictionModifier(frictionModifier: number): void;
+        getFriction(): number;
+        setFriction(frictionModifier: number): void;
 
         getMass(): number;
         setMass(speed: number): void;

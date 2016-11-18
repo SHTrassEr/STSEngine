@@ -21,6 +21,10 @@
 
             this.lastClientId = 0;
             this.connectedClientList = new Map<string, number>();
+
+            let commandInitWorld = worldServiceList.getCommandInitializer().createInitWorld();
+            commandInitWorld.setInitiatorId(0);
+            commandListService.add(commandInitWorld);
         }
 
 

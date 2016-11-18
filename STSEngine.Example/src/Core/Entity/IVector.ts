@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IPoint {
+    export interface IVector {
         x: number;
         y: number;
     }

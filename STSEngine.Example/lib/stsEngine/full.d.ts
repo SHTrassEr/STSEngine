@@ -44,17 +44,6 @@ declare namespace STSEngine {
     }
 }
 declare namespace STSEngine {
-    class BaseException {
-        private message;
-        constructor(message?: string);
-        getMessage(): string;
-    }
-}
-declare namespace STSEngine {
-    class NotImplementedException {
-    }
-}
-declare namespace STSEngine {
     interface IAttributeList extends IterableKeyValuePair, ICommitable {
         get(attribute: number, defaultValue?: any): any;
         set(attribute: number, value: any): void;
@@ -84,6 +73,17 @@ declare namespace STSEngine {
     interface IterableKeyValuePair extends Iterable<[number, any]> {
         getList(): [number, any][];
         getIterator(): IterableIterator<[number, any]>;
+    }
+}
+declare namespace STSEngine {
+    class BaseException {
+        private message;
+        constructor(message?: string);
+        getMessage(): string;
+    }
+}
+declare namespace STSEngine {
+    class NotImplementedException {
     }
 }
 declare namespace STSEngine {

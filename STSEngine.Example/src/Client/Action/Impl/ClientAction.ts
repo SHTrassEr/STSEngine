@@ -17,31 +17,31 @@
         }
 
         public setClientForce(itemId: number, up: boolean, right: boolean, down: boolean, left: boolean): void {
-            let force: [number, number] = [0, 0];
+            let force = new Vector(0, 0);
 
             if (up) {
-                force[1] -= 1;
+                force.y -= 1;
             }
 
             if (down) {
-                force[1] += 1;
+                force.y += 1;
             }
 
             if (left) {
-                force[0] -= 1;
+                force.x -= 1;
             }
 
             if (right) {
-                force[0] += 1;
+                force.x += 1;
             }
             
-            var command = this.commandInitializer.createSetClientForceVector();
+            var command = this.commandInitializer.createApplyForce();
             command.setItemId(itemId);
-            command.setClientForceVector(force);
+            command.setForce(force);
             this.addCommand(command);
         }
         
-        public fire(itemId: number, position: [number, number]): void {
+        public fire(itemId: number, position: IVector): void {
             var command = this.commandInitializer.createFire();
             command.setItemId(itemId);
             command.setPosition(position);

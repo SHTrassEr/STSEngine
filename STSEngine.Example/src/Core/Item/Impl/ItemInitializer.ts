@@ -13,19 +13,27 @@
                     return this.createTank(attr);
                 case ItemBullet.Type:
                     return this.createBullet(attr);
+                case ItemWall.Type:
+                    return this.createWall(attr);
             }
         }
 
         public createTank(attr?: Iterable<[number, any]>): ItemTank {
-            var object = new ItemTank(this.createAttributeList(), attr);
-            this.initId(object);
-            return object;
+            var item = new ItemTank(this.createAttributeList(), attr);
+            this.initId(item);
+            return item;
         }
 
         public createBullet(attr?: Iterable<[number, any]>): ItemBullet {
-            var object = new ItemBullet(this.createAttributeList(), attr);
-            this.initId(object);
-            return object;
+            var item = new ItemBullet(this.createAttributeList(), attr);
+            this.initId(item);
+            return item;
+        }
+
+        public createWall(attr?: Iterable<[number, any]>): ItemWall {
+            var item = new ItemWall(this.createAttributeList(), attr);
+            this.initId(item);
+            return item;
         }
 
     }

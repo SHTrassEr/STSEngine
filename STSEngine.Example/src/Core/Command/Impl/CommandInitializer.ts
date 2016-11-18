@@ -18,11 +18,16 @@
                     return this.createFire(attr);
                 case CommandChangeClientName.Type:
                     return this.createChangeClientName(attr);
-                case CommandSetClientForceVector.Type:
-                    return this.createSetClientForceVector(attr);
+                case CommandApplyForce.Type:
+                    return this.createApplyForce(attr);
+                case CommandInitWorld.Type:
+                    return this.createInitWorld(attr);
             }
         }
-        
+
+        public createInitWorld(attr?: Iterable<[number, any]>): CommandInitWorld {
+            return new CommandInitWorld(this.createAttributeList(), attr);
+        }
 
         public createRegisterClient(attr?: Iterable<[number, any]>): CommandRegisterClient {
             return new CommandRegisterClient(this.createAttributeList(), attr);
@@ -40,8 +45,8 @@
             return new CommandChangeClientName(this.createAttributeList(), attr);
         }
 
-        public createSetClientForceVector(attr?: Iterable<[number, any]>): CommandSetClientForceVector {
-            return new CommandSetClientForceVector(this.createAttributeList(), attr);
+        public createApplyForce(attr?: Iterable<[number, any]>): CommandApplyForce {
+            return new CommandApplyForce(this.createAttributeList(), attr);
         }
 
     }

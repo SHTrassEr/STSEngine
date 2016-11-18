@@ -60,7 +60,7 @@ function ready() {
 
     function onStageMouseClick(s, p: PIXI.Point) {
         
-        playerAction.fire(getPlayerObjectId(), [p.x, p.y]);
+        playerAction.fire(getPlayerObjectId(), p);
     }
 
     let scoreDiv = document.getElementById("score");

@@ -18,43 +18,19 @@
         }
 
         protected moveItem(item: IItem): void {
+            let force = item.getForce();
 
-            let f = Matter.Vector.create(item.getForceVector()[0] / 600, item.getForceVector()[1] / 600);
-            let p = Matter.Vector.create(item.getBody().position.x, item.getBody().position.y);
-
-            let body = item.getBody();
-
-            if (f.x != 0 || f.y != 0) {
-                Matter.Body.applyForce(body, p, f);
+            if (force.x != 0 || force.y != 0) {
+                item.applyForce();
             }
 
-            
-            
-            Matter.Body.setPosition(body, { x: MathHelper.round(body.position.x), y: MathHelper.round(body.position.y) });
-            Matter.Body.setVelocity(body, { x: MathHelper.round(body.velocity.x, 0.1), y: MathHelper.round(body.velocity.y, 0.1) });
+/*            let position = item.getPosition();
+            VectorHelper.round(position);
+            item.setPosition(position);
 
-            
-
-            
-            /*
-
-            item.getBody().
-
-            let mass = item.getMass();
-            
-            let forceVector = item.getForceVector();
-            let moveVector = item.getMoveVector();
-            let position = item.getPosition();
-            let frictionForce = VectorHelper.multScalar(moveVector, -1 * item.getFrictionModifier());
-
-            moveVector[0] += (forceVector[0] + frictionForce[0]) / mass;
-            moveVector[1] += (forceVector[1] + frictionForce[1]) / mass;
-
-            item.setMoveVector(moveVector);
-
-            this.worldServiceList.getCollisionService().processCollision(item);
-
-            item.setPosition(VectorHelper.sum(position, moveVector));*/
+            let velocity = item.getVelocity();
+            VectorHelper.round(velocity);
+            item.setVelocity(velocity);*/
         }
 
     }

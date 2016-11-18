@@ -14,9 +14,6 @@
 
         }
 
-
-        
-
         public getEngine(): Matter.Engine {
             return this.engine;
         }   
@@ -26,6 +23,7 @@
         }
 
         protected addItem(itemListService: IItemListService, item: IItem): void {
+            item.getBody().id = item.getId();
             Matter.World.add(this.engine.world, item.getBody());
         }
 
@@ -46,18 +44,7 @@
             engine.world.gravity.x = 0;
             engine.world.gravity.y = 0;
 
-            this.initLimit(engine, worldAttributeList);
             this.initEvents(engine, worldAttributeList);
-        }
-
-        protected initLimit(engine: Matter.Engine, worldAttributeList: IWorldAttributeList) {
-            let size = worldAttributeList.getWorldSize();
-            let w = 200;
-            Matter.World.addBody(engine.world, Matter.Bodies.rectangle(size[0] / 2, -w, size[0] + w, w * 2, { isStatic: true }));
-            Matter.World.addBody(engine.world, Matter.Bodies.rectangle(size[0] / 2, size[1] + w, size[0] + w, w * 2, { isStatic: true }));
-
-            Matter.World.addBody(engine.world, Matter.Bodies.rectangle(-w, size[1] / 2, w * 2, size[1] + w, { isStatic: true }));
-            Matter.World.addBody(engine.world, Matter.Bodies.rectangle(size[0] + w, size[1] / 2, w * 2, size[1] + w, { isStatic: true }));
         }
 
         protected initEvents(engine: Matter.Engine, worldAttributeList: IWorldAttributeList) {

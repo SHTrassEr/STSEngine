@@ -27,7 +27,7 @@
             this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
 
             this.commandInitializer = new CommandInitializer();
-            this.objectInitializer = new ItemInitializer();
+            this.objectInitializer = new ItemInitializer(this.getItemId.bind(this));
             this.processInitializer = new ProcessInitializer(this.getProcessId.bind(this));
             this.commandDispatcher = new CommandDispatcher(this);
             this.processDispatcher = new ProcessDispatcher(this);
@@ -83,7 +83,7 @@
             return this.physicsEngine;
         }
 
-        protected getObjectId(): number {
+        protected getItemId(): number {
             var id = this.worldAttributeList.getLastObjectId() + 1;
             this.worldAttributeList.setLastObjectId(id);
             return id;

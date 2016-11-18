@@ -19,19 +19,19 @@
 
         protected fire(process: ProcessFire, item: ItemTank): void {
             var bullet = this.worldServiceList.getItemInitializer().createBullet();
-            bullet.setPosition([item.getPosition(0), item.getPosition(1)]);
+            bullet.setPosition(item.getPosition());
             bullet.setClientId(item.getClientId());
 
-            bullet.setFrictionModifier(0.1);
+            bullet.setFriction(0.1);
 
-            var v = VectorHelper.normalize(VectorHelper.substract(process.getPosition(), item.getPosition()));
-
-            v = VectorHelper.multScalar(v, 0.08);
-
-
-            bullet.setForceVector(v);
-            bullet.setMoveVector(VectorHelper.copy(item.getMoveVector()));
-            bullet.setMass(5);
+            var force = process.getPosition();
+            VectorHelper.substract(force, item.getPosition());
+            VectorHelper.normalize(force);
+            bullet.setForce(force);
+            bullet.setMass(10);
+            bullet.setForceScale(0.01);
+            bullet.setVelocity(item.getVelocity());
+            
 
             this.worldServiceList.getItemListService().add(bullet);
 

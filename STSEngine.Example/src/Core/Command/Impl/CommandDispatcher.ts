@@ -12,7 +12,8 @@
             this.commandHandlerList[CommandCreateClientItemTank.Type] = new CommandCreateClientItemTankHandler(worldServiceList);
             this.commandHandlerList[CommandFire.Type] = new CommandFireHandler(worldServiceList);
             this.commandHandlerList[CommandChangeClientName.Type] = new CommandChangeClientNameHandler(worldServiceList);
-            this.commandHandlerList[CommandSetClientForceVector.Type] = new CommandSetClientForceVectorHandler(worldServiceList);
+            this.commandHandlerList[CommandApplyForce.Type] = new CommandApplyForceHandler(worldServiceList);
+            this.commandHandlerList[CommandInitWorld.Type] = new CommandInitWorldHandler(worldServiceList);
         }
 
     }

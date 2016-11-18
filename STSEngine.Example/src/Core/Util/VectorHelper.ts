@@ -2,37 +2,45 @@
 
     export module VectorHelper {
 
-        export function length(v: [number, number]): number {
-            return Math.sqrt(v[0]*v[0] + v[1]*v[1]);
+        export function length(v: IVector): number {
+            return Math.sqrt(v.x*v.x + v.y*v.y);
         }
 
-        export function normalize(v: [number, number]): [number, number] {
+        export function normalize(v: IVector): void {
             let len = length(v);
             if (len > 0) {
-                return [v[0] / len, v[1] / len];
+                v.x /= len;
+                v.y /= len;
+            }
+        }
+
+        export function multScalar(v: IVector, scalar: number): void {
+            v.x *= scalar;
+            v.y *= scalar;
+        }
+
+        export function sum(v1: IVector, v2: IVector): void {
+            v1.x += v2.x;
+            v1.y += v2.y;
+        }
+
+        export function substract(v1: IVector, v2: IVector): void {
+            v1.x -= v2.x;
+            v1.y -= v2.y;
+        }
+
+        export function round(v: IVector): void {
+            v.x = MathHelper.round(v.x);
+            v.y = MathHelper.round(v.y);
+        }
+
+        export function parse(v: any): IVector {
+
+            if (v) {
+                return new Vector(v);
             }
 
-            return [0, 0];
-        }
-
-        export function multScalar(v: [number, number], scalar: number): [number, number] {
-            return [v[0] * scalar, v[1] * scalar];
-        }
-
-        export function copy(v: [number, number]): [number, number] {
-            return [v[0], v[1]];
-        }
-
-        export function sum(v1: [number, number], v2: [number, number]): [number, number] {
-            return [v1[0] + v2[0], v1[1] + v2[1]];
-        }
-
-        export function substract(v1: [number, number], v2: [number, number]): [number, number] {
-            return [v1[0] - v2[0], v1[1] - v2[1]];
-        }
-
-        export function round(n: [number, number]): [number, number] {
-            return [MathHelper.round(n[0]), MathHelper.round(n[1])];
+            return v;
         }
         
     }

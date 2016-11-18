@@ -19,9 +19,8 @@
         }
 
         public start(): void {
-            let world = this.engine.getWorld();
             this.metronome.start();
-            this.timerId = setInterval( () => this.updateWorld(), 10);
+            this.timerId = setInterval(this.updateWorld.bind(this), 10);
         }
 
         public getCommandLog(startStepNumber: number): ICommand[][] {

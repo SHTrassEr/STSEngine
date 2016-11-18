@@ -20,12 +20,12 @@ namespace STSEngine.Example {
             this.attributeList.set(this._objectId, id);
         }
 
-        public getPosition(): [number, number] {
-            return this.attributeList.get(this._position);
+        public getPosition(): IVector {
+            return VectorHelper.parse(this.attributeList.get(this._position));
         }
 
-        public setPosition(position: [number, number]): void {
-            this.attributeList.set(this._position, position);
+        public setPosition(position: IVector): void {
+            this.attributeList.set(this._position, new Vector(position));
         }
     }
 

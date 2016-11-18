@@ -45,7 +45,7 @@
             this.stage.interactive = true;
 
             this.stage.on('mousedown', this.onStageMouseClick.bind(this));
-
+            
 
             this.grid = this.drawGrid();
             this.worldLimit = this.drawWordLimit();
@@ -91,12 +91,12 @@
             }
         }
 
-        protected drawObjectRectangle(o: IItem): PIXI.Graphics {
+        protected drawObjectRectangle(o: IItem & IItemRectangle): PIXI.Graphics {
             let position = o.getPosition();
-            let size = o.getSize();
+
             let cellSize = this.cellSize;
-            let objectWidth = Math.floor(size[0]);
-            let objectHeight = Math.floor(size[1]);
+            let objectWidth = Math.floor(o.getWidth());
+            let objectHeight = Math.floor(o.getHeight());
 
             var graphics = new PIXI.Graphics();
 
@@ -110,20 +110,11 @@
 
 
 
-            graphics.pivot.x = objectWidth * cellSize / 2;
-            graphics.pivot.y = objectHeight * cellSize / 2;
-
-
             graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
 
-            //graphics.drawRect((objectWidth - 1) * cellSize / 2, 0, 1 * cellSize, 1 * cellSize);
 
-            graphics.pivot.x = objectWidth * cellSize / 2;
-            graphics.pivot.y = objectHeight * cellSize / 2;
 
-            let ppp = new Point(1, 1);
-
-            graphics.pivot.set();
+            graphics.pivot.set(objectWidth * cellSize / 2, objectHeight * cellSize / 2);
             
             graphics.filters = [new PIXI.filters.BlurFilter()];
 
@@ -134,7 +125,7 @@
 
             var objectSprite: PIXI.Graphics = this.objectMap.get(o.getId());
             if (!objectSprite) {
-                objectSprite = this.drawObjectRectangle(o);
+                objectSprite = this.drawObjectRectangle(<any>o);
                 this.objectMap.set(o.getId(), objectSprite);
                 this.stage.addChild(objectSprite);
             }
@@ -168,12 +159,11 @@
             for (let o of iterator) {
                 if (o instanceof Item) {
                     let objectSprite = this.getObjectSprite(o);
-                    let x = Math.round(this.getDrawPoint(o.getPosition(0)));
-                    let y = Math.round(this.getDrawPoint(o.getPosition(1)));
+                    let x = Math.round(this.getDrawPoint(o.getPosition().x));
+                    let y = Math.round(this.getDrawPoint(o.getPosition().y));
 
                     if (o instanceof ItemTank && o.getClientId() == this.clientId) {
                         this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
-
                         this.grid.position.set(x - this.width / 2, y - this.height / 2);
 
                     }

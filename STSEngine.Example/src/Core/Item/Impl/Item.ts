@@ -4,81 +4,76 @@
 
         private _clientId: number = ++this.lastAttributeId;
         private _mass: number = ++this.lastAttributeId;
-        private _frictionModifier: number = ++this.lastAttributeId;
+        private _forceScale: number = ++this.lastAttributeId;
         private _size: number = ++this.lastAttributeId;
         private _moveVector: number = ++this.lastAttributeId;
-        private _forceVector: number = ++this.lastAttributeId;
+        private _force: number = ++this.lastAttributeId;
         private _bodyJSON: number = ++this.lastAttributeId;
 
         protected body: Matter.Body;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
+        constructor(attributeList: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
             let body = this.createBody();
 
             if (kvpList && this.getBodyJSON()) {
                 let o = CircularJSON.parse(this.getBodyJSON());
-                o.inertia = Infinity;
+                if (!o.inertia) {
+                    o.inertia = Infinity;
+                }
+
+                if (!o.mass) {
+                    o.mass = 40;
+                }
+                
                 Matter.Body.set(body, o);
             }
 
             this.setBody(body);
-            this.setId(body.id);
         }
 
         protected abstract createBody(): Matter.Body;
 
 
-        public getPosition(): [number, number];
-        public getPosition(d: number): number;
-        public getPosition(d?: number): [number, number] | number {
-            if (typeof d == 'number') {
-                if (d === 0) {
-                    return this.body.position.x;
-                } else if (d === 1) {
-                    return this.body.position.y;
-                }
-            }
-
-            return [this.body.position.x, this.body.position.y];
+        public getPosition(): IVector {
+            return this.body.position;
         }
 
-        public setPosition(position: [number, number]): void {
-            Matter.Body.setPosition(this.body, {x: position[0], y: position[1]});
+        public setPosition(position: IVector): void {
+            Matter.Body.setPosition(this.body, position);
         }
 
-        public getMoveVector(): [number, number];
-        public getMoveVector(d: number): number;
-        public getMoveVector(d?: number): [number, number] | number {
-            if (typeof d == 'number') {
-                if (d === 0) {
-                    return this.body.velocity.x;
-                } else if (d === 1) {
-                    return this.body.velocity.y;
-                }
-            }
-
-            return [this.body.velocity.x, this.body.velocity.y];
+        public getForce(): IVector {
+            return VectorHelper.parse(this.attributeList.get(this._force));
         }
 
-        public setMoveVector(moveVector: [number, number]): void {
-            Matter.Body.setVelocity(this.body, { x: moveVector[0], y: moveVector[1] });
+        public setForce(force: IVector): void {
+            this.attributeList.set(this._force, force);
         }
 
-        public getForceVector(): [number, number];
-        public getForceVector(d: number): number;
-        public getForceVector(d?: number): [number, number] | number {
-            if (d) {
-                return this.attributeList.get(this._forceVector)[d];
-            }
-
-            return this.attributeList.get(this._forceVector);
+        public getForceScale(): number {
+            return this.attributeList.get(this._forceScale, 1);
         }
 
-        public setForceVector(forceVector: [number, number]): void {
-            this.attributeList.set(this._forceVector, forceVector);
+        public setForceScale(scale: number): void {
+            this.attributeList.set(this._forceScale, scale);
         }
+
+        public applyForce(): void {
+            let force = this.getForce();
+            VectorHelper.multScalar(force, this.getForceScale());
+            Matter.Body.applyForce(this.body, this.body.position, force);
+        }
+
+        public getVelocity(): IVector {
+            return new Vector(this.body.velocity);
+        }
+
+        public setVelocity(velocity: IVector): void {
+            Matter.Body.setVelocity(this.body, velocity);
+        }
+        
 
         public getClientId(): number {
             return this.attributeList.get(this._clientId);
@@ -89,22 +84,20 @@
         }
 
         public getMass(): number {
-            return this.attributeList.get(this._mass);
+            return this.body.mass;
         }
 
-        public setMass(speed: number): void {
-            this.attributeList.set(this._mass, speed);
+        public setMass(mass: number): void {
+            Matter.Body.setMass(this.body, mass);
         }
 
-        public getFrictionModifier(): number {
-            return this.attributeList.get(this._frictionModifier);
+        public getFriction(): number {
+            return this.body.friction;
         }
 
-        public setFrictionModifier(frictionModifier: number): void {
-            this.attributeList.set(this._frictionModifier, frictionModifier);
+        public setFriction(friction: number): void {
+            this.body.friction = friction
         }
-
-        public abstract getSize(): [number, number];
 
         public getBody(): Matter.Body {
             return this.body;

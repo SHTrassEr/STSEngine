@@ -2,15 +2,15 @@
 
 namespace STSEngine.Example {
 
-    export class CommandSetClientForceVector extends Command {
+    export class CommandApplyForce extends Command {
 
         private _itemId: number = ++this.lastAttributeId;
-        private _clientForceVector: number = ++this.lastAttributeId;
+        private _force: number = ++this.lastAttributeId;
 
         constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
-            this.setType(CommandSetClientForceVector.Type);
+            this.setType(CommandApplyForce.Type);
         }
 
         public getItemId(): number {
@@ -21,16 +21,16 @@ namespace STSEngine.Example {
             this.attributeList.set(this._itemId, id);
         }
 
-        public getClientForceVector(): [number, number] {
-            return this.attributeList.get(this._clientForceVector);
+        public getForce(): IVector {
+            return VectorHelper.parse(this.attributeList.get(this._force));
         }
 
-        public setClientForceVector(clientForceVector: [number, number]): void {
-            this.attributeList.set(this._clientForceVector, clientForceVector);
+        public setForce(force: IVector): void {
+            this.attributeList.set(this._force, new Vector(force));
         }
     }
 
-    export module CommandSetClientForceVector {
+    export module CommandApplyForce {
         export const Type = ++Command.LastTypeId;
     }
 }
