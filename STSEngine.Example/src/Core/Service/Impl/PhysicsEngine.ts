@@ -53,6 +53,8 @@
             Matter.Events.on(engine, "beforeUpdate", this.beforeUpdate.bind(this));
             Matter.Events.on(engine, "afterUpdate", this.afterUpdate.bind(this));
             Matter.Events.on(engine, "collisionStart", this.onCollisionStart.bind(this));
+            Matter.Events.on(engine, "collisionActive", this.onCollisionActive.bind(this));
+
         }
 
         protected beforeUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
@@ -63,6 +65,7 @@
         }
 
         protected afterUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
+
             let itemList = this.worldServiceList.getItemListService().getIterator();
             for (let item of itemList) {
                 item.setPosition(VectorHelper.round(item.getPosition()));
@@ -80,19 +83,26 @@
             }
         }
 
+        protected onCollisionActive(e: Matter.IEventCollision<Matter.Engine>): void {
+            this.onCollisionStart(e);
+        }
+
         protected onCollisionStart(e: Matter.IEventCollision<Matter.Engine>): void {
+            if (e.pairs.length > 1) {
+                let cc = 1;
+            }
             for (let p of e.pairs) {
                 let bodyA = this.worldServiceList.getItemListService().get(p.bodyA.id);
                 let bodyB = this.worldServiceList.getItemListService().get(p.bodyB.id);
                 
                 if (bodyA instanceof ItemBullet && bodyB instanceof ItemTank) {
                     this.processCollisionTankBullet(p, bodyB, bodyA);
-                    return;
+                    continue;
                 }
 
                 if (bodyB instanceof ItemBullet && bodyA instanceof ItemTank) {
                     this.processCollisionTankBullet(p, bodyA, bodyB);
-                    return;
+                    continue;
                 }
 
 
