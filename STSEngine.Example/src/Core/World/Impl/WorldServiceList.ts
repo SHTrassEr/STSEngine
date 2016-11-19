@@ -19,7 +19,7 @@
         constructor(worldAttributeList: WorldAttributeList) {
             this.worldAttributeList = worldAttributeList;
             this.itemListService = new ItemListService();
-            this.physicsEngine = new PhysicsEngine(worldAttributeList, this.itemListService);
+            
             this.clientInitializer = new ClientInitializer();
             
             this.processListService = new ProcessListService();
@@ -31,6 +31,7 @@
             this.processInitializer = new ProcessInitializer(this.getProcessId.bind(this));
             this.commandDispatcher = new CommandDispatcher(this);
             this.processDispatcher = new ProcessDispatcher(this);
+            this.physicsEngine = new PhysicsEngine(this);
 
         }
 

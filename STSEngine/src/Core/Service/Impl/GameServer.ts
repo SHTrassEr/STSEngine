@@ -12,6 +12,7 @@
         constructor(engine: IEngine) {
             this.engine = engine;
             var tickLength = engine.getWorld().getAttributeList().getTickLength();
+            //let tickLength = 100;
             this.metronome = new Metronome(tickLength);
             this.commandLog = [];
             this.emptyCommandList = [];
@@ -35,11 +36,13 @@
                 let commandList = this.engine.getCommandList();
                 this.commandLog[currentStepNumber] = commandList;
 
+                this.engine.step();
+
                 if (this.onUpdateWorld) {
                     this.onUpdateWorld(this.engine.getWorld(), currentStepNumber, commandList);
                 }
 
-                this.engine.step();
+
             }
         }
 

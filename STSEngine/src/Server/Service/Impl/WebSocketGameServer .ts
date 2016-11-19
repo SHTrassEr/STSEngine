@@ -25,6 +25,12 @@
         }
 
         protected onUpdateWorld(world: IWorld, currentStepNumber: number, commandList: ICommand[]): void {
+
+            /*let messageWorldFullInfo = new ClientServerMessageWorldFullInfo();
+            messageWorldFullInfo.setWorld(this.engine.getWorld());
+
+            this.webSocketServer.sendAll(messageWorldFullInfo);*/
+
             let message = this.createStepMessage(currentStepNumber, commandList);
             this.webSocketServer.sendAll(message);
         }

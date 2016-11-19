@@ -18,13 +18,13 @@
         }
 
         protected moveItem(item: IItem): void {
-            let force = item.getForce();
+        /*    let force = item.getForce();
 
             if (force.x != 0 || force.y != 0) {
                 item.applyForce();
             }
 
-/*            let position = item.getPosition();
+            let position = item.getPosition();
             VectorHelper.round(position);
             item.setPosition(position);
 

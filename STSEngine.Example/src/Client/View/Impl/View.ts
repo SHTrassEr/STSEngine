@@ -1,4 +1,10 @@
-﻿namespace STSEngine.Example {
+﻿declare class FPSMeter {
+    constructor(ancor: any, options: any);
+    tickStart(): void;
+    tick(): void;
+}
+
+namespace STSEngine.Example {
 
     export class View extends STSEngine.View {
 
@@ -22,8 +28,17 @@
 
         protected clientListService: IClientListService;
 
-        private onMouseClick = new LiteEvent<PIXI.Point>();   
+        private onMouseClick = new LiteEvent<IVector>();   
 
+        private onTouchEnd = new LiteEvent<IVector>();  
+        private onTouchMove = new LiteEvent<IVector>();  
+
+        private meter: any;
+
+        private touchInt: number;
+
+        private touchStart: IVector;
+        private touchIdentifier: number = null;
         
 
         constructor(rootElement: HTMLDivElement, world: IWorld) {
@@ -31,11 +46,13 @@
 
             this.cellSize = 1;
             this.width = rootElement.clientWidth;
-            this.height = 800;
-            
+            this.height = 400;
+
+            //this.renderer = new PIXI.CanvasRenderer(this.width, this.height);// autoDetectRenderer(this.width, this.height);
             this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+
             //this.renderer.
-            this.renderer.roundPixels = true;
+            //this.renderer.roundPixels = true;
             this.rootElement.appendChild(this.renderer.view);
 
             this.objectMap = new Map<number, PIXI.Graphics>();
@@ -45,6 +62,11 @@
             this.stage.interactive = true;
 
             this.stage.on('mousedown', this.onStageMouseClick.bind(this));
+            this.stage.on('touchend', this.onStageTouchEnd.bind(this));
+
+            this.stage.on('touchstart', this.onStageMouseTouchStart.bind(this));
+
+            this.stage.on('touchmove', this.onStageMouseTouchMove.bind(this));
             
 
             this.grid = this.drawGrid();
@@ -52,6 +74,8 @@
             this.stage.addChild(this.grid);
             this.stage.addChild(this.worldLimit);
             this.stepNumber = -1;
+
+            this.meter = <any>(new FPSMeter(rootElement, { position: "relative" }));
         }
 
         protected onStageMouseClick(event) {
@@ -59,6 +83,38 @@
             this.onMouseClick.trigger(this, p);
         }
 
+
+        protected onStageMouseTouchMove(event) {
+            let s = new Vector(this.touchStart);
+            let p = new Vector(event.data.global);
+
+            VectorHelper.substract(p, s);
+
+            this.onTouchMove.trigger(this, p);
+
+        }
+
+        protected onStageTouchEnd(event) {
+
+            if (this.touchIdentifier === event.data.identifier) {
+                let p = event.data.getLocalPosition(this.stage);
+                this.onTouchEnd.trigger(this, p);
+                this.touchIdentifier = null;
+            }
+            else {
+                let p = event.data.getLocalPosition(this.stage);
+                this.onMouseClick.trigger(this, p);
+            }
+        }
+
+
+        protected onStageMouseTouchStart(event) {
+            
+            if (this.touchIdentifier === null) {
+                this.touchStart = new Vector(event.data.global);
+                this.touchIdentifier = event.data.identifier;
+            }
+        }
         
 
         protected getClientInfoText(client: IClient) {
@@ -116,7 +172,7 @@
 
             graphics.pivot.set(objectWidth * cellSize / 2, objectHeight * cellSize / 2);
             
-            graphics.filters = [new PIXI.filters.BlurFilter()];
+           // graphics.filters = [new PIXI.filters.BlurFilter()];
 
             return graphics;
         }
@@ -146,12 +202,17 @@
 
 
         protected refresh(): void {
-            let iterator = this.itemListService.getIterator();
+            
 
-            if (this.worldAttributeList.getStepNumber() == this.stepNumber) { 
+            if (this.worldAttributeList.getStepNumber() == this.stepNumber) {
+                //this.meter.tick();
                 return;
             }
 
+            let iterator = this.itemListService.getIterator();
+
+            this.meter.tickStart();
+            
             this.stepNumber = this.worldAttributeList.getStepNumber();
 
             this.clearStage();
@@ -168,18 +229,16 @@
 
                     }
 
-                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurX = Math.abs(objectSprite.position.x - x) / 20;
-                    (<PIXI.filters.BlurFilter>(objectSprite.filters[0])).blurY = Math.abs(objectSprite.position.y - y) / 20;
-
                     objectSprite.position.x = x;
                     objectSprite.position.y = y;
 
                 }
             }
 
-            this.updateAllClientInfo();
+            //this.updateAllClientInfo();
 
             this.renderer.render(this.stage);
+            this.meter.tick();
         }
 
         protected getDrawPoint(p: number): number {
@@ -191,20 +250,46 @@
 
             var size = this.worldAttributeList.getWorldSize();
 
-            graphics.beginFill(0xFFFFFF);
-            graphics.lineStyle(2, 0x000000);
-            graphics.drawRect(0, 0, size[0] * this.cellSize, size[1] * this.cellSize);
+            let width = size[0];
+            let height = size[1];
 
-            var noiseFilter = new PIXI.filters.NoiseFilter();
+            graphics.beginFill(0x333333);
+            graphics.lineStyle(0);
+            graphics.drawRect(-300, -300, width + 600, height + 600);
+
+            graphics.beginFill(0xCCCCCC);
+            graphics.lineStyle(2, 0x999999);
+            graphics.drawRect(0, 0, width * this.cellSize, height * this.cellSize);
+
+            let x = 0;
+
+
+            while (x < width) {
+
+                let y = 0;
+
+                while (y < height) {
+                    graphics.drawRect(x, y, 5, 5);
+                    y += 200;
+                }
+
+
+                x += 200;
+            }
+
+
+           /*var noiseFilter = new PIXI.filters.NoiseFilter();
             noiseFilter.noise = 0.1;
 
-            graphics.filters = [noiseFilter];
+            graphics.filters = [noiseFilter];*/
 
             return graphics;
         }
 
         protected drawGrid(): PIXI.Graphics {
             var graphics = new PIXI.Graphics();
+
+            
 
             /*graphics.beginFill(0xFFFFFF);
             graphics.lineStyle(0);
@@ -242,9 +327,16 @@
 
 
 
-        public mouseClick(): ILiteEvent<PIXI.Point> {
+        public mouseClick(): ILiteEvent<IVector> {
             return this.onMouseClick;
+        }
 
+        public touchMove(): ILiteEvent<IVector> {
+            return this.onTouchMove;
+        }
+
+        public touchEnd(): ILiteEvent<IVector> {
+            return this.onTouchEnd;
         }
        
     }

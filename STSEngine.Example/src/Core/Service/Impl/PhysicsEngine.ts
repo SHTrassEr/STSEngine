@@ -3,14 +3,14 @@
     export class PhysicsEngine implements IPhysicsEngine {
 
         protected engine: Matter.Engine;
-        protected itemListService: IItemListService;
+        protected worldServiceList: IWorldServiceList;
 
-        constructor(worldAttributeList: IWorldAttributeList, itemListService: IItemListService) {
-            this.itemListService = itemListService;
-            let engine = this.createEngine(worldAttributeList);
-            this.initEngine(engine, worldAttributeList);
+        constructor(worldServiceList: IWorldServiceList) {
+            this.worldServiceList = worldServiceList;
+            let engine = this.createEngine(worldServiceList.getWorldAttributeList());
+            this.initEngine(engine, worldServiceList.getWorldAttributeList());
             this.engine = engine;
-            this.initItemListService(engine, itemListService);
+            this.initItemListService(engine, worldServiceList.getItemListService());
 
         }
 
@@ -37,7 +37,9 @@
         }
 
         protected createEngine(worldAttributeList: IWorldAttributeList): Matter.Engine {
-            return Matter.Engine.create();
+            let engine = Matter.Engine.create();
+            engine.velocityIterations = 4;
+            return engine;
         }
 
         protected initEngine(engine: Matter.Engine, worldAttributeList: IWorldAttributeList): void {
@@ -48,13 +50,40 @@
         }
 
         protected initEvents(engine: Matter.Engine, worldAttributeList: IWorldAttributeList) {
+            Matter.Events.on(engine, "beforeUpdate", this.beforeUpdate.bind(this));
+            Matter.Events.on(engine, "afterUpdate", this.afterUpdate.bind(this));
             Matter.Events.on(engine, "collisionStart", this.onCollisionStart.bind(this));
+        }
+
+        protected beforeUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
+            let itemList = this.worldServiceList.getItemListService().getIterator();
+            for (let item of itemList) {
+                item.applyForce();
+            }
+        }
+
+        protected afterUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
+            let itemList = this.worldServiceList.getItemListService().getIterator();
+            for (let item of itemList) {
+                item.setPosition(VectorHelper.round(item.getPosition()));
+
+                let velocity = item.getVelocity();
+                if (Math.abs(velocity.x) < 0.1) {
+                    velocity.x = 0;
+                }
+
+                if (Math.abs(velocity.y) < 0.1) {
+                    velocity.y = 0;
+                }
+
+                item.setVelocity(VectorHelper.round(velocity));
+            }
         }
 
         protected onCollisionStart(e: Matter.IEventCollision<Matter.Engine>): void {
             for (let p of e.pairs) {
-                let bodyA = this.itemListService.get(p.bodyA.id);
-                let bodyB = this.itemListService.get(p.bodyB.id);
+                let bodyA = this.worldServiceList.getItemListService().get(p.bodyA.id);
+                let bodyB = this.worldServiceList.getItemListService().get(p.bodyB.id);
                 
                 if (bodyA instanceof ItemBullet && bodyB instanceof ItemTank) {
                     this.processCollisionTankBullet(p, bodyB, bodyA);
@@ -68,18 +97,27 @@
 
 
                 if (bodyA instanceof ItemBullet) {
-                    this.itemListService.remove(bodyA.getId());
+                    this.worldServiceList.getItemListService().remove(bodyA.getId());
                 }
 
                 if (bodyB instanceof ItemBullet) {
-                    this.itemListService.remove(bodyB.getId());
+                    this.worldServiceList.getItemListService().remove(bodyB.getId());
                 }
             }
         }
 
         protected processCollisionTankBullet(p: Matter.IPair, tank: ItemTank, bullet: ItemBullet) {
             if (tank.getClientId() != bullet.getClientId()) {
-                this.itemListService.remove(bullet.getId());
+
+                let clientListService = this.worldServiceList.getClientListService();
+
+                let bulletClient = clientListService.getTyped<IClientActive>(bullet.getClientId(), ClientActive);
+                let tankClient = clientListService.getTyped<IClientActive>(tank.getClientId(), ClientActive);
+
+                bulletClient.setScore(bulletClient.getScore() + 10);
+                tankClient.setScore(tankClient.getScore() - 10);
+                
+                this.worldServiceList.getItemListService().remove(bullet.getId());
             } else {
                 p.isActive = false;
             }

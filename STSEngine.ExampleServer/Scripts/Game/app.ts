@@ -44,7 +44,19 @@ function ready() {
 
     var content = document.getElementById("content");
 
+    /*var meter1 = (new FPSMeter(document.getElementById("fps1"), { position: "relative" }));
+    var meter2 = (new FPSMeter(document.getElementById("fps2"), { position: "relative" }));*/
+
+
     var world = client.getEngine().getWorld();
+    var engine = client.getEngine();
+
+/*    engine.beforePhysicsEngineStep().on(() => meter1.tickStart());
+    engine.afterPhysicsEngineStep().on(() => meter1.tick());
+
+    engine.beforeStep().on(() => meter2.tickStart());
+    engine.afterStep().on(() => meter2.tick());*/
+
     world.getServiceList();
 
     var view = new STSEngine.Example.View(<HTMLDivElement>content, world);
@@ -53,14 +65,42 @@ function ready() {
         view.setClientId(client.getClientId());
         view.start();
         view.mouseClick().on(onStageMouseClick);
+        view.touchMove().on(onStageTouchMove);
+        view.touchEnd().on(onStageTouchEnd);
+
+
+
+        /*setInterval(() => {
+            world.getAttributeList().setTickLength(50);
+            engine.step();
+        }, 50);
+        */
+
         
 
-        setInterval(updateScore, 500);
+        setInterval(updateScore, 100);
     }
 
-    function onStageMouseClick(s, p: PIXI.Point) {
+    function onStageMouseClick(s, p: STSEngine.Example.IVector) {
         
-        playerAction.fire(getPlayerObjectId(), p);
+        playerAction.fire(getPlayerObject().getId(), p);
+    }
+
+    function onStageTouchEnd(s, p: STSEngine.Example.IVector) {
+        playerAction.setClientForceVector(getPlayerObject().getId(), new STSEngine.Example.Vector(0, 0));
+    }
+
+    function onStageTouchMove(s, p: STSEngine.Example.IVector) {
+
+        let o = getPlayerObject();
+        /*let v = o.getPosition();
+
+        let f = new STSEngine.Example.Vector(p);
+
+        STSEngine.Example.VectorHelper.substract(f, v);*/
+
+
+        playerAction.setClientForceVector(o.getId(), p);
     }
 
     let scoreDiv = document.getElementById("score");
@@ -70,7 +110,11 @@ function ready() {
         let str = '';
         for (let client of clientList) {
             if (client instanceof STSEngine.Example.ClientActive) {
-                str += client.getName() + " (" + client.getId() + ") " + client.getScore() + "<br>";
+                let name = "";
+                if (client.getName()) {
+                    name = client.getName();
+                }
+                str += name + " (" + client.getId() + ") " + client.getScore() + "|";
             }
         }
         /*
@@ -82,7 +126,16 @@ function ready() {
 
         }*/
 
-        scoreDiv.innerHTML = str;
+        var itemList = world.getServiceList().getItemListService().getIterator();
+        for (let item of itemList) {
+            if (item instanceof STSEngine.Example.ItemTank) {
+                let v = item.getPosition();
+                str += JSON.stringify(v);
+            }
+
+        }
+
+        scoreDiv.innerText = str;
     }
 
     var world = client.getEngine().getWorld();
@@ -90,13 +143,13 @@ function ready() {
 
     var up: boolean, down: boolean, left: boolean, right: boolean;//, fire: boolean;
 
-    function getPlayerObjectId() {
+    function getPlayerObject() {
         var o = objectListService.getFirst(o => (<STSEngine.Example.ItemTank>(<any>o)).getClientId() == client.getClientId());
-        return o.getId();
+        return o;
     }
 
     function keyDownHandler(e: any) {
-        var playerObjectId = getPlayerObjectId();
+        var playerObjectId = getPlayerObject().getId();
 
         if (e.keyCode == 87) {
             if (!up) {
@@ -124,7 +177,7 @@ function ready() {
         }
     }
     function keyUpHandler(e: any) {
-        var playerObjectId = getPlayerObjectId();
+        var playerObjectId = getPlayerObject().getId();
         if (e.keyCode == 87) {
             if (up) {
                 up = false;

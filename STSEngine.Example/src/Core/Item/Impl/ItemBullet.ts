@@ -20,11 +20,11 @@ namespace STSEngine.Example {
         }
 
         public getWidth(): number {
-            return 10;
+            return 8;
         }
 
         public getHeight(): number {
-            return 10;
+            return 8;
         }
  
     }

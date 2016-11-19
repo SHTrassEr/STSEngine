@@ -6,6 +6,9 @@
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
         protected commandListService: ICommandListService;
+
+        private onBeforeStep = new LiteEvent<IEngine>();
+        private onAfterStep = new LiteEvent<IEngine>();   
         
         constructor(world: IWorld, commandListService: ICommandListService) {
             this.world = world;
@@ -24,6 +27,7 @@
         }
 
         public step() {
+            this.onBeforeStep.trigger(this, this);
             this.increaseStepNumber();
             this.processCommandList();
             for (let i = 0; i < this.processListService.getProcessList().length; i++) {
@@ -32,6 +36,8 @@
             }
 
             this.processListService.removeFinished();
+
+            this.onAfterStep.trigger(this, this);
         }
 
         protected increaseStepNumber(): void {
@@ -49,6 +55,15 @@
                 this.commandDispatcher.execute(command);
             }
             this.commandListService.clear();
+        }
+
+        public beforeStep(): ILiteEvent<IEngine> {
+            return this.onBeforeStep;
+
+        }
+
+        public afterStep(): ILiteEvent<IEngine> {
+            return this.onAfterStep;
         }
     }
 }

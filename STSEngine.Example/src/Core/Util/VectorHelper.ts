@@ -29,9 +29,10 @@
             v1.y -= v2.y;
         }
 
-        export function round(v: IVector): void {
+        export function round(v: IVector): IVector {
             v.x = MathHelper.round(v.x);
             v.y = MathHelper.round(v.y);
+            return v;
         }
 
         export function parse(v: any): IVector {

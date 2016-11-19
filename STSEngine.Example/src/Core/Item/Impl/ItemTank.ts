@@ -18,7 +18,7 @@ namespace STSEngine.Example {
         }
 
         public getWidth(): number {
-            return 50;
+            return 30;
         }
 
         public setSize(width: number, height: number): void {
@@ -27,7 +27,7 @@ namespace STSEngine.Example {
         }
 
         public getHeight(): number {
-            return 50;
+            return 30;
         }
     }
 

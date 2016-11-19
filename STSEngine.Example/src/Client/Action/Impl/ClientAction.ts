@@ -34,10 +34,14 @@
             if (right) {
                 force.x += 1;
             }
-            
+
+            this.setClientForceVector(itemId, force);
+        }
+
+        public setClientForceVector(itemId: number, vector: IVector): void {
             var command = this.commandInitializer.createApplyForce();
             command.setItemId(itemId);
-            command.setForce(force);
+            command.setForce(vector);
             this.addCommand(command);
         }
         

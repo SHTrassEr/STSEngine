@@ -62,8 +62,10 @@
 
         public applyForce(): void {
             let force = this.getForce();
-            VectorHelper.multScalar(force, this.getForceScale());
-            Matter.Body.applyForce(this.body, this.body.position, force);
+            if (force) {
+                VectorHelper.multScalar(force, this.getForceScale());
+                Matter.Body.applyForce(this.body, this.body.position, force);
+            }
         }
 
         public getVelocity(): IVector {

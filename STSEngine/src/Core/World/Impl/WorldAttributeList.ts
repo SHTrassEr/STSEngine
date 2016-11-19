@@ -10,7 +10,7 @@ namespace STSEngine {
         private _stepNumber: number = ++this.lastAttributeId;
 
         public getTickLength(): number {
-            return this.attributeList.get(this._tickLength, 50);
+            return this.attributeList.get(this._tickLength, 20);
         }
 
         public setTickLength(tickLength: number): void {
