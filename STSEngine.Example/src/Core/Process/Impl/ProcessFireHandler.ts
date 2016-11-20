@@ -18,7 +18,7 @@
         }
 
         protected fire(process: ProcessFire, item: ItemTank): void {
-            var bullet = this.world.getItemInitializer().createBullet();
+            var bullet = this.world.getEntityFactory().create<ItemBullet>(ItemBullet);
             bullet.setPosition(item.getPosition());
             bullet.setClientId(item.getClientId());
 
@@ -35,7 +35,7 @@
 
             this.world.getItemListService().add(bullet);
 
-            var moveProcess = this.world.getProcessInitializer().createMoveItem();
+            var moveProcess = this.world.getEntityFactory().create<ProcessMoveItem>(ProcessMoveItem);
 
             moveProcess.setItemId(bullet.getId());
 

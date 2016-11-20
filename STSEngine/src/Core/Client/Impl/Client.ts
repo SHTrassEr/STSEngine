@@ -5,12 +5,8 @@ namespace STSEngine {
     export class Client extends Entity implements IClient {
 
         protected attributeList: IAttributeList;
-
         protected attributeNameId: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-        }
 
         public getName(): string {
             return this.attributeList.get(this.attributeNameId);
@@ -21,12 +17,7 @@ namespace STSEngine {
         }
     }
 
-    export module ClientType {
-
-        let lastTypeId = 0;
-
-        export function getNewTypeId(): number {
-            return ++lastTypeId
-        }
+    export module Client {
+        export const type = ModuleInfo.name + '.' + Client.name;
     }
 }

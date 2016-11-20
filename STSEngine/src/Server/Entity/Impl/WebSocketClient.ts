@@ -10,10 +10,10 @@
         protected onMessageHandler: (client: IWebSocketClient, message: IClientServerMessage) => void;
         protected onCloseHandler: (client: IWebSocketClient) => void;
 
-        protected clientSeverMessageInitializer: IClientServerMessageInitializer;
+        protected entityFactory: IEntityFactory;
 
-        constructor(clientSeverMessageInitializer: IClientServerMessageInitializer, id: number, client: any) {
-            this.clientSeverMessageInitializer = clientSeverMessageInitializer;
+        constructor(entityFactory: IEntityFactory, id: number, client: any) {
+            this.entityFactory = entityFactory;
             this.id = id;
             this.client = client;
             this.setStatus(WebSocketClientStatus.Initialization);
@@ -34,14 +34,15 @@
                 if (attr && this.onMessageHandler) {
 
                     try {
-                        var message = this.clientSeverMessageInitializer.create(attr);
+                        var message = this.entityFactory.restore<IClientServerMessage>(attr, ClientServerMessage);
+                        this.onMessageHandler(this, message);
                     }
                     catch (e) {
                         console.log(e);
                         this.status = WebSocketClientStatus.Disconnected;
                     }
                     
-                    this.onMessageHandler(this, message);
+
                 }
             }
 

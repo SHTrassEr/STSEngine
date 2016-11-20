@@ -2,19 +2,19 @@
 
     export class WebSocketClientListService implements IWebSocketClientListService {
 
-        protected clientSeverMessageInitializer: IClientServerMessageInitializer;
+        protected entityFactory: IEntityFactory;
         private webSocketClientList: Map<number, IWebSocketClient>;
         private lastSocketClientId: number;
 
-        constructor(clientSeverMessageInitializer: IClientServerMessageInitializer) {
-            this.clientSeverMessageInitializer = clientSeverMessageInitializer;
+        constructor(entityFactory: IEntityFactory) {
+            this.entityFactory = entityFactory;
             this.lastSocketClientId = 0;
             this.webSocketClientList = new Map<number, IWebSocketClient>();
         }
 
         public addWebSocketClient(client: any): IWebSocketClient {
             let newClientId = this.getNewSocketClientId();
-            let webSocketClient = new WebSocketClient(this.clientSeverMessageInitializer, newClientId, client);
+            let webSocketClient = new WebSocketClient(this.entityFactory, newClientId, client);
             this.webSocketClientList.set(newClientId, webSocketClient);
             return webSocketClient;
         }

@@ -8,10 +8,9 @@
         }
 
         protected initProcessHandlerList(world: IWorld) {
-            this.processHandlerList = [];
-            this.processHandlerList[ProcessCreateClientItemTank.Type] = new ProcessCreateClientItemTankHandler(world);
-            this.processHandlerList[ProcessFire.Type] = new ProcessFireHandler(world);
-            this.processHandlerList[ProcessMoveItem.Type] = new ProcessMoveItemHandler(world);
+            this.processHandlerList.set(ProcessCreateClientItemTank.type, new ProcessCreateClientItemTankHandler(world));
+            this.processHandlerList.set(ProcessFire.type, new ProcessFireHandler(world));
+            this.processHandlerList.set(ProcessMoveItem.type, new ProcessMoveItemHandler(world));
         }   
     }
 }

@@ -7,11 +7,6 @@ namespace STSEngine.Example {
         private _itemId: number = ++this.lastAttributeId;
         private _moveDirection: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ProcessMoveItem.Type);
-        }
-
         public getItemId(): number {
             return this.attributeList.get(this._itemId);
         }
@@ -23,6 +18,6 @@ namespace STSEngine.Example {
     }
 
     export module ProcessMoveItem {
-        export const Type = ++Item.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ProcessMoveItem.name;
     }
 }

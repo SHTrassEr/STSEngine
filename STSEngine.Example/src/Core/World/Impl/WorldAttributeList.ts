@@ -18,4 +18,8 @@
             this.attributeList.set(this._worldSize, size);
         }
     }
+
+    export module WorldAttributeList {
+        export const type = ModuleInfo.name + '.' + WorldAttributeList.name;
+    }
 }

@@ -7,12 +7,6 @@ namespace STSEngine.Example {
         private _itemId: number = ++this.lastAttributeId;
         private _force: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-
-            this.setType(CommandApplyForce.Type);
-        }
-
         public getItemId(): number {
             return this.attributeList.get(this._itemId);
         }
@@ -31,6 +25,6 @@ namespace STSEngine.Example {
     }
 
     export module CommandApplyForce {
-        export const Type = ++Command.LastTypeId;
+        export const type = ModuleInfo.name + '.' + CommandApplyForce.name;
     }
 }

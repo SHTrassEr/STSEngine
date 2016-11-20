@@ -1,4 +1,6 @@
-﻿namespace STSEngine {
+﻿/// <reference path="../../ModuleInfo.ts" />
+
+namespace STSEngine {
 
     export class Entity implements IEntity {
 
@@ -18,13 +20,21 @@
             if (kvpList) {
                 this.attributeList.setList(kvpList);
             }
+
+            let currentType = this.getType();
+            let type = (<any>(this.constructor)).type;
+            if (!type || (currentType && currentType != type)) {
+                throw new Error();
+            }
+
+            this.setType(type);
         }
 
-        public getType(): number {
+        public getType(): string {
             return this.attributeList.get(this._type);
         }
 
-        public setType(type: number): void {
+        private setType(type: string): void {
             this.attributeList.set(this._type, type);
         }
 
@@ -53,4 +63,9 @@
             return this.attributeList;
         }
     }
+
+    export module Entity {
+        export const type = ModuleInfo.name + '.' + Entity.name;
+    }
+
 }

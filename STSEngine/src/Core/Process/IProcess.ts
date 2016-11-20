@@ -1,11 +1,6 @@
 ﻿namespace STSEngine {
 
-    export interface IProcess extends IterableKeyValuePair { 
-        getId(): number;
-        setId(id: number): void;
-
-        getType(): number;
-        setType(processType: number): void
+    export interface IProcess extends IEntity { 
 
         getInitStep(): number;
         setInitStep(initStep: number): void

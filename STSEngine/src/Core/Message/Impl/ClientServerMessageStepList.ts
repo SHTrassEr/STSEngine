@@ -6,11 +6,6 @@ namespace STSEngine {
 
         private _stepList: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ClientServerMessageStepList.Type);
-        }
-
         public setStepList(stepList: IEntity[]): void {
             let stepAttributeList: [number, any][][] = []
             if (stepList) {
@@ -28,6 +23,6 @@ namespace STSEngine {
     }
 
     export module ClientServerMessageStepList {
-        export const Type = ++ClientServerMessage.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ClientServerMessageStepList.name;
     }
 }

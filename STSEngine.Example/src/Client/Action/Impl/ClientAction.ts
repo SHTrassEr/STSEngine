@@ -3,13 +3,6 @@
     export class ClientAction extends STSEngine.ClientAction implements IClientAction {
 
         protected onActionHandler: (clientAction: IClientAction) => void;
-        protected commandInitializer: CommandInitializer;
-
-        constructor() {
-            super();
-            this.commandInitializer = new CommandInitializer();
-        }
-
 
         protected addCommand(command: ICommand): void {
             this.commandListService.add(command);
@@ -39,21 +32,21 @@
         }
 
         public setClientForceVector(itemId: number, vector: IVector): void {
-            var command = this.commandInitializer.createApplyForce();
+            var command = new CommandApplyForce();
             command.setItemId(itemId);
             command.setForce(vector);
             this.addCommand(command);
         }
         
         public fire(itemId: number, position: IVector): void {
-            var command = this.commandInitializer.createFire();
+            var command = new CommandFire();
             command.setItemId(itemId);
             command.setPosition(position);
             this.addCommand(command);
         }
 
         public changeClientName(clientId: number, name: string): void {
-            var command = this.commandInitializer.createChangeClientName();
+            var command = new CommandChangeClientName();
             command.setClientId(clientId);
             command.setClientName(name);
             this.addCommand(command);

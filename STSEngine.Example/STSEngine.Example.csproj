@@ -40,10 +40,7 @@
     <TypeScriptCompile Include="src\Client\Service\Impl\WebSocketGameClient.ts" />
     <TypeScriptCompile Include="src\Client\Service\IWebSocketGameClient.ts" />
     <TypeScriptCompile Include="src\Client\View\Impl\View.ts" />
-    <TypeScriptCompile Include="src\Core\Client\IClientInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Client\Impl\Client.ts" />
-    <TypeScriptCompile Include="src\Core\Client\Impl\ClientInitializer.ts" />
-    <TypeScriptCompile Include="src\Core\Command\ICommandInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandInitWorldHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandApplyForceHandler.ts" />
@@ -59,24 +56,19 @@
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandCreateClientItemTankHandler.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandDispatcher.ts" />
     <TypeScriptCompile Include="src\Core\Command\Impl\CommandRegisterClientHandler.ts" />
-    <TypeScriptCompile Include="src\Core\Command\Impl\CommandInitializer.ts" />
+    <TypeScriptCompile Include="src\Core\Entity\Impl\Entity.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItemRectangle.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItemTank.ts" />
-    <TypeScriptCompile Include="src\Core\Item\IItemInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItemListService.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\Item.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemWall.ts" />
-    <TypeScriptCompile Include="src\Core\Item\Impl\ItemInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemBullet.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItem.ts" />
     <TypeScriptCompile Include="src\Core\Client\Impl\ClientActive.ts" />
     <TypeScriptCompile Include="src\Core\Client\IClientActive.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemListService.ts" />
-    <TypeScriptCompile Include="src\Core\Message\IClientServerMessageInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessage.ts" />
-    <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\Entity\Process.ts" />
-    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\Vector.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IVector.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\ItemTank.ts" />
@@ -87,7 +79,6 @@
     <TypeScriptCompile Include="src\Core\Process\Impl\Entity\ProcessCreateClientItemTank.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessFireHandler.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessMoveItemHandler.ts" />
-    <TypeScriptCompile Include="src\Core\Process\IProcessInitializer.ts" />
     <TypeScriptCompile Include="src\Core\Service\ICollisionService.ts" />
     <TypeScriptCompile Include="src\Core\Service\IPhysicsEngine.ts" />
     <TypeScriptCompile Include="src\Core\Service\IEngine.ts" />
@@ -100,6 +91,7 @@
     <TypeScriptCompile Include="src\Core\World\Impl\World.ts" />
     <TypeScriptCompile Include="src\Core\World\IWorldAttributeList.ts" />
     <TypeScriptCompile Include="src\Core\World\IWorld.ts" />
+    <TypeScriptCompile Include="src\Core\ModuleInfo.ts" />
     <TypeScriptCompile Include="src\Server\Export.ts" />
     <TypeScriptCompile Include="src\Server\Service\Impl\WebSocketGameServer.ts" />
   </ItemGroup>

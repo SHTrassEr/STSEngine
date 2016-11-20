@@ -7,11 +7,6 @@ namespace STSEngine {
         private _commandList: number = ++this.lastAttributeId;
         private _stepNumber: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ClientServerMessageStep.Type);
-        }
-
         public setCommandList(commandList: ICommand[]): void {
             let commandAttributeList: [number, any][][] = []
             if (commandList) {
@@ -37,6 +32,6 @@ namespace STSEngine {
     }
 
     export module ClientServerMessageStep {
-        export const Type = ++ClientServerMessage.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ClientServerMessageStep.name;
     }
 }

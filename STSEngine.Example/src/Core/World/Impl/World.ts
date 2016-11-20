@@ -1,37 +1,62 @@
 ﻿namespace STSEngine.Example {
 
-    export class World implements IWorld {
+    export class World extends STSEngine.World implements IWorld {
 
         protected worldAttributeList: IWorldAttributeList;
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
         protected clientListService: IClientListService;
-        protected clientInitializer: IClientInitializer;
+        protected entityFactory: IEntityFactory;
 
-        protected commandInitializer: ICommandInitializer;
-        protected itemInitializer: IItemInitializer;
-        protected processInitializer: IProcessInitializer;
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
         protected collisionService: ICollisionService;
         protected physicsEngine: IPhysicsEngine;
 
         constructor(worldAttributeList: WorldAttributeList) {
-            this.worldAttributeList = worldAttributeList;
+            super(worldAttributeList);
+
+            this.entityFactory = new EntityFactory(this.initEntity.bind(this));
+            this.initEntityFactory(this.entityFactory);
+
+            
             this.itemListService = new ItemListService();
-            
-            this.clientInitializer = new ClientInitializer();
-            
+
             this.processListService = new ProcessListService();
             this.clientListService = new ClientListService();
             this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
 
-            this.commandInitializer = new CommandInitializer();
-            this.itemInitializer = new ItemInitializer(this.getItemId.bind(this));
-            this.processInitializer = new ProcessInitializer(this.getProcessId.bind(this));
             this.commandDispatcher = new CommandDispatcher(this);
             this.processDispatcher = new ProcessDispatcher(this);
             this.physicsEngine = new PhysicsEngine(this);
+        }
+
+        protected initEntityFactory(entityFactory: IEntityFactory) {
+            super.initEntityFactory(entityFactory);
+            entityFactory.add(CommandApplyForce);
+            entityFactory.add(CommandChangeClientName);
+            entityFactory.add(CommandCreateClientItemTank);
+            entityFactory.add(CommandFire);
+            entityFactory.add(CommandInitWorld);
+            entityFactory.add(CommandRegisterClient);
+
+
+            entityFactory.add(ItemBullet);
+            entityFactory.add(ItemTank);
+            entityFactory.add(ItemWall);
+
+
+            entityFactory.add(ProcessCreateClientItemTank);
+            entityFactory.add(ProcessFire);
+            entityFactory.add(ProcessMoveItem);
+        }
+
+        protected initEntity(entity: IEntity) {
+            if (entity instanceof Item || entity instanceof Process) {
+                if (!entity.getId()) {
+                    entity.setId(this.getItemId());
+                }
+            }
         }
 
 
@@ -39,16 +64,8 @@
             return this.worldAttributeList;
         }
 
-        public getCommandInitializer(): ICommandInitializer {
-            return this.commandInitializer;
-        }
-
-        public getItemInitializer(): IItemInitializer {
-            return this.itemInitializer;
-        }
-
-        public getProcessInitializer(): IProcessInitializer {
-            return this.processInitializer;
+        public getEntityFactory(): IEntityFactory {
+            return this.entityFactory;
         }
 
         public getProcessDispatcher(): IProcessDispatcher {
@@ -75,10 +92,6 @@
             return this.clientListService;
         }
 
-        public getClientInitializer(): IClientInitializer {
-            return this.clientInitializer;
-        }
-
         public getPhysicsEngine(): IPhysicsEngine {
             return this.physicsEngine;
         }
@@ -86,12 +99,6 @@
         protected getItemId(): number {
             var id = this.worldAttributeList.getLastItemId() + 1;
             this.worldAttributeList.setLastItemId(id);
-            return id;
-        }
-
-        protected getProcessId(): number {
-            var id = this.worldAttributeList.getLastProcessId() + 1;
-            this.worldAttributeList.setLastProcessId(id);
             return id;
         }
     }

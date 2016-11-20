@@ -5,28 +5,27 @@
         protected itemListService: IItemListService;
         protected processListService: IProcessListService;
         protected clientListService: IClientListService;
-        protected clientInitializer: IClientInitializer;
 
-        protected commandInitializer: ICommandInitializer;
-        protected itemInitializer: IItemInitializer;
-        protected processInitializer: IProcessInitializer;
+        protected entityFactory: IEntityFactory;
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
 
+        constructor(worldAttributeList: WorldAttributeList) {
+            this.worldAttributeList = worldAttributeList;
+        }
+
+        protected initEntityFactory(entityFactory: IEntityFactory) {
+            entityFactory.add(ClientServerMessageCommandList);
+            entityFactory.add(ClientServerMessageInit);
+            entityFactory.add(ClientServerMessageRequestAuthentication);
+            entityFactory.add(ClientServerMessageResponseAuthentication);
+            entityFactory.add(ClientServerMessageStep);
+            entityFactory.add(ClientServerMessageStepList);
+            entityFactory.add(ClientServerMessageWorldFullInfo);
+        }
+
         public getWorldAttributeList(): IWorldAttributeList {
             return this.worldAttributeList;
-        }
-
-        public getCommandInitializer(): ICommandInitializer {
-            return this.commandInitializer;
-        }
-
-        public getItemInitializer(): IItemInitializer {
-            return this.itemInitializer;
-        }
-
-        public getProcessInitializer(): IProcessInitializer {
-            return this.processInitializer;
         }
 
         public getProcessDispatcher(): IProcessDispatcher {
@@ -49,8 +48,8 @@
             return this.clientListService;
         }
 
-        public getClientInitializer(): IClientInitializer {
-            return this.clientInitializer;
+        public getEntityFactory(): IEntityFactory {
+            return this.entityFactory;
         }
 
         protected getItemId(): number {

@@ -7,13 +7,6 @@ namespace STSEngine.Example {
         private _clientId: number = ++this.lastAttributeId;
         private _clientName: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-
-            this.setType(CommandRegisterClient.Type);
-        }
-
-
         public getClientId(): number {
             return this.attributeList.get(this._clientId);
         }
@@ -34,6 +27,6 @@ namespace STSEngine.Example {
     }
 
     export module CommandRegisterClient {
-        export const Type = ++Command.LastTypeId;
+        export const type = ModuleInfo.name + '.' + CommandRegisterClient.name;
     }
 }

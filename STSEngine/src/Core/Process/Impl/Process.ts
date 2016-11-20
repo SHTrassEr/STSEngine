@@ -4,11 +4,6 @@ namespace STSEngine {
 
     export class Process extends Entity implements IProcess {
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(Process.Type);
-        }
-
         private _processStatus: number = ++this.lastAttributeId;
         private _initStep: number = ++this.lastAttributeId;
         private _finishStep: number = ++this.lastAttributeId;
@@ -39,7 +34,6 @@ namespace STSEngine {
     }
 
     export module Process {
-        export let LastTypeId = 0;
-        export const Type = ++LastTypeId;
+        export const type = ModuleInfo.name + '.' + Process.name;
     }
 }

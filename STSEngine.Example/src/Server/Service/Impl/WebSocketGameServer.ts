@@ -8,7 +8,6 @@
 
         constructor(socket: WebSocket) {
 
-            let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
             let world = new World(worldAttributeList);
 
@@ -16,12 +15,12 @@
             let commandListService = new CommandListService();
             let engine = new Engine(world, commandListService);
             
-            super(socket, engine, clientServerMessageInitializer);
+            super(socket, engine);
 
             this.lastClientId = 0;
             this.connectedClientList = new Map<string, number>();
 
-            let commandInitWorld = world.getCommandInitializer().createInitWorld();
+            let commandInitWorld = world.getEntityFactory().create<CommandInitWorld>(CommandInitWorld);
             commandInitWorld.setInitiatorId(0);
             commandListService.add(commandInitWorld);
         }

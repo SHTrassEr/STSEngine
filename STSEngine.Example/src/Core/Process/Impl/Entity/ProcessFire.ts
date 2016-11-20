@@ -7,11 +7,6 @@ namespace STSEngine.Example {
         private _itemId: number = ++this.lastAttributeId;
         private _position: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ProcessFire.Type);
-        }
-
         public getItemId(): number {
             return this.attributeList.get(this._itemId);
         }
@@ -30,6 +25,6 @@ namespace STSEngine.Example {
     }
 
     export module ProcessFire {
-        export const Type = ++Item.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ProcessFire.name;
     }
 }

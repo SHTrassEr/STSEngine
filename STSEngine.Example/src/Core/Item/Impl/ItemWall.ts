@@ -4,11 +4,6 @@ namespace STSEngine.Example {
 
     export class ItemWall extends Item implements IItemRectangle  {
 
-        constructor(attributeList: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ItemWall.Type);
-        }
-
         protected createBody(): Matter.Body {
             let body = Matter.Bodies.rectangle(200, 200, this.getWidth(), this.getHeight(), { isStatic: true, label: "Wall" });
 
@@ -31,6 +26,6 @@ namespace STSEngine.Example {
     }
 
     export module ItemWall {
-        export const Type = ++Item.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ItemWall.name;
     }
 }

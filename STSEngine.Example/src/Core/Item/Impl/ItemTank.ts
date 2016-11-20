@@ -7,11 +7,6 @@ namespace STSEngine.Example {
         private _clientForceVector: number = ++this.lastAttributeId;
         private _clientForceModifier: number = ++this.lastAttributeId;
 
-        constructor(attributeList: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ItemTank.Type);
-        }
-
         protected createBody(): Matter.Body {
             let body = Matter.Bodies.rectangle(200, 200, this.getWidth(), this.getHeight(), { density: 0.001, friction: 0.1, frictionAir: 0.1, frictionStatic: 0.5, inertia: Infinity, label: "ItemTank" });
             return body;
@@ -32,6 +27,6 @@ namespace STSEngine.Example {
     }
 
     export module ItemTank {
-        export const Type = ++Item.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ItemTank.name;
     }
 }

@@ -5,15 +5,10 @@
         protected webSocketServer: IWebSocketServer;
         protected gameServer: IGameServer;
         protected engine: IEngine;
-        protected clientSeverMessageInitializer: IClientServerMessageInitializer;
 
-
-        constructor(server: any, engine: IEngine, clientSeverMessageInitializer: IClientServerMessageInitializer) {
-            this.webSocketServer = new WebSocketServer(server, clientSeverMessageInitializer);
-
+        constructor(server: any, engine: IEngine) {
+            this.webSocketServer = new WebSocketServer(server, engine.getWorld().getEntityFactory());
             this.engine = engine;
-
-            this.clientSeverMessageInitializer = clientSeverMessageInitializer;
             this.init();
         }
 
@@ -78,7 +73,7 @@
 
         protected processCommandList(webSocketClient: IWebSocketClient, message: ClientServerMessageCommandList) {
 
-            let commandList = this.engine.getWorld().getCommandInitializer().createList(message.getCommandList());
+            let commandList = this.engine.getWorld().getEntityFactory().restoreList<ICommand>(message.getCommandList(), Command);
             this.engine.getCommandListService().setCommandList(this.initCommandList(webSocketClient, commandList));
         } 
 

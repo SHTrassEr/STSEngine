@@ -2,8 +2,7 @@
 
     export interface IEntity extends IterableKeyValuePair {
 
-        getType(): number;
-        setType(type: number): void;
+        getType(): string;
 
         getId(): number;
         setId(id: number): void;

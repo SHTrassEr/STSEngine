@@ -6,11 +6,6 @@ namespace STSEngine {
 
         private _sid: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ClientServerMessageResponseAuthentication.Type);
-        }
-
         public setSID(sid: string): void {
             this.attributeList.set(this._sid, sid);
         }
@@ -21,6 +16,6 @@ namespace STSEngine {
     }
 
     export module ClientServerMessageResponseAuthentication {
-        export const Type = ++ClientServerMessage.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ClientServerMessageResponseAuthentication.name;
     }
 }

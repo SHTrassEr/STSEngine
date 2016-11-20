@@ -8,12 +8,12 @@
         }
 
         protected initCommandHandlerList(world: IWorld) {
-            this.commandHandlerList[CommandRegisterClient.Type] = new CommandRegisterClientHandler(world);
-            this.commandHandlerList[CommandCreateClientItemTank.Type] = new CommandCreateClientItemTankHandler(world);
-            this.commandHandlerList[CommandFire.Type] = new CommandFireHandler(world);
-            this.commandHandlerList[CommandChangeClientName.Type] = new CommandChangeClientNameHandler(world);
-            this.commandHandlerList[CommandApplyForce.Type] = new CommandApplyForceHandler(world);
-            this.commandHandlerList[CommandInitWorld.Type] = new CommandInitWorldHandler(world);
+            this.commandHandlerList.set(CommandRegisterClient.type, new CommandRegisterClientHandler(world));
+            this.commandHandlerList.set(CommandCreateClientItemTank.type, new CommandCreateClientItemTankHandler(world));
+            this.commandHandlerList.set(CommandFire.type, new CommandFireHandler(world));
+            this.commandHandlerList.set(CommandChangeClientName.type, new CommandChangeClientNameHandler(world));
+            this.commandHandlerList.set(CommandApplyForce.type, new CommandApplyForceHandler(world));
+            this.commandHandlerList.set(CommandInitWorld.type, new CommandInitWorldHandler(world));
         }
 
     }

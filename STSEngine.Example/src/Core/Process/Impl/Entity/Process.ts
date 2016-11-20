@@ -1,4 +1,4 @@
-﻿
+﻿/// <reference path="../../../Entity/Impl/Entity.ts" />
 
 namespace STSEngine.Example {
 
@@ -7,6 +7,6 @@ namespace STSEngine.Example {
     }
 
     export module Process {
-        let lastTypeId = STSEngine.Process.LastTypeId;
+        export const type = ModuleInfo.name + '.' + Process.name;
     }
 }

@@ -11,7 +11,7 @@ namespace STSEngine.Example {
         }
 
         protected executeCommand(command: CommandCreateClientItemTank): void {
-            var process = this.world.getProcessInitializer().createCreateClientItemTank();
+            var process = this.world.getEntityFactory().create<ProcessCreateClientItemTank>(ProcessCreateClientItemTank);
             process.setClientId(command.getClientId());
             this.startProcess(process);
         }

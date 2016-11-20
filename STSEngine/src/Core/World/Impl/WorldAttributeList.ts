@@ -41,4 +41,9 @@ namespace STSEngine {
             this.attributeList.set(this._stepNumber, stepNumber);
         }
     }
+
+    export module WorldAttributeList {
+        export let LastTypeId = 0;
+        export const Type = ++LastTypeId;
+    }
 }

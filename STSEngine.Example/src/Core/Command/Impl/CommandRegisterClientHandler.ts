@@ -16,7 +16,7 @@ namespace STSEngine.Example {
             client.setId(command.getClientId());
             this.world.getClientListService().add(client);
 
-            let process = this.world.getProcessInitializer().createCreateClientItemTank();
+            let process = this.world.getEntityFactory().create<ProcessCreateClientItemTank>(ProcessCreateClientItemTank);
             process.setClientId(command.getClientId());
             this.startProcess(process);
         }

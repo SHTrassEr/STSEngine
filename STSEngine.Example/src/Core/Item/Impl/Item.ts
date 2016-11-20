@@ -1,4 +1,6 @@
-﻿namespace STSEngine.Example {
+﻿/// <reference path="../../Entity/Impl/Entity.ts" />
+
+namespace STSEngine.Example {
 
     export abstract class Item extends STSEngine.Item implements IItem {
 
@@ -125,6 +127,6 @@
     }
 
     export module Item {
-        let lastTypeId = STSEngine.Item.LastTypeId;
+        export const type = ModuleInfo.name + '.' + Item.name;
     }
 }

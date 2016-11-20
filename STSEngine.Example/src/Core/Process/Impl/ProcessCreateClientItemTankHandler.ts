@@ -9,7 +9,7 @@
         }
 
         public initProcess(process: ProcessCreateClientItemTank): void {
-            let itemTank = this.world.getItemInitializer().createTank();
+            let itemTank = this.world.getEntityFactory().create<ItemTank>(ItemTank);
             itemTank.setClientId(process.getClientId());
             itemTank.setPosition(new Vector(40, 40));
             itemTank.setForce(new Vector(0, 0));
@@ -19,7 +19,7 @@
 
             this.world.getItemListService().add(itemTank);
 
-            var moveProcess = this.world.getProcessInitializer().createMoveItem();
+            var moveProcess = this.world.getEntityFactory().create<ProcessMoveItem>(ProcessMoveItem);
             moveProcess.setItemId(itemTank.getId());
             this.startProcess(moveProcess);
 

@@ -9,10 +9,6 @@ namespace STSEngine {
         private _itemListService: number = ++this.lastAttributeId;
         private _processListService: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ClientServerMessageWorldFullInfo.Type);
-        }
 
         public setWorld(world: IWorld): void {
             this.setWorldAttributeList(world.getWorldAttributeList());
@@ -56,6 +52,6 @@ namespace STSEngine {
     }
 
     export module ClientServerMessageWorldFullInfo {
-        export const Type = ++ClientServerMessage.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ClientServerMessageWorldFullInfo.name;
     }
 }

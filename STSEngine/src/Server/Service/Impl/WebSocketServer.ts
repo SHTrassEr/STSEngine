@@ -7,9 +7,11 @@
         protected onClientConnectedHandler: (webSocketClient: IWebSocketClient) => void;
         protected onClientDisconnectedHandler: (webSocketClient: IWebSocketClient) => void;
         protected onClientMessageHandler: (webSocketClient: IWebSocketClient, message: IClientServerMessage) => void;
+        protected entityFactory: IEntityFactory;
 
-        constructor(server: any, clientSeverMessageInitializer: IClientServerMessageInitializer) {
-            this.webSocketClientListService = new WebSocketClientListService(clientSeverMessageInitializer);
+        constructor(server: any, entityFactory: IEntityFactory) {
+            this.entityFactory = entityFactory;
+            this.webSocketClientListService = new WebSocketClientListService(entityFactory);
             this.server = server;
             this.init();
         }
@@ -47,6 +49,9 @@
         protected initWebSocketClient(webSocketClient: IWebSocketClient) {
             webSocketClient.setOnMessage(this.onClientMessage.bind(this));
             webSocketClient.setOnClose(this.onClientDisconnected.bind(this));
+
+            //this.entityFactory.create
+
             let message = new ClientServerMessageRequestAuthentication();
             webSocketClient.sendMessage(message);
         }

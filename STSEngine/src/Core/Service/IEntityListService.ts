@@ -1,6 +1,6 @@
 ﻿namespace STSEngine {
 
-    export interface IEntityListService<T extends IItem> extends IFilterable<T> {
+    export interface IEntityListService<T extends IEntity> extends IFilterable<T> {
         init(objectList: Iterable<T>): void;
         get(id: number): T;
         has(id: number): boolean;

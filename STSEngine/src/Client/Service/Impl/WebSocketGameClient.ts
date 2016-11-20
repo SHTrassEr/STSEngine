@@ -7,12 +7,10 @@
         protected engine: IEngine;
         protected clientAction: IClientAction;
         protected clientId: number;
-        protected clientSeverMessageInitializer: IClientServerMessageInitializer;
 
         protected onConnectedHandler: (webSocketClient: IWebSocketGameClient) => void;
 
-        constructor(socket: WebSocket, sid: string, clientAction: IClientAction, engine: IEngine, clientSeverMessageInitializer: IClientServerMessageInitializer) {
-            this.clientSeverMessageInitializer = clientSeverMessageInitializer;
+        constructor(socket: WebSocket, sid: string, clientAction: IClientAction, engine: IEngine) {
             this.engine = engine;
             this.socket = socket;
             this.clientAction = clientAction;
@@ -62,22 +60,22 @@
         }
 
         protected processServerMessage(attr: Iterable<[number, any]>): void {
-            let message = this.clientSeverMessageInitializer.create(attr);
+            let message = this.engine.getWorld().getEntityFactory().restore<IClientServerMessage>(attr, ClientServerMessage);
 
             switch (message.getType()) {
-                case ClientServerMessageRequestAuthentication.Type:
+                case ClientServerMessageRequestAuthentication.type:
                     this.sendAuthentication();
                     break;
-                case ClientServerMessageInit.Type:
+                case ClientServerMessageInit.type:
                     this.processInit(<ClientServerMessageInit>message);
                     break;
-                case ClientServerMessageStep.Type:
+                case ClientServerMessageStep.type:
                     this.processStep(<ClientServerMessageStep>message);
                     break;
-                case ClientServerMessageStepList.Type:
+                case ClientServerMessageStepList.type:
                     this.processStepList(<ClientServerMessageStepList>message);
                     break;
-                case ClientServerMessageWorldFullInfo.Type:
+                case ClientServerMessageWorldFullInfo.type:
                     this.processWorldFullInfo(<ClientServerMessageWorldFullInfo>message);
                     break;
             }
@@ -91,16 +89,16 @@
 
         protected processStep(message: ClientServerMessageStep) {
             let commandListAttr = message.getCommandList();
-            let commandList = this.engine.getWorld().getCommandInitializer().createList(commandListAttr);
+            let commandList = this.engine.getWorld().getEntityFactory().restoreList<ICommand>(commandListAttr, Command);
             this.engine.getCommandListService().setCommandList(commandList);
             this.engine.step();
         }
 
         protected processStepList(message: ClientServerMessageStepList) {
             var stepListAttr = message.getStepList();
-            var stepList = this.clientSeverMessageInitializer.createList(stepListAttr);
+            var stepList = this.engine.getWorld().getEntityFactory().restoreList<ClientServerMessageStep>(stepListAttr, ClientServerMessageStep);
             for (var step of stepList) {
-                this.processStep(<ClientServerMessageStep>step);
+                this.processStep(step);
             }
         }
 
@@ -108,13 +106,13 @@
             let world = this.engine.getWorld();
             world.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
 
-            let itemList = world.getItemInitializer().createList(message.getItemListService());
+            let itemList = world.getEntityFactory().restoreList<IItem>(message.getItemListService(), Item);
             world.getItemListService().setList(itemList, true);
 
-            let processList = world.getProcessInitializer().createList(message.getProcessListService());
+            let processList = world.getEntityFactory().restoreList<IProcess>(message.getProcessListService(), Process);
             world.getProcessListService().setList(processList, true);
 
-            let clientList = world.getClientInitializer().createList(message.getClientListService());
+            let clientList = world.getEntityFactory().restoreList<IClient>(message.getClientListService(), Client);
             world.getClientListService().setList(clientList, true);
 
         }

@@ -6,11 +6,6 @@ namespace STSEngine {
 
         private _commandList: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
-            super(attributeList, kvpList);
-            this.setType(ClientServerMessageCommandList.Type);
-        }
-
         public setCommandList(commandList: [number, any][][]): void {
             this.attributeList.set(this._commandList, commandList);
         }
@@ -21,6 +16,6 @@ namespace STSEngine {
     }
 
     export module ClientServerMessageCommandList {
-        export const Type = ++ClientServerMessage.LastTypeId;
+        export const type = ModuleInfo.name + '.' + ClientServerMessageCommandList.name;
     }
 }
