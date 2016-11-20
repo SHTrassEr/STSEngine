@@ -2,10 +2,10 @@
 
     export class CommandHandler implements ICommandHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            this.worldServiceList = worldServiceList;
+        constructor(world: IWorld) {
+            this.world = world;
         }
 
         public execute(command: ICommand): void {
@@ -35,12 +35,12 @@
         }
 
         protected startProcess(process: IProcess): void {
-            this.worldServiceList.getProcessListService().add(process);
-            this.worldServiceList.getProcessDispatcher().init(process);
+            this.world.getProcessListService().add(process);
+            this.world.getProcessDispatcher().init(process);
         }
 
         protected finishProcess(process: IProcess): void {
-            this.worldServiceList.getProcessDispatcher().finish(process);
+            this.world.getProcessDispatcher().finish(process);
         }
     }
 }

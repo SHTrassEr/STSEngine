@@ -2,10 +2,10 @@
 
     export class ProcessHandler implements IProcessHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            this.worldServiceList = worldServiceList;
+        constructor(world: IWorld) {
+            this.world = world;
         }
 
         public init(process: IProcess): void {
@@ -37,11 +37,11 @@
         }
 
         protected setInitStep(process: IProcess) {
-            process.setInitStep(this.worldServiceList.getWorldAttributeList().getStepNumber());
+            process.setInitStep(this.world.getWorldAttributeList().getStepNumber());
         }
 
         protected setFinishStep(process: IProcess) {
-            process.setFinishStep(this.worldServiceList.getWorldAttributeList().getStepNumber());
+            process.setFinishStep(this.world.getWorldAttributeList().getStepNumber());
         }
 
         protected initProcess(process: IProcess): void {
@@ -61,8 +61,8 @@
         }
 
         protected startProcess(process: IProcess): void {
-            this.worldServiceList.getProcessListService().add(process);
-            this.worldServiceList.getProcessDispatcher().init(process);
+            this.world.getProcessListService().add(process);
+            this.world.getProcessDispatcher().init(process);
         }
     }
 }

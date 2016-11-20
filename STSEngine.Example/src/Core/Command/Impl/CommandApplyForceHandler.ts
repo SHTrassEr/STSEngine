@@ -4,14 +4,14 @@ namespace STSEngine.Example {
 
     export class CommandApplyForceHandler extends CommandHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         protected executeCommand(command: CommandApplyForce): void {
-            let item = this.worldServiceList.getItemListService().getTyped<IItemTank>(command.getItemId(), ItemTank);
+            let item = this.world.getItemListService().getTyped<IItemTank>(command.getItemId(), ItemTank);
 
             let force = command.getForce();
             VectorHelper.normalize(force);

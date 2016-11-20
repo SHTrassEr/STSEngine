@@ -4,19 +4,19 @@ namespace STSEngine.Example {
 
     export class CommandRegisterClientHandler extends CommandHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         protected executeCommand(command: CommandRegisterClient): void {
             let client = new ClientActive();
             client.setName(command.getClientName());
             client.setId(command.getClientId());
-            this.worldServiceList.getClientListService().add(client);
+            this.world.getClientListService().add(client);
 
-            let process = this.worldServiceList.getProcessInitializer().createCreateClientItemTank();
+            let process = this.world.getProcessInitializer().createCreateClientItemTank();
             process.setClientId(command.getClientId());
             this.startProcess(process);
         }
@@ -24,7 +24,7 @@ namespace STSEngine.Example {
         protected isValidCommand(command: CommandRegisterClient): boolean {
 
             if (this.isSystemCommand(command)) {
-                var client = this.worldServiceList.getClientListService().getFirst(p => p.getId() == command.getClientId());
+                var client = this.world.getClientListService().getFirst(p => p.getId() == command.getClientId());
                 if (!client) {
                     return true;
                 }

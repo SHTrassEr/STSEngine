@@ -5,13 +5,13 @@ namespace STSEngine.Example {
     export class CommandFireHandler extends CommandHandler {
 
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         protected executeCommand(command: CommandFire): void {
-            var process = this.worldServiceList.getProcessInitializer().createFire();
-            process.setObjectId(command.getItemId());
+            var process = this.world.getProcessInitializer().createFire();
+            process.setItemId(command.getItemId());
             process.setPosition(command.getPosition());
             this.startProcess(process);
         }

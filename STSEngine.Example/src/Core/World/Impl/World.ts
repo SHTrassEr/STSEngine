@@ -9,7 +9,7 @@
         protected clientInitializer: IClientInitializer;
 
         protected commandInitializer: ICommandInitializer;
-        protected objectInitializer: IItemInitializer;
+        protected itemInitializer: IItemInitializer;
         protected processInitializer: IProcessInitializer;
         protected processDispatcher: IProcessDispatcher;
         protected commandDispatcher: ICommandDispatcher;
@@ -27,12 +27,11 @@
             this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
 
             this.commandInitializer = new CommandInitializer();
-            this.objectInitializer = new ItemInitializer(this.getItemId.bind(this));
+            this.itemInitializer = new ItemInitializer(this.getItemId.bind(this));
             this.processInitializer = new ProcessInitializer(this.getProcessId.bind(this));
             this.commandDispatcher = new CommandDispatcher(this);
             this.processDispatcher = new ProcessDispatcher(this);
             this.physicsEngine = new PhysicsEngine(this);
-
         }
 
 
@@ -45,7 +44,7 @@
         }
 
         public getItemInitializer(): IItemInitializer {
-            return this.objectInitializer;
+            return this.itemInitializer;
         }
 
         public getProcessInitializer(): IProcessInitializer {
@@ -85,8 +84,8 @@
         }
 
         protected getItemId(): number {
-            var id = this.worldAttributeList.getLastObjectId() + 1;
-            this.worldAttributeList.setLastObjectId(id);
+            var id = this.worldAttributeList.getLastItemId() + 1;
+            this.worldAttributeList.setLastItemId(id);
             return id;
         }
 
@@ -95,6 +94,5 @@
             this.worldAttributeList.setLastProcessId(id);
             return id;
         }
-        
     }
 }

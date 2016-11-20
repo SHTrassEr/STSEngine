@@ -4,14 +4,14 @@ namespace STSEngine.Example {
 
     export class CommandCreateClientItemTankHandler extends CommandHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         protected executeCommand(command: CommandCreateClientItemTank): void {
-            var process = this.worldServiceList.getProcessInitializer().createCreateClientItemTank();
+            var process = this.world.getProcessInitializer().createCreateClientItemTank();
             process.setClientId(command.getClientId());
             this.startProcess(process);
         }

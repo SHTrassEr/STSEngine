@@ -10,18 +10,18 @@
 
             let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
-            let worldServiceList = new World(worldAttributeList);
+            let world = new World(worldAttributeList);
 
 
             let commandListService = new CommandListService();
-            let engine = new Engine(worldServiceList, commandListService);
+            let engine = new Engine(world, commandListService);
             
             super(socket, engine, clientServerMessageInitializer);
 
             this.lastClientId = 0;
             this.connectedClientList = new Map<string, number>();
 
-            let commandInitWorld = worldServiceList.getCommandInitializer().createInitWorld();
+            let commandInitWorld = world.getCommandInitializer().createInitWorld();
             commandInitWorld.setInitiatorId(0);
             commandListService.add(commandInitWorld);
         }

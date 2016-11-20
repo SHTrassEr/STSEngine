@@ -4,22 +4,22 @@ namespace STSEngine.Example {
 
     export class CommandInitWorldHandler extends CommandHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         protected executeCommand(command: CommandInitWorld): void {
-            this.initLimit(this.worldServiceList);
+            this.initLimit(this.world);
         }
 
-        protected initLimit(worldServiceList: IWorld) {
-            let engine = worldServiceList.getPhysicsEngine().getEngine();
-            let itemInitializer = worldServiceList.getItemInitializer();
-            let size = worldServiceList.getWorldAttributeList().getWorldSize();
+        protected initLimit(world: IWorld) {
+            let engine = world.getPhysicsEngine().getEngine();
+            let itemInitializer = world.getItemInitializer();
+            let size = world.getWorldAttributeList().getWorldSize();
             let w = 200;
-            let itemListService = worldServiceList.getItemListService();
+            let itemListService = world.getItemListService();
 
             let w1 = itemInitializer.createWall();
             w1.setPosition(new Vector(size[0] / 2, -w));

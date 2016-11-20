@@ -53,9 +53,9 @@
             return this.clientInitializer;
         }
 
-        protected getObjectId(): number {
-            var id = this.worldAttributeList.getLastObjectId() + 1;
-            this.worldAttributeList.setLastObjectId(id);
+        protected getItemId(): number {
+            var id = this.worldAttributeList.getLastItemId() + 1;
+            this.worldAttributeList.setLastItemId(id);
             return id;
         }
 

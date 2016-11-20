@@ -4,12 +4,12 @@ namespace STSEngine.Example {
 
     export class CommandChangeClientNameHandler extends CommandHandler {
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         protected executeCommand(command: CommandChangeClientName): void {
-            var client = this.worldServiceList.getClientListService().getTyped<IClient>(command.getClientId(), Client);
+            var client = this.world.getClientListService().getTyped<IClient>(command.getClientId(), Client);
             if (client) {
                 client.setName(command.getClientName());
             }

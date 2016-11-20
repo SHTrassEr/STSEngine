@@ -8,11 +8,11 @@
 
             let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
-            let worldServiceList = new World(worldAttributeList);
+            let world = new World(worldAttributeList);
 
 
             let commandListService = new CommandListService();
-            let engine = new Engine(worldServiceList, commandListService);
+            let engine = new Engine(world, commandListService);
 
 
             super(socket, sid, clientAction, engine, clientServerMessageInitializer);

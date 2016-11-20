@@ -2,14 +2,14 @@
 
     export class ProcessFireHandler extends STSEngine.ProcessHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         public executeProcess(process: ProcessFire): void {
-            let item = this.worldServiceList.getItemListService().getTyped<ItemTank>(process.getObjectId(), ItemTank); 
+            let item = this.world.getItemListService().getTyped<ItemTank>(process.getItemId(), ItemTank); 
             if (item) {
                 this.fire(process, item);
             }
@@ -18,7 +18,7 @@
         }
 
         protected fire(process: ProcessFire, item: ItemTank): void {
-            var bullet = this.worldServiceList.getItemInitializer().createBullet();
+            var bullet = this.world.getItemInitializer().createBullet();
             bullet.setPosition(item.getPosition());
             bullet.setClientId(item.getClientId());
 
@@ -33,9 +33,9 @@
             bullet.setVelocity(item.getVelocity());
             
 
-            this.worldServiceList.getItemListService().add(bullet);
+            this.world.getItemListService().add(bullet);
 
-            var moveProcess = this.worldServiceList.getProcessInitializer().createMoveItem();
+            var moveProcess = this.world.getProcessInitializer().createMoveItem();
 
             moveProcess.setItemId(bullet.getId());
 

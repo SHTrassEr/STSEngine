@@ -2,16 +2,16 @@
 
     export class ProcessDispatcher extends STSEngine.ProcessDispatcher {
 
-        constructor(worldServiceList: IWorld) {
+        constructor(world: IWorld) {
             super();
-            this.initProcessHandlerList(worldServiceList);
+            this.initProcessHandlerList(world);
         }
 
-        protected initProcessHandlerList(worldServiceList: IWorld) {
+        protected initProcessHandlerList(world: IWorld) {
             this.processHandlerList = [];
-            this.processHandlerList[ProcessCreateClientItemTank.Type] = new ProcessCreateClientItemTankHandler(worldServiceList);
-            this.processHandlerList[ProcessFire.Type] = new ProcessFireHandler(worldServiceList);
-            this.processHandlerList[ProcessMoveItem.Type] = new ProcessMoveItemHandler(worldServiceList);
+            this.processHandlerList[ProcessCreateClientItemTank.Type] = new ProcessCreateClientItemTankHandler(world);
+            this.processHandlerList[ProcessFire.Type] = new ProcessFireHandler(world);
+            this.processHandlerList[ProcessMoveItem.Type] = new ProcessMoveItemHandler(world);
         }   
     }
 }

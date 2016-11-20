@@ -8,8 +8,8 @@
         getLastProcessId(): number;
         setLastProcessId(id: number): void;
 
-        getLastObjectId(): number;
-        setLastObjectId(id: number): void;
+        getLastItemId(): number;
+        setLastItemId(id: number): void;
 
         getStepNumber(): number;
         setStepNumber(stepNumber: number): void;

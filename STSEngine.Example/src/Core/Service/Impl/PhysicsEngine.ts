@@ -3,14 +3,14 @@
     export class PhysicsEngine implements IPhysicsEngine {
 
         protected engine: Matter.Engine;
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            this.worldServiceList = worldServiceList;
-            let engine = this.createEngine(worldServiceList.getWorldAttributeList());
-            this.initEngine(engine, worldServiceList.getWorldAttributeList());
+        constructor(world: IWorld) {
+            this.world = world;
+            let engine = this.createEngine(world.getWorldAttributeList());
+            this.initEngine(engine, world.getWorldAttributeList());
             this.engine = engine;
-            this.initItemListService(engine, worldServiceList.getItemListService());
+            this.initItemListService(engine, world.getItemListService());
 
         }
 
@@ -58,7 +58,7 @@
         }
 
         protected beforeUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
-            let itemList = this.worldServiceList.getItemListService().getIterator();
+            let itemList = this.world.getItemListService().getIterator();
             for (let item of itemList) {
                 item.applyForce();
             }
@@ -66,7 +66,7 @@
 
         protected afterUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
 
-            let itemList = this.worldServiceList.getItemListService().getIterator();
+            let itemList = this.world.getItemListService().getIterator();
             for (let item of itemList) {
                 item.setPosition(VectorHelper.round(item.getPosition()));
 
@@ -92,8 +92,8 @@
                 let cc = 1;
             }
             for (let p of e.pairs) {
-                let bodyA = this.worldServiceList.getItemListService().get(p.bodyA.id);
-                let bodyB = this.worldServiceList.getItemListService().get(p.bodyB.id);
+                let bodyA = this.world.getItemListService().get(p.bodyA.id);
+                let bodyB = this.world.getItemListService().get(p.bodyB.id);
                 
                 if (bodyA instanceof ItemBullet && bodyB instanceof ItemTank) {
                     this.processCollisionTankBullet(p, bodyB, bodyA);
@@ -107,11 +107,11 @@
 
 
                 if (bodyA instanceof ItemBullet) {
-                    this.worldServiceList.getItemListService().remove(bodyA.getId());
+                    this.world.getItemListService().remove(bodyA.getId());
                 }
 
                 if (bodyB instanceof ItemBullet) {
-                    this.worldServiceList.getItemListService().remove(bodyB.getId());
+                    this.world.getItemListService().remove(bodyB.getId());
                 }
             }
         }
@@ -119,7 +119,7 @@
         protected processCollisionTankBullet(p: Matter.IPair, tank: ItemTank, bullet: ItemBullet) {
             if (tank.getClientId() != bullet.getClientId()) {
 
-                let clientListService = this.worldServiceList.getClientListService();
+                let clientListService = this.world.getClientListService();
 
                 let bulletClient = clientListService.getTyped<IClientActive>(bullet.getClientId(), ClientActive);
                 let tankClient = clientListService.getTyped<IClientActive>(tank.getClientId(), ClientActive);
@@ -127,7 +127,7 @@
                 bulletClient.setScore(bulletClient.getScore() + 10);
                 tankClient.setScore(tankClient.getScore() - 10);
                 
-                this.worldServiceList.getItemListService().remove(bullet.getId());
+                this.world.getItemListService().remove(bullet.getId());
             } else {
                 p.isActive = false;
             }

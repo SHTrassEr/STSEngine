@@ -2,14 +2,14 @@
 
     export class ProcessMoveItemHandler extends STSEngine.ProcessHandler {
 
-        protected worldServiceList: IWorld;
+        protected world: IWorld;
 
-        constructor(worldServiceList: IWorld) {
-            super(worldServiceList);
+        constructor(world: IWorld) {
+            super(world);
         }
 
         public executeProcess(process: ProcessMoveItem): void {
-            var item = this.worldServiceList.getItemListService().get(process.getItemId());
+            var item = this.world.getItemListService().get(process.getItemId());
             if (item) {
                 this.moveItem(item);
             } else {

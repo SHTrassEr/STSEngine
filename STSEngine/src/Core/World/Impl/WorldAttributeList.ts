@@ -25,11 +25,11 @@ namespace STSEngine {
             this.attributeList.set(this._processId, id);
         }
 
-        public getLastObjectId(): number {
+        public getLastItemId(): number {
             return this.attributeList.get(this._lastObjectId, 0);
         }
 
-        public setLastObjectId(id: number) {
+        public setLastItemId(id: number) {
             this.attributeList.set(this._lastObjectId, id);
         }
 
