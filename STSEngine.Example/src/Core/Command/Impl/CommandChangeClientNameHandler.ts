@@ -4,7 +4,7 @@ namespace STSEngine.Example {
 
     export class CommandChangeClientNameHandler extends CommandHandler {
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super(worldServiceList);
         }
 

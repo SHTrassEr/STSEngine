@@ -3,9 +3,9 @@
     export class PhysicsEngine implements IPhysicsEngine {
 
         protected engine: Matter.Engine;
-        protected worldServiceList: IWorldServiceList;
+        protected worldServiceList: IWorld;
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             this.worldServiceList = worldServiceList;
             let engine = this.createEngine(worldServiceList.getWorldAttributeList());
             this.initEngine(engine, worldServiceList.getWorldAttributeList());

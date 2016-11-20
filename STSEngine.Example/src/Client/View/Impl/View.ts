@@ -15,7 +15,7 @@ namespace STSEngine.Example {
 
         protected renderer: PIXI.SystemRenderer;
         protected stage: PIXI.Container;
-        protected tankSprite: PIXI.Graphics;
+        protected bulletSprite: PIXI.Graphics;
         protected grid: PIXI.Graphics;
         protected worldLimit: PIXI.Graphics;
 
@@ -39,6 +39,7 @@ namespace STSEngine.Example {
 
         private touchStart: IVector;
         private touchIdentifier: number = null;
+
         
 
         constructor(rootElement: HTMLDivElement, world: IWorld) {
@@ -69,13 +70,15 @@ namespace STSEngine.Example {
             this.stage.on('touchmove', this.onStageMouseTouchMove.bind(this));
             
 
-            this.grid = this.drawGrid();
-            this.worldLimit = this.drawWordLimit();
-            this.stage.addChild(this.grid);
-            this.stage.addChild(this.worldLimit);
+            //this.grid = this.drawGrid();
+            //this.worldLimit = this.drawWordLimit();
+            //this.stage.addChild(this.grid);
+            //this.stage.addChild(this.worldLimit);
             this.stepNumber = -1;
 
             this.meter = <any>(new FPSMeter(rootElement, { position: "relative" }));
+
+            this.bulletSprite = this.drawBullet();
         }
 
         protected onStageMouseClick(event) {
@@ -147,7 +150,30 @@ namespace STSEngine.Example {
             }
         }
 
+        protected drawBullet(): PIXI.Graphics {
+
+
+            let cellSize = this.cellSize;
+            let objectWidth = 8;
+            let objectHeight = 8;
+
+            var graphics = new PIXI.Graphics();
+
+            graphics.beginFill(0xFFFF00);
+            graphics.lineStyle(1, 0x770000);
+
+            graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
+
+            graphics.pivot.set(objectWidth * cellSize / 2, objectHeight * cellSize / 2);
+            return graphics;
+        }
+
         protected drawObjectRectangle(o: IItem & IItemRectangle): PIXI.Graphics {
+
+            if (o instanceof ItemBullet) {
+                return this.bulletSprite.clone();
+            }
+
             let position = o.getPosition();
 
             let cellSize = this.cellSize;
@@ -163,17 +189,10 @@ namespace STSEngine.Example {
                 graphics.beginFill(0xFFFF00);
                 graphics.lineStyle(1, 0x770000);
             }
-
-
-
-            graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
-
-
-
-            graphics.pivot.set(objectWidth * cellSize / 2, objectHeight * cellSize / 2);
             
-           // graphics.filters = [new PIXI.filters.BlurFilter()];
-
+            graphics.drawRect(0, 0, objectWidth * cellSize, objectHeight * cellSize);
+            
+            graphics.pivot.set(objectWidth * cellSize / 2, objectHeight * cellSize / 2);
             return graphics;
         }
 
@@ -225,7 +244,7 @@ namespace STSEngine.Example {
 
                     if (o instanceof ItemTank && o.getClientId() == this.clientId) {
                         this.stage.pivot.set(x - this.width / 2, y - this.height / 2);
-                        this.grid.position.set(x - this.width / 2, y - this.height / 2);
+                        //this.grid.position.set(x - this.width / 2, y - this.height / 2);
 
                     }
 
@@ -252,6 +271,7 @@ namespace STSEngine.Example {
 
             let width = size[0];
             let height = size[1];
+
 
             graphics.beginFill(0x333333);
             graphics.lineStyle(0);

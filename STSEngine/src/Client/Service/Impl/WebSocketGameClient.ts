@@ -91,7 +91,7 @@
 
         protected processStep(message: ClientServerMessageStep) {
             let commandListAttr = message.getCommandList();
-            let commandList = this.engine.getWorld().getServiceList().getCommandInitializer().createList(commandListAttr);
+            let commandList = this.engine.getWorld().getCommandInitializer().createList(commandListAttr);
             this.engine.getCommandListService().setCommandList(commandList);
             this.engine.step();
         }
@@ -105,17 +105,17 @@
         }
 
         protected processWorldFullInfo(message: ClientServerMessageWorldFullInfo) {
-            let worldServiceList = this.engine.getWorld().getServiceList();
-            worldServiceList.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
+            let world = this.engine.getWorld();
+            world.getWorldAttributeList().setList(message.getWorldAttributeList(), true);
 
-            let itemList = worldServiceList.getItemInitializer().createList(message.getItemListService());
-            worldServiceList.getItemListService().setList(itemList, true);
+            let itemList = world.getItemInitializer().createList(message.getItemListService());
+            world.getItemListService().setList(itemList, true);
 
-            let processList = worldServiceList.getProcessInitializer().createList(message.getProcessListService());
-            worldServiceList.getProcessListService().setList(processList, true);
+            let processList = world.getProcessInitializer().createList(message.getProcessListService());
+            world.getProcessListService().setList(processList, true);
 
-            let clientList = worldServiceList.getClientInitializer().createList(message.getClientListService());
-            worldServiceList.getClientListService().setList(clientList, true);
+            let clientList = world.getClientInitializer().createList(message.getClientListService());
+            world.getClientListService().setList(clientList, true);
 
         }
 

@@ -5,7 +5,7 @@ namespace STSEngine.Example {
     export class CommandFireHandler extends CommandHandler {
 
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super(worldServiceList);
         }
 

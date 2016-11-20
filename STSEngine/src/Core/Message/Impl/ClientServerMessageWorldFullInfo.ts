@@ -15,11 +15,10 @@ namespace STSEngine {
         }
 
         public setWorld(world: IWorld): void {
-            let serviceList = world.getServiceList();
-            this.setWorldAttributeList(serviceList.getWorldAttributeList());
-            this.setClientListService(serviceList.getClientListService());
-            this.setItemListService(serviceList.getItemListService());
-            this.setProcessListService(serviceList.getProcessListService());
+            this.setWorldAttributeList(world.getWorldAttributeList());
+            this.setClientListService(world.getClientListService());
+            this.setItemListService(world.getItemListService());
+            this.setProcessListService(world.getProcessListService());
         }
 
 

@@ -91,10 +91,8 @@
     <TypeScriptCompile Include="src\Core\Entity\Impl\AttributeListMapCommitable.ts" />
     <TypeScriptCompile Include="src\Core\Item\Impl\Item.ts" />
     <TypeScriptCompile Include="src\Core\World\Impl\World.ts" />
-    <TypeScriptCompile Include="src\Core\World\Impl\WorldServiceList.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItem.ts" />
     <TypeScriptCompile Include="src\Core\World\IWorld.ts" />
-    <TypeScriptCompile Include="src\Core\World\IWorldServiceList.ts" />
     <TypeScriptCompile Include="src\Core\Exception\NotImplementedException.ts" />
     <TypeScriptCompile Include="src\Core\Exception\BaseException.ts" />
     <TypeScriptCompile Include="src\Core\Process\Impl\ProcessDispatcher.ts" />

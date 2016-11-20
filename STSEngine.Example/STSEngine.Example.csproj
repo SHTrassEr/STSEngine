@@ -96,12 +96,10 @@
     <TypeScriptCompile Include="src\Core\Service\Impl\Engine.ts" />
     <TypeScriptCompile Include="src\Core\Util\MathHelper.ts" />
     <TypeScriptCompile Include="src\Core\Util\VectorHelper.ts" />
-    <TypeScriptCompile Include="src\Core\World\Impl\World.ts" />
     <TypeScriptCompile Include="src\Core\World\Impl\WorldAttributeList.ts" />
-    <TypeScriptCompile Include="src\Core\World\Impl\WorldServiceList.ts" />
-    <TypeScriptCompile Include="src\Core\World\IWorld.ts" />
+    <TypeScriptCompile Include="src\Core\World\Impl\World.ts" />
     <TypeScriptCompile Include="src\Core\World\IWorldAttributeList.ts" />
-    <TypeScriptCompile Include="src\Core\World\IWorldServiceList.ts" />
+    <TypeScriptCompile Include="src\Core\World\IWorld.ts" />
     <TypeScriptCompile Include="src\Server\Export.ts" />
     <TypeScriptCompile Include="src\Server\Service\Impl\WebSocketGameServer.ts" />
   </ItemGroup>

@@ -1,22 +1,68 @@
 ﻿namespace STSEngine {
 
-    export class World implements IWorld {
+    export abstract class World implements IWorld {
+        protected worldAttributeList: IWorldAttributeList;
+        protected itemListService: IItemListService;
+        protected processListService: IProcessListService;
+        protected clientListService: IClientListService;
+        protected clientInitializer: IClientInitializer;
 
-        protected worldServiceList: IWorldServiceList;
-        protected attributeList: IWorldAttributeList;
+        protected commandInitializer: ICommandInitializer;
+        protected itemInitializer: IItemInitializer;
+        protected processInitializer: IProcessInitializer;
+        protected processDispatcher: IProcessDispatcher;
+        protected commandDispatcher: ICommandDispatcher;
 
-        constructor(worldSettings: IWorldServiceList) {
-            this.attributeList = worldSettings.getWorldAttributeList();
-            this.worldServiceList = worldSettings;
-            this.attributeList.setStepNumber(0);
+        public getWorldAttributeList(): IWorldAttributeList {
+            return this.worldAttributeList;
         }
 
-        public getServiceList(): IWorldServiceList {
-            return this.worldServiceList;
+        public getCommandInitializer(): ICommandInitializer {
+            return this.commandInitializer;
         }
 
-        public getAttributeList(): IWorldAttributeList {
-            return this.attributeList;
+        public getItemInitializer(): IItemInitializer {
+            return this.itemInitializer;
+        }
+
+        public getProcessInitializer(): IProcessInitializer {
+            return this.processInitializer;
+        }
+
+        public getProcessDispatcher(): IProcessDispatcher {
+            return this.processDispatcher;
+        }
+
+        public getCommandDispatcher(): ICommandDispatcher {
+            return this.commandDispatcher;
+        }
+
+        public getItemListService(): IItemListService {
+            return this.itemListService;
+        }
+
+        public getProcessListService(): IProcessListService {
+            return this.processListService;
+        }
+
+        public getClientListService(): IClientListService {
+            return this.clientListService;
+        }
+
+        public getClientInitializer(): IClientInitializer {
+            return this.clientInitializer;
+        }
+
+        protected getObjectId(): number {
+            var id = this.worldAttributeList.getLastObjectId() + 1;
+            this.worldAttributeList.setLastObjectId(id);
+            return id;
+        }
+
+        protected getProcessId(): number {
+            var id = this.worldAttributeList.getLastProcessId() + 1;
+            this.worldAttributeList.setLastProcessId(id);
+            return id;
         }
     }
 }

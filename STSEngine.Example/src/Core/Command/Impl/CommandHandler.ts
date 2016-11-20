@@ -2,7 +2,7 @@
 
     export class CommandHandler extends STSEngine.CommandHandler {
 
-        protected worldServiceList: IWorldServiceList;
+        protected worldServiceList: IWorld;
 
         protected isSystemCommand(command: ICommand) {
             return command.getInitiatorId() === 0;

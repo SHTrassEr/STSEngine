@@ -57,8 +57,6 @@ function ready() {
     engine.beforeStep().on(() => meter2.tickStart());
     engine.afterStep().on(() => meter2.tick());*/
 
-    world.getServiceList();
-
     var view = new STSEngine.Example.View(<HTMLDivElement>content, world);
     function onClientConnected(client: STSEngine.IWebSocketGameClient) {
 
@@ -106,7 +104,7 @@ function ready() {
     let scoreDiv = document.getElementById("score");
 
     function updateScore() {
-        var clientList = world.getServiceList().getClientListService().getIterator();
+        var clientList = world.getClientListService().getIterator();
         let str = '';
         for (let client of clientList) {
             if (client instanceof STSEngine.Example.ClientActive) {
@@ -126,7 +124,7 @@ function ready() {
 
         }*/
 
-        var itemList = world.getServiceList().getItemListService().getIterator();
+        var itemList = world.getItemListService().getIterator();
         for (let item of itemList) {
             if (item instanceof STSEngine.Example.ItemTank) {
                 let v = item.getPosition();
@@ -139,7 +137,7 @@ function ready() {
     }
 
     var world = client.getEngine().getWorld();
-    var objectListService = world.getServiceList().getItemListService();
+    var objectListService = world.getItemListService();
 
     var up: boolean, down: boolean, left: boolean, right: boolean;//, fire: boolean;
 

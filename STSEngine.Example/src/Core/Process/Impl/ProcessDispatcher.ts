@@ -2,12 +2,12 @@
 
     export class ProcessDispatcher extends STSEngine.ProcessDispatcher {
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super();
             this.initProcessHandlerList(worldServiceList);
         }
 
-        protected initProcessHandlerList(worldServiceList: IWorldServiceList) {
+        protected initProcessHandlerList(worldServiceList: IWorld) {
             this.processHandlerList = [];
             this.processHandlerList[ProcessCreateClientItemTank.Type] = new ProcessCreateClientItemTankHandler(worldServiceList);
             this.processHandlerList[ProcessFire.Type] = new ProcessFireHandler(worldServiceList);

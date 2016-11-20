@@ -10,12 +10,11 @@
 
             let clientServerMessageInitializer = new ClientServerMessageInitializer();
             let worldAttributeList = new WorldAttributeList();
-            let worldServiceList = new WorldServiceList(worldAttributeList);
+            let worldServiceList = new World(worldAttributeList);
 
-            let world = new World(worldServiceList);
 
             let commandListService = new CommandListService();
-            let engine = new Engine(world, commandListService);
+            let engine = new Engine(worldServiceList, commandListService);
             
             super(socket, engine, clientServerMessageInitializer);
 

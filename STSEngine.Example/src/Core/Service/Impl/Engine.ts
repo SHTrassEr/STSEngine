@@ -23,8 +23,8 @@ namespace STSEngine.Example {
             super.step();
 
             this.onBeforePhysicsEngineStep.trigger(this, this);
-            let engine = this.world.getServiceList().getPhysicsEngine();
-            let tickLength = this.world.getServiceList().getWorldAttributeList().getTickLength();
+            let engine = this.world.getPhysicsEngine();
+            let tickLength = this.world.getWorldAttributeList().getTickLength();
             engine.update(tickLength);
             /*engine.update(tickLength);
             engine.update(tickLength);

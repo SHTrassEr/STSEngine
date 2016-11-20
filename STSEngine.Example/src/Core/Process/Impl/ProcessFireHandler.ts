@@ -2,9 +2,9 @@
 
     export class ProcessFireHandler extends STSEngine.ProcessHandler {
 
-        protected worldServiceList: IWorldServiceList;
+        protected worldServiceList: IWorld;
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super(worldServiceList);
         }
 

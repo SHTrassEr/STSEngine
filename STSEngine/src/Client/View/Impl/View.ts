@@ -16,15 +16,14 @@
 
         constructor(rootElement: HTMLDivElement, world: IWorld) {
             this.world = world;
-            let worldServiceList  = world.getServiceList();
 
             this.rootElement = rootElement;
             this.clearHtmlElement(this.rootElement);
 
-            this.worldAttributeList = worldServiceList.getWorldAttributeList();
-            this.itemListService = worldServiceList.getItemListService();
-            this.processListService = worldServiceList.getProcessListService();
-            this.clientListService = worldServiceList.getClientListService();
+            this.worldAttributeList = world.getWorldAttributeList();
+            this.itemListService = world.getItemListService();
+            this.processListService = world.getProcessListService();
+            this.clientListService = world.getClientListService();
 
             this.isStarted = false;
         }

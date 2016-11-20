@@ -4,9 +4,9 @@ namespace STSEngine.Example {
 
     export class CommandInitWorldHandler extends CommandHandler {
 
-        protected worldServiceList: IWorldServiceList;
+        protected worldServiceList: IWorld;
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super(worldServiceList);
         }
 
@@ -14,7 +14,7 @@ namespace STSEngine.Example {
             this.initLimit(this.worldServiceList);
         }
 
-        protected initLimit(worldServiceList: IWorldServiceList) {
+        protected initLimit(worldServiceList: IWorld) {
             let engine = worldServiceList.getPhysicsEngine().getEngine();
             let itemInitializer = worldServiceList.getItemInitializer();
             let size = worldServiceList.getWorldAttributeList().getWorldSize();

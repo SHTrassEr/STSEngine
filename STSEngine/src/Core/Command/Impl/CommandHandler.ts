@@ -2,9 +2,9 @@
 
     export class CommandHandler implements ICommandHandler {
 
-        protected worldServiceList: IWorldServiceList;
+        protected worldServiceList: IWorld;
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             this.worldServiceList = worldServiceList;
         }
 

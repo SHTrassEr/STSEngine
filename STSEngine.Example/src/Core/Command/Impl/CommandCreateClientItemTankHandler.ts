@@ -4,9 +4,9 @@ namespace STSEngine.Example {
 
     export class CommandCreateClientItemTankHandler extends CommandHandler {
 
-        protected worldServiceList: IWorldServiceList;
+        protected worldServiceList: IWorld;
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super(worldServiceList);
         }
 

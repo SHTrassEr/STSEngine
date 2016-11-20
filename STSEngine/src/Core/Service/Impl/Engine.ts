@@ -13,9 +13,9 @@
         constructor(world: IWorld, commandListService: ICommandListService) {
             this.world = world;
             this.commandListService = commandListService;
-            this.processListService = world.getServiceList().getProcessListService();
-            this.processDispatcher = world.getServiceList().getProcessDispatcher();
-            this.commandDispatcher = world.getServiceList().getCommandDispatcher();
+            this.processListService = world.getProcessListService();
+            this.processDispatcher = world.getProcessDispatcher();
+            this.commandDispatcher = world.getCommandDispatcher();
         }
 
         public getWorld(): IWorld {
@@ -41,8 +41,8 @@
         }
 
         protected increaseStepNumber(): void {
-            let stepNumber: number = this.world.getAttributeList().getStepNumber() + 1;
-            this.world.getAttributeList().setStepNumber(stepNumber);
+            let stepNumber: number = this.world.getWorldAttributeList().getStepNumber() + 1;
+            this.world.getWorldAttributeList().setStepNumber(stepNumber);
         }
 
         public getCommandList(): ICommand[] {

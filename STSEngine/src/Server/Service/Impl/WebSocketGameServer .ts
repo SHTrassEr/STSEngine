@@ -78,7 +78,7 @@
 
         protected processCommandList(webSocketClient: IWebSocketClient, message: ClientServerMessageCommandList) {
 
-            let commandList = this.engine.getWorld().getServiceList().getCommandInitializer().createList(message.getCommandList());
+            let commandList = this.engine.getWorld().getCommandInitializer().createList(message.getCommandList());
             this.engine.getCommandListService().setCommandList(this.initCommandList(webSocketClient, commandList));
         } 
 

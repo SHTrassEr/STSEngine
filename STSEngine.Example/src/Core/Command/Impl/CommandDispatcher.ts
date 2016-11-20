@@ -2,12 +2,12 @@
 
     export class CommandDispatcher extends STSEngine.CommandDispatcher {
 
-        constructor(worldServiceList: IWorldServiceList) {
+        constructor(worldServiceList: IWorld) {
             super();
             this.initCommandHandlerList(worldServiceList);
         }
 
-        protected initCommandHandlerList(worldServiceList: IWorldServiceList) {
+        protected initCommandHandlerList(worldServiceList: IWorld) {
             this.commandHandlerList[CommandRegisterClient.Type] = new CommandRegisterClientHandler(worldServiceList);
             this.commandHandlerList[CommandCreateClientItemTank.Type] = new CommandCreateClientItemTankHandler(worldServiceList);
             this.commandHandlerList[CommandFire.Type] = new CommandFireHandler(worldServiceList);

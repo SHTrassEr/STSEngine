@@ -11,7 +11,7 @@
 
         constructor(engine: IEngine) {
             this.engine = engine;
-            var tickLength = engine.getWorld().getAttributeList().getTickLength();
+            var tickLength = engine.getWorld().getWorldAttributeList().getTickLength();
             //let tickLength = 100;
             this.metronome = new Metronome(tickLength);
             this.commandLog = [];
@@ -47,7 +47,7 @@
         }
 
         protected getStepNumber(): number {
-            return this.engine.getWorld().getAttributeList().getStepNumber();
+            return this.engine.getWorld().getWorldAttributeList().getStepNumber();
         }
 
         public setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void {
