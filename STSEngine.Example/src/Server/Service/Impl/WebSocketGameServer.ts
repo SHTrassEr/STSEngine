@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class WebSocketGameServer extends STSEngine.WebSocketGameServer {
+    export class WebSocketGameServer extends Core.WebSocketGameServer {
 
         protected lastClientId: number;
         protected connectedClientList: Map<string, number>;
@@ -12,7 +12,7 @@
             let world = new World(worldAttributeList);
 
 
-            let commandListService = new CommandListService();
+            let commandListService = new Core.CommandListService();
             let engine = new Engine(world, commandListService);
             
             super(socket, engine);

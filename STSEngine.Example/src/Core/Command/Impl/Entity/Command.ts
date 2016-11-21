@@ -2,7 +2,7 @@
 
 namespace STSEngine.Example {
 
-    export abstract class Command extends STSEngine.Command implements ICommand {
+    export abstract class Command extends Core.Command implements ICommand {
 
     }
 

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IItemListService extends IEntityListService<IItem> {
+    export interface IItemListService extends Core.IEntityListService<IItem> {
 
     }
 }

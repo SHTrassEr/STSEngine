@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IWebSocketGameClient extends STSEngine.IWebSocketGameClient {
+    export interface IWebSocketGameClient extends Core.IWebSocketGameClient {
 
         getEngine(): IEngine;
         getClientId(): number;

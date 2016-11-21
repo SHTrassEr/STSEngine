@@ -3,15 +3,15 @@
 
 namespace STSEngine.Example {
 
-    export class Engine extends STSEngine.Engine implements IEngine{
+    export class Engine extends Core.Engine implements IEngine{
 
         protected world: IWorld;
         private meter: any;
 
-        private onBeforePhysicsEngineStep = new LiteEvent<IEngine>();
-        private onAfterPhysicsEngineStep = new LiteEvent<IEngine>();   
+        private onBeforePhysicsEngineStep = new STSEngine.Core.LiteEvent<IEngine>();
+        private onAfterPhysicsEngineStep = new STSEngine.Core.LiteEvent<IEngine>();   
 
-        constructor(world: IWorld, commandListService: ICommandListService) {
+        constructor(world: IWorld, commandListService: STSEngine.Core.ICommandListService) {
             super(world, commandListService);
         }
 
@@ -39,12 +39,12 @@ namespace STSEngine.Example {
         }
 
 
-        public beforePhysicsEngineStep(): ILiteEvent<IEngine> {
+        public beforePhysicsEngineStep(): STSEngine.Core.ILiteEvent<IEngine> {
             return this.onAfterPhysicsEngineStep;
         }
 
 
-        public afterPhysicsEngineStep(): ILiteEvent<IEngine> {
+        public afterPhysicsEngineStep(): STSEngine.Core.ILiteEvent<IEngine> {
             return this.onAfterPhysicsEngineStep;
         }
         

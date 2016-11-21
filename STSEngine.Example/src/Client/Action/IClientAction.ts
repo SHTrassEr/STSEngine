@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IClientAction extends STSEngine.IClientAction {
+    export interface IClientAction extends Core.IClientAction {
 
         setClientForce(itemId: number, up: boolean, right: boolean, down: boolean, left: boolean): void;
         fire(itemId: number, position: IVector);

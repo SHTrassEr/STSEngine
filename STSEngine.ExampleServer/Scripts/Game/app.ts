@@ -58,7 +58,7 @@ function ready() {
     engine.afterStep().on(() => meter2.tick());*/
 
     var view = new STSEngine.Example.View(<HTMLDivElement>content, world);
-    function onClientConnected(client: STSEngine.IWebSocketGameClient) {
+    function onClientConnected(client: STSEngine.Core.IWebSocketGameClient) {
 
         view.setClientId(client.getClientId());
         view.start();

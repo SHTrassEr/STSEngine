@@ -1,10 +1,10 @@
 ﻿namespace STSEngine.Example {
 
-    export class WorldAttributeList extends STSEngine.WorldAttributeList implements IWorldAttributeList {
+    export class WorldAttributeList extends Core.WorldAttributeList implements IWorldAttributeList {
 
         private _worldSize: number = ++this.lastAttributeId;
 
-        constructor(attributeList?: IAttributeList, kvpList?: Iterable<[number, any]>) {
+        constructor(attributeList?: Core.IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
             this.setWorldSize([1000, 6000]);

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class WebSocketGameClient extends STSEngine.WebSocketGameClient implements IWebSocketGameClient {
+    export class WebSocketGameClient extends Core.WebSocketGameClient implements IWebSocketGameClient {
 
         protected engine: IEngine;
 
@@ -9,7 +9,7 @@
             let worldAttributeList = new WorldAttributeList();
             let world = new World(worldAttributeList);
 
-            let commandListService = new CommandListService();
+            let commandListService = new STSEngine.Core.CommandListService();
             let engine = new Engine(world, commandListService);
 
             super(socket, sid, clientAction, engine);

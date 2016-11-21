@@ -15,7 +15,6 @@ namespace STSEngine.Example {
         }
 
         protected initLimit(world: IWorld) {
-            let engine = world.getPhysicsEngine().getEngine();
             let entityFactory = world.getEntityFactory();
             let size = world.getWorldAttributeList().getWorldSize();
             let w = 200;

@@ -2,7 +2,7 @@
 
 namespace STSEngine.Example {
 
-    export abstract class Process extends STSEngine.Process implements IProcess {
+    export abstract class Process extends Core.Process implements IProcess {
 
     }
 

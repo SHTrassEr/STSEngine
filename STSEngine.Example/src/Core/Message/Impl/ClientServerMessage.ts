@@ -2,7 +2,7 @@
 
 namespace STSEngine.Example {
 
-    export abstract class ClientServerMessage extends STSEngine.ClientServerMessage implements IClientServerMessage {
+    export abstract class ClientServerMessage extends Core.ClientServerMessage implements IClientServerMessage {
 
     }
 

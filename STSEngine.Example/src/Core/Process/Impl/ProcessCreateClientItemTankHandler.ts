@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class ProcessCreateClientItemTankHandler extends STSEngine.ProcessHandler {
+    export class ProcessCreateClientItemTankHandler extends Core.ProcessHandler {
 
         protected world: IWorld;
 
@@ -23,7 +23,7 @@
             moveProcess.setItemId(itemTank.getId());
             this.startProcess(moveProcess);
 
-            process.setStatus(ProcessStatus.Finished);
+            process.setStatus(Core.ProcessStatus.Finished);
         }
     }
 }

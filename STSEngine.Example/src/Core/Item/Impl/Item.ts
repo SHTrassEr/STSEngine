@@ -2,7 +2,7 @@
 
 namespace STSEngine.Example {
 
-    export abstract class Item extends STSEngine.Item implements IItem {
+    export abstract class Item extends Core.Item implements IItem {
 
         private _clientId: number = ++this.lastAttributeId;
         private _mass: number = ++this.lastAttributeId;
@@ -14,7 +14,7 @@ namespace STSEngine.Example {
 
         protected body: Matter.Body;
 
-        constructor(attributeList: IAttributeList, kvpList?: Iterable<[number, any]>) {
+        constructor(attributeList: Core.IAttributeList, kvpList?: Iterable<[number, any]>) {
             super(attributeList, kvpList);
 
             let body = this.createBody();

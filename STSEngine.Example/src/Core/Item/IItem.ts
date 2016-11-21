@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export interface IItem extends STSEngine.IItem {
+    export interface IItem extends Core.IItem {
 
         getPosition(): IVector;
         setPosition(position: IVector): void;

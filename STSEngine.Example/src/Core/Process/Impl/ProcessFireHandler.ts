@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class ProcessFireHandler extends STSEngine.ProcessHandler {
+    export class ProcessFireHandler extends Core.ProcessHandler {
 
         protected world: IWorld;
 
@@ -14,7 +14,7 @@
                 this.fire(process, item);
             }
 
-            process.setStatus(ProcessStatus.Finished);
+            process.setStatus(Core.ProcessStatus.Finished);
         }
 
         protected fire(process: ProcessFire, item: ItemTank): void {

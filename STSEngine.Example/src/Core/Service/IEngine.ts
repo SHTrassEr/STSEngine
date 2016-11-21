@@ -1,13 +1,13 @@
 ﻿namespace STSEngine.Example {;
 
-    export interface IEngine extends STSEngine.IEngine {
+    export interface IEngine extends Core.IEngine {
         getWorld(): IWorld;
-        getCommandListService(): ICommandListService;
+        getCommandListService(): STSEngine.Core.ICommandListService;
         step(): void;
-        getCommandList(): ICommand[];
+        getCommandList(): STSEngine.Core.ICommand[];
 
-        beforePhysicsEngineStep(): ILiteEvent<IEngine>;
-        afterPhysicsEngineStep(): ILiteEvent<IEngine>;
+        beforePhysicsEngineStep(): STSEngine.Core.ILiteEvent<IEngine>;
+        afterPhysicsEngineStep(): STSEngine.Core.ILiteEvent<IEngine>;
 
     }
 }

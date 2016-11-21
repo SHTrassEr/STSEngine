@@ -1,28 +1,25 @@
 ﻿namespace STSEngine.Example {
 
-    export class World extends STSEngine.World implements IWorld {
+    export class World extends Core.World implements IWorld {
 
         protected worldAttributeList: IWorldAttributeList;
         protected itemListService: IItemListService;
-        protected processListService: IProcessListService;
-        protected clientListService: IClientListService;
-        protected entityFactory: IEntityFactory;
 
-        protected processDispatcher: IProcessDispatcher;
-        protected commandDispatcher: ICommandDispatcher;
+        protected clientListService: IClientListService;
+
         protected collisionService: ICollisionService;
         protected physicsEngine: IPhysicsEngine;
 
         constructor(worldAttributeList: WorldAttributeList) {
             super(worldAttributeList);
 
-            this.entityFactory = new EntityFactory(this.initEntity.bind(this));
+            this.entityFactory = new Core.EntityFactory(this.initEntity.bind(this));
             this.initEntityFactory(this.entityFactory);
 
-            
+
             this.itemListService = new ItemListService();
 
-            this.processListService = new ProcessListService();
+            this.processListService = new Core.ProcessListService();
             this.clientListService = new ClientListService();
             this.collisionService = new CollisionService(this.worldAttributeList, this.itemListService, this.clientListService);
 
@@ -31,27 +28,35 @@
             this.physicsEngine = new PhysicsEngine(this);
         }
 
-        protected initEntityFactory(entityFactory: IEntityFactory) {
+        protected initEntityFactory(entityFactory: Core.IEntityFactory) {
             super.initEntityFactory(entityFactory);
-            entityFactory.add(CommandApplyForce);
-            entityFactory.add(CommandChangeClientName);
-            entityFactory.add(CommandCreateClientItemTank);
-            entityFactory.add(CommandFire);
-            entityFactory.add(CommandInitWorld);
-            entityFactory.add(CommandRegisterClient);
+            entityFactory.set(CommandApplyForce);
+            entityFactory.set(CommandChangeClientName);
+            entityFactory.set(CommandCreateClientItemTank);
+            entityFactory.set(CommandFire);
+            entityFactory.set(CommandInitWorld);
+            entityFactory.set(CommandRegisterClient);
 
 
-            entityFactory.add(ItemBullet);
-            entityFactory.add(ItemTank);
-            entityFactory.add(ItemWall);
+            entityFactory.set(ItemBullet);
+            entityFactory.set(ItemTank);
+            entityFactory.set(ItemWall);
 
 
-            entityFactory.add(ProcessCreateClientItemTank);
-            entityFactory.add(ProcessFire);
-            entityFactory.add(ProcessMoveItem);
+            entityFactory.set(ProcessCreateClientItemTank);
+            entityFactory.set(ProcessFire);
+            entityFactory.set(ProcessMoveItem);
         }
 
-        protected initEntity(entity: IEntity) {
+        public getItemListService(): IItemListService {
+            return this.itemListService;
+        }
+
+        public getClientListService(): IClientListService {
+            return this.clientListService;
+        }
+
+        protected initEntity(entity: Core.IEntity) {
             if (entity instanceof Item || entity instanceof Process) {
                 if (!entity.getId()) {
                     entity.setId(this.getItemId());
@@ -64,32 +69,8 @@
             return this.worldAttributeList;
         }
 
-        public getEntityFactory(): IEntityFactory {
-            return this.entityFactory;
-        }
-
-        public getProcessDispatcher(): IProcessDispatcher {
-            return this.processDispatcher;
-        }
-
-        public getCommandDispatcher(): ICommandDispatcher {
-            return this.commandDispatcher;
-        }
-
-        public getItemListService(): IItemListService {
-            return this.itemListService;
-        }
-
-        public getProcessListService(): IProcessListService {
-            return this.processListService;
-        }
-
         public getCollisionService(): ICollisionService {
             return this.collisionService;
-        }
-
-        public getClientListService(): IClientListService {
-            return this.clientListService;
         }
 
         public getPhysicsEngine(): IPhysicsEngine {

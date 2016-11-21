@@ -6,7 +6,7 @@
 
 namespace STSEngine.Example {
 
-    export class View extends STSEngine.View {
+    export class View extends Core.View {
 
         protected worldAttributeList: WorldAttributeList;
 
@@ -26,12 +26,12 @@ namespace STSEngine.Example {
 
         protected clientInfoTextMap: Map<number, PIXI.Text>;
 
-        protected clientListService: IClientListService;
+        protected clientListService: Core.IClientListService;
 
-        private onMouseClick = new LiteEvent<IVector>();   
+        private onMouseClick = new Core.LiteEvent<IVector>();   
 
-        private onTouchEnd = new LiteEvent<IVector>();  
-        private onTouchMove = new LiteEvent<IVector>();  
+        private onTouchEnd = new Core.LiteEvent<IVector>();  
+        private onTouchMove = new Core.LiteEvent<IVector>();  
 
         private meter: any;
 
@@ -120,7 +120,7 @@ namespace STSEngine.Example {
         }
         
 
-        protected getClientInfoText(client: IClient) {
+        protected getClientInfoText(client: Core.IClient) {
 
             if (!this.clientInfoTextMap.has(client.getId())) {
                 let text = new PIXI.Text();
@@ -347,15 +347,15 @@ namespace STSEngine.Example {
 
 
 
-        public mouseClick(): ILiteEvent<IVector> {
+        public mouseClick(): Core.ILiteEvent<IVector> {
             return this.onMouseClick;
         }
 
-        public touchMove(): ILiteEvent<IVector> {
+        public touchMove(): Core.ILiteEvent<IVector> {
             return this.onTouchMove;
         }
 
-        public touchEnd(): ILiteEvent<IVector> {
+        public touchEnd(): Core.ILiteEvent<IVector> {
             return this.onTouchEnd;
         }
        

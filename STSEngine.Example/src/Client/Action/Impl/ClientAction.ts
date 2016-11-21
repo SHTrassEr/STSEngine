@@ -1,10 +1,10 @@
 ﻿namespace STSEngine.Example {
 
-    export class ClientAction extends STSEngine.ClientAction implements IClientAction {
+    export class ClientAction extends Core.ClientAction implements IClientAction {
 
         protected onActionHandler: (clientAction: IClientAction) => void;
 
-        protected addCommand(command: ICommand): void {
+        protected addCommand(command: STSEngine.Core.ICommand): void {
             this.commandListService.add(command);
             this.onAction();
         }

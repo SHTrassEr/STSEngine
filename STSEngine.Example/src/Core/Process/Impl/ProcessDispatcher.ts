@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class ProcessDispatcher extends STSEngine.ProcessDispatcher {
+    export class ProcessDispatcher extends Core.ProcessDispatcher {
 
         constructor(world: IWorld) {
             super();

@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class CommandDispatcher extends STSEngine.CommandDispatcher {
+    export class CommandDispatcher extends Core.CommandDispatcher {
 
         constructor(world: IWorld) {
             super();

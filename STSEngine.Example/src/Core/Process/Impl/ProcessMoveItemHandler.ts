@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class ProcessMoveItemHandler extends STSEngine.ProcessHandler {
+    export class ProcessMoveItemHandler extends Core.ProcessHandler {
 
         protected world: IWorld;
 
@@ -13,7 +13,7 @@
             if (item) {
                 this.moveItem(item);
             } else {
-                process.setStatus(ProcessStatus.Finished);
+                process.setStatus(Core.ProcessStatus.Finished);
             }
         }
 

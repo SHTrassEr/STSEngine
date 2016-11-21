@@ -1,6 +1,6 @@
 ﻿namespace STSEngine.Example {
 
-    export class CommandHandler extends STSEngine.CommandHandler {
+    export class CommandHandler extends Core.CommandHandler {
 
         protected world: IWorld;
 
