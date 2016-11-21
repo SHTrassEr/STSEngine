@@ -51,15 +51,15 @@
     <TypeScriptCompile Include="src\Core\Message\IClientServerMessage.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IAttributeList.ts" />
     <TypeScriptCompile Include="src\Core\Entity\Impl\AttributeListMap.ts" />
-    <TypeScriptCompile Include="src\Core\Client\IClientListService.ts" />
+    <TypeScriptCompile Include="src\Core\Client\Service\IClientListService.ts" />
     <TypeScriptCompile Include="src\Core\Service\ILiteEvent.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\LiteEvent.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\EntityListService.ts" />
     <TypeScriptCompile Include="src\Core\Service\IEntityListService.ts" />
-    <TypeScriptCompile Include="src\Core\Client\Impl\Client.ts" />
-    <TypeScriptCompile Include="src\Core\Client\IClient.ts" />
-    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessHandler.ts" />
-    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessListService.ts" />
+    <TypeScriptCompile Include="src\Core\Client\Entity\Impl\Client.ts" />
+    <TypeScriptCompile Include="src\Core\Client\Entity\IClient.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\Impl\ProcessHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\Impl\ProcessListService.ts" />
     <TypeScriptCompile Include="src\Core\Service\IEntityFactory.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\EntityFactory.ts" />
     <TypeScriptCompile Include="src\Core\World\Impl\WorldAttributeList.ts" />
@@ -85,11 +85,11 @@
     <TypeScriptCompile Include="src\Core\World\IWorld.ts" />
     <TypeScriptCompile Include="src\Core\Exception\NotImplementedException.ts" />
     <TypeScriptCompile Include="src\Core\Exception\BaseException.ts" />
-    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\Impl\ProcessDispatcher.ts" />
     <TypeScriptCompile Include="src\Core\Process\ProcessType.ts" />
-    <TypeScriptCompile Include="src\Core\Process\Impl\Process.ts" />
-    <TypeScriptCompile Include="src\Core\Process\IProcessDispatcher.ts" />
-    <TypeScriptCompile Include="src\Core\Process\IProcessHandler.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Entity\Impl\Process.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\IProcessDispatcher.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\IProcessHandler.ts" />
     <TypeScriptCompile Include="src\Core\Process\ProcessStatus.ts" />
     <TypeScriptCompile Include="src\Core\Service\IEngine.ts" />
     <TypeScriptCompile Include="src\Core\Service\IFilterService.ts" />
@@ -97,12 +97,12 @@
     <TypeScriptCompile Include="src\Core\Service\IMetronome.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\Engine.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\FilterService.ts" />
-    <TypeScriptCompile Include="src\Core\Process\IProcess.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Entity\IProcess.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\GameServer.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\Metronome.ts" />
     <TypeScriptCompile Include="src\Core\Service\Impl\EntityListServiceCommitable.ts" />
-    <TypeScriptCompile Include="src\Core\Process\Impl\ProcessListServiceCommitable.ts" />
-    <TypeScriptCompile Include="src\Core\Process\IProcessListService.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\Impl\ProcessListServiceCommitable.ts" />
+    <TypeScriptCompile Include="src\Core\Process\Service\IProcessListService.ts" />
     <TypeScriptCompile Include="src\Core\Service\ServiceAttributeType.ts" />
     <TypeScriptCompile Include="lib\typings\node.d.ts" />
     <TypeScriptCompile Include="src\Server\Entity\Impl\WebSocketClient.ts" />
@@ -139,6 +139,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\Core\Client\Service\Impl\" />
     <Folder Include="src\Test\Core\Object\" />
   </ItemGroup>
   <PropertyGroup>

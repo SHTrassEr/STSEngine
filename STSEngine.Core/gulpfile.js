@@ -36,7 +36,7 @@ gulp.task('copy-example', ['build-full'], function () {
 
 gulp.task('copy-server', ['build-server'], function () {
     return merge([
-        gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine/')),
+        gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine.core/')),
         gulp.src('out/server.d.ts').pipe(gulp.dest('../STSEngine.ExampleServer/Scripts/typings/STSEngine')),
     ]);
 });

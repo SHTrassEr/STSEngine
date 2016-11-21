@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Entity/Impl/Entity.ts" />
+﻿/// <reference path="../../../Entity/Impl/Entity.ts" />
 
 namespace STSEngine.Core {
 

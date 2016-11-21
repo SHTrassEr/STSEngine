@@ -2,6 +2,6 @@
 
     export module ModuleInfo {
 
-        export const name = "STSEngine.Example"
+        export const name = "STSEngine.Example.Tanks"
     }
 }
