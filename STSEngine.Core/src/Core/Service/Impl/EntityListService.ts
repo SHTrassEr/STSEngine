@@ -4,8 +4,6 @@ namespace STSEngine.Core {
     export class EntityListService<T extends IEntity> implements IEntityListService<T> {
         protected itemList: Map<number, T>;
         protected filterService: IFilterService<T>;
-        private onBeforeAdd = new LiteEvent<T>();   
-        private onBeforeRemove = new LiteEvent<T>();   
 
         constructor() {
             this.itemList = new Map<number, T>();
@@ -28,9 +26,10 @@ namespace STSEngine.Core {
         }
 
         public add(item: T): void {
-            this.onBeforeAdd.trigger(this, item);
+            this.triggerEvent(this.onBeforeAdd, item);
             let itemId: number = item.getId();
             this.itemList.set(itemId, item);
+            this.triggerEvent(this.onAfterAdd, item);
         }
 
         public has(id: number): boolean {
@@ -40,13 +39,16 @@ namespace STSEngine.Core {
         public remove(id: number): void {
             let item = this.get(id);
             if (item) {
-                this.onBeforeRemove.trigger(this, item);
+                this.triggerEvent(this.onBeforeRemove, item);
                 this.itemList.delete(id);
+                this.triggerEvent(this.onAfterRemove, item);
             }
         }
 
         public clear(): void {
+            this.triggerEvent(this.onBeforeClear);
             this.itemList.clear();
+            this.triggerEvent(this.onAfterClear);
         }
 
         public getIterator(): IterableIterator<T> {
@@ -90,13 +92,34 @@ namespace STSEngine.Core {
             return undefined;
         }
 
-        public beforeAdd(): ILiteEvent<T> {
-            return this.onBeforeAdd;
-            
+        private onBeforeAdd = new LiteEvent<IEventEntityListService<T>>();
+        private onAfterAdd = new LiteEvent<IEventEntityListService<T>>();
+        private onBeforeRemove = new LiteEvent<IEventEntityListService<T>>();
+        private onAfterRemove = new LiteEvent<IEventEntityListService<T>>();
+        private onBeforeClear = new LiteEvent<IEventEntityListService<T>>();
+        private onAfterClear = new LiteEvent<IEventEntityListService<T>>();
+
+        protected triggerEvent(event: LiteEvent<IEventEntityListService<T>>, item?: T) {
+            if (event.getCount() > 0) {
+                let e = new EventEntityListService<T>(this, item);
+                event.trigger(e);
+            }
         }
 
-        public beforeRemove(): ILiteEvent<T> {
+        public beforeAdd(): ILiteEvent<IEventEntityListService<T>> {
+            return this.onBeforeAdd;
+        }
+
+        public afterAdd(): ILiteEvent<IEventEntityListService<T>> {
+            return this.onAfterAdd;
+        }
+
+        public beforeRemove(): ILiteEvent<IEventEntityListService<T>> {
             return this.onBeforeRemove;
+        }
+
+        public afterRemove(): ILiteEvent<IEventEntityListService<T>> {
+            return this.onAfterRemove;
         }
     }
 }

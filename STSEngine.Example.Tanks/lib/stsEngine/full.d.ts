@@ -30,6 +30,29 @@ declare namespace STSEngine.Core {
     }
 }
 declare namespace STSEngine.Core {
+    interface IEventEngine {
+        getSource(): IEngine;
+        getStep(): number;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IEventEntityListService<T extends IEntity> {
+        getSource(): IEntityListService<T>;
+        getEntity(): T;
+    }
+}
+declare namespace STSEngine.Core {
+    class BaseException {
+        private message;
+        constructor(message?: string);
+        getMessage(): string;
+    }
+}
+declare namespace STSEngine.Core {
+    class NotImplementedException {
+    }
+}
+declare namespace STSEngine.Core {
     interface IAttributeList extends IterableKeyValuePair, ICommitable {
         get(attribute: number, defaultValue?: any): any;
         set(attribute: number, value: any): void;
@@ -61,17 +84,6 @@ declare namespace STSEngine.Core {
     }
 }
 declare namespace STSEngine.Core {
-    class BaseException {
-        private message;
-        constructor(message?: string);
-        getMessage(): string;
-    }
-}
-declare namespace STSEngine.Core {
-    class NotImplementedException {
-    }
-}
-declare namespace STSEngine.Core {
     interface IItem extends IEntity {
     }
 }
@@ -81,88 +93,6 @@ declare namespace STSEngine.Core {
 }
 declare namespace STSEngine.Core {
     interface IClientServerMessage extends IEntity {
-    }
-}
-declare namespace STSEngine.Core {
-    interface ICommitable {
-        commit(): void;
-        rollback(): void;
-        isDirty(): boolean;
-    }
-}
-declare namespace STSEngine.Core {
-    interface IEngine {
-        getWorld(): IWorld;
-        getCommandListService(): ICommandListService;
-        step(): void;
-        getCommandList(): ICommand[];
-        beforeStep(): ILiteEvent<IEngine>;
-        afterStep(): ILiteEvent<IEngine>;
-    }
-}
-declare namespace STSEngine.Core {
-    interface IEntityFactory {
-        set(t: typeof Entity): void;
-        has(t: typeof Entity | string): boolean;
-        delete(t: typeof Entity | string): void;
-        create<T extends IEntity>(e: typeof Entity): T;
-        restore<T extends IEntity>(attr: Iterable<[number, any]>, baseClass: typeof Entity): T;
-        restoreList<T extends IEntity>(attrList: Iterable<Iterable<[number, any]>>, baseClass: typeof Entity): Iterable<T>;
-    }
-}
-declare namespace STSEngine.Core {
-    interface IEntityListService<T extends IEntity> extends IFilterable<T> {
-        init(objectList: Iterable<T>): void;
-        get(id: number): T;
-        has(id: number): boolean;
-        getSize(): number;
-        add(object: T): void;
-        remove(id: number): void;
-        clear(): void;
-        getIterator(): IterableIterator<T>;
-        serialize(): [number, any][][];
-        setList(object: Iterable<T>, clear?: boolean): void;
-        getTyped<V extends T>(objectId: number, type: any): V;
-        beforeAdd(): ILiteEvent<T>;
-        beforeRemove(): ILiteEvent<T>;
-    }
-}
-declare namespace STSEngine.Core {
-    interface IFilterService<T> {
-        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): IterableIterator<T>;
-        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
-    }
-}
-declare namespace STSEngine.Core {
-    interface IGameServer {
-        start(): void;
-        getCommandLog(startStepNumber: number): ICommand[][];
-        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
-    }
-}
-declare namespace STSEngine.Core {
-    interface ILiteEvent<V> {
-        on(handler: {
-            (sender: any, data?: V): void;
-        }): void;
-        off(handler: {
-            (sender: any, data?: V): void;
-        }): void;
-    }
-}
-declare namespace STSEngine.Core {
-    interface IMetronome {
-        start(startTime?: number): void;
-        getStartTime(): number;
-        pause(): void;
-        resume(): void;
-        getTickLength(): number;
-        getTickCount(): number;
-    }
-}
-declare namespace STSEngine.Core {
-    class ServiceAttributeType {
-        static LastId: string;
     }
 }
 declare namespace STSEngine.Core {
@@ -199,6 +129,92 @@ declare namespace STSEngine.Core {
         setLastItemId(id: number): void;
         getStepNumber(): number;
         setStepNumber(stepNumber: number): void;
+    }
+}
+declare namespace STSEngine.Core {
+    interface ICommitable {
+        commit(): void;
+        rollback(): void;
+        isDirty(): boolean;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IEngine {
+        getWorld(): IWorld;
+        getCommandListService(): ICommandListService;
+        getStep(): number;
+        update(): void;
+        getCommandList(): ICommand[];
+        beforeUpdate(): ILiteEvent<IEventEngine>;
+        afterUpdate(): ILiteEvent<IEventEngine>;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IEntityFactory {
+        set(t: typeof Entity): void;
+        has(t: typeof Entity | string): boolean;
+        delete(t: typeof Entity | string): void;
+        create<T extends IEntity>(e: typeof Entity): T;
+        restore<T extends IEntity>(attr: Iterable<[number, any]>, baseClass: typeof Entity): T;
+        restoreList<T extends IEntity>(attrList: Iterable<Iterable<[number, any]>>, baseClass: typeof Entity): Iterable<T>;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IEntityListService<T extends IEntity> extends IFilterable<T> {
+        init(objectList: Iterable<T>): void;
+        get(id: number): T;
+        has(id: number): boolean;
+        getSize(): number;
+        add(object: T): void;
+        remove(id: number): void;
+        clear(): void;
+        getIterator(): IterableIterator<T>;
+        serialize(): [number, any][][];
+        setList(object: Iterable<T>, clear?: boolean): void;
+        getTyped<V extends T>(objectId: number, type: any): V;
+        beforeAdd(): ILiteEvent<IEventEntityListService<T>>;
+        afterAdd(): ILiteEvent<IEventEntityListService<T>>;
+        beforeRemove(): ILiteEvent<IEventEntityListService<T>>;
+        afterRemove(): ILiteEvent<IEventEntityListService<T>>;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IFilterService<T> {
+        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): IterableIterator<T>;
+        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IGameServer {
+        start(): void;
+        getCommandLog(startStepNumber: number): ICommand[][];
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
+    }
+}
+declare namespace STSEngine.Core {
+    interface ILiteEvent<V> {
+        on(handler: {
+            (data?: V): void;
+        }): void;
+        off(handler: {
+            (data?: V): void;
+        }): void;
+        getCount(): number;
+    }
+}
+declare namespace STSEngine.Core {
+    interface IMetronome {
+        start(startTime?: number): void;
+        getStartTime(): number;
+        pause(): void;
+        resume(): void;
+        getTickLength(): number;
+        getTickCount(): number;
+    }
+}
+declare namespace STSEngine.Core {
+    class ServiceAttributeType {
+        static LastId: string;
     }
 }
 declare namespace STSEngine.Core {
@@ -275,6 +291,24 @@ declare namespace STSEngine.Core {
         clear(): void;
         getAll(condition: (item: ICommand) => boolean): IterableIterator<ICommand>;
         getFirst(condition: (item: ICommand) => boolean): ICommand;
+    }
+}
+declare namespace STSEngine.Core {
+    class EventEngine implements IEventEngine {
+        protected engine: IEngine;
+        protected step: number;
+        constructor(engine: IEngine, step: number);
+        getSource(): IEngine;
+        getStep(): number;
+    }
+}
+declare namespace STSEngine.Core {
+    class EventEntityListService<T extends IEntity> implements IEventEntityListService<T> {
+        protected entityListService: IEntityListService<T>;
+        protected entity: T;
+        constructor(entityListService: IEntityListService<T>, entity?: T);
+        getSource(): IEntityListService<T>;
+        getEntity(): T;
     }
 }
 declare namespace STSEngine.Core {
@@ -428,150 +462,6 @@ declare namespace STSEngine.Core {
     }
 }
 declare namespace STSEngine.Core {
-    class Engine implements IEngine {
-        protected world: IWorld;
-        protected processListService: IProcessListService;
-        protected processDispatcher: IProcessDispatcher;
-        protected commandDispatcher: ICommandDispatcher;
-        protected commandListService: ICommandListService;
-        private onBeforeStep;
-        private onAfterStep;
-        constructor(world: IWorld, commandListService: ICommandListService);
-        getWorld(): IWorld;
-        getCommandListService(): ICommandListService;
-        step(): void;
-        protected increaseStepNumber(): void;
-        getCommandList(): ICommand[];
-        protected processCommandList(): void;
-        beforeStep(): ILiteEvent<IEngine>;
-        afterStep(): ILiteEvent<IEngine>;
-    }
-}
-declare namespace STSEngine.Core {
-    class EntityFactory implements IEntityFactory {
-        private initEntityHandler;
-        protected itemAttributeType: number;
-        protected entityList: Map<string, typeof Entity>;
-        constructor(initEntityHandler?: (entity: IEntity) => void);
-        set(t: typeof Entity): void;
-        has(t: typeof Entity | string): boolean;
-        delete(t: typeof Entity | string): void;
-        protected getType(t: typeof Entity | string): string;
-        protected getItemType(attr: Iterable<[number, any]>): string;
-        restoreList<T extends IEntity>(attrList: Iterable<Iterable<[number, any]>>, baseClass: typeof Entity): Iterable<T>;
-        protected createByType(type: string, attr?: Iterable<[number, any]>): IEntity;
-        restore<T extends IEntity>(attr: Iterable<[number, any]>, e: typeof Entity): T;
-        create<T extends IEntity>(e: typeof Entity): T;
-        protected createByAttr(attr: Iterable<[number, any]>): IEntity;
-        protected initEntity(entity: IEntity): void;
-        protected createAttributeList(type: string): IAttributeList;
-    }
-}
-declare namespace STSEngine.Core {
-    class EntityListService<T extends IEntity> implements IEntityListService<T> {
-        protected itemList: Map<number, T>;
-        protected filterService: IFilterService<T>;
-        private onBeforeAdd;
-        private onBeforeRemove;
-        constructor();
-        init(itemList: Iterable<T>): void;
-        get(itemId: number): T;
-        getSize(): number;
-        add(item: T): void;
-        has(id: number): boolean;
-        remove(id: number): void;
-        clear(): void;
-        getIterator(): IterableIterator<T>;
-        serialize(): [number, any][][];
-        setList(entityList: Iterable<T>, clear?: boolean): void;
-        getAll(condition: (item: IEntity) => boolean): IterableIterator<T>;
-        getFirst(condition: (item: IEntity) => boolean): T;
-        getTyped<V extends T>(itemId: number, type: any): V;
-        beforeAdd(): ILiteEvent<T>;
-        beforeRemove(): ILiteEvent<T>;
-    }
-}
-declare namespace STSEngine.Core {
-    class EntityListServiceCommitable<T extends IEntity> implements IEntityListService<T>, ICommitable {
-        protected itemListService: IEntityListService<T>;
-        protected deletedItemIdList: Set<number>;
-        protected newItemIdList: Set<number>;
-        protected filterService: IFilterService<T>;
-        private onBeforeAdd;
-        private onBeforeRemove;
-        constructor();
-        init(itemList: Iterable<T>): void;
-        get(id: number): T;
-        has(id: number): boolean;
-        getSize(): number;
-        add(item: T): void;
-        protected isItemNotDeleted(item: T): boolean;
-        getIterator(): IterableIterator<T>;
-        serialize(): [number, any][][];
-        setList(entityList: Iterable<T>, clear?: boolean): void;
-        remove(id: number): void;
-        clear(): void;
-        commit(): void;
-        rollback(): void;
-        isDirty(): boolean;
-        getAll(condition: (item: T) => boolean): IterableIterator<T>;
-        getFirst(condition: (item: T) => boolean): T;
-        getTyped<V extends T>(itemId: number, type: any): V;
-        beforeAdd(): ILiteEvent<T>;
-        beforeRemove(): ILiteEvent<T>;
-    }
-}
-declare namespace STSEngine.Core {
-    class FilterService<T> implements IFilterService<T> {
-        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): IterableIterator<T>;
-        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
-    }
-}
-declare namespace STSEngine.Core {
-    class GameServer implements IGameServer {
-        protected emptyCommandList: ICommand[];
-        protected engine: IEngine;
-        protected metronome: IMetronome;
-        protected commandLog: ICommand[][];
-        protected timerId: any;
-        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
-        constructor(engine: IEngine);
-        start(): void;
-        getCommandLog(startStepNumber: number): ICommand[][];
-        protected updateWorld(): void;
-        protected getStepNumber(): number;
-        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
-    }
-}
-declare namespace STSEngine.Core {
-    class LiteEvent<V> implements ILiteEvent<V> {
-        private handlers;
-        on(handler: {
-            (sender: any, data?: V): void;
-        }): void;
-        off(handler: {
-            (sender: any, data?: V): void;
-        }): void;
-        trigger(sender: any, data?: V): void;
-    }
-}
-declare namespace STSEngine.Core {
-    class Metronome implements IMetronome {
-        protected tickLength: number;
-        protected startTime: number;
-        protected pauseStart: number;
-        protected pauseLength: number;
-        protected isPaused: boolean;
-        constructor(tickLength: number);
-        start(startTime?: number): void;
-        getStartTime(): number;
-        pause(): void;
-        resume(): void;
-        getTickLength(): number;
-        getTickCount(): number;
-    }
-}
-declare namespace STSEngine.Core {
     interface IProcess extends IEntity {
         getInitStep(): number;
         setInitStep(initStep: number): void;
@@ -648,6 +538,160 @@ declare namespace STSEngine.Core {
     module WorldAttributeList {
         let LastTypeId: number;
         const Type: number;
+    }
+}
+declare namespace STSEngine.Core {
+    class Engine implements IEngine {
+        protected world: IWorld;
+        protected processListService: IProcessListService;
+        protected processDispatcher: IProcessDispatcher;
+        protected commandDispatcher: ICommandDispatcher;
+        protected commandListService: ICommandListService;
+        private onBeforeUpdate;
+        private onAfterUpdate;
+        constructor(world: IWorld, commandListService: ICommandListService);
+        getWorld(): IWorld;
+        getCommandListService(): ICommandListService;
+        update(): void;
+        getStep(): number;
+        protected increaseStepNumber(): void;
+        getCommandList(): ICommand[];
+        protected processCommandList(): void;
+        protected triggerEvent(event: LiteEvent<IEventEngine>, step: number): void;
+        beforeUpdate(): ILiteEvent<IEventEngine>;
+        afterUpdate(): ILiteEvent<IEventEngine>;
+    }
+}
+declare namespace STSEngine.Core {
+    class EntityFactory implements IEntityFactory {
+        private initEntityHandler;
+        protected itemAttributeType: number;
+        protected entityList: Map<string, typeof Entity>;
+        constructor(initEntityHandler?: (entity: IEntity) => void);
+        set(t: typeof Entity): void;
+        has(t: typeof Entity | string): boolean;
+        delete(t: typeof Entity | string): void;
+        protected getType(t: typeof Entity | string): string;
+        protected getItemType(attr: Iterable<[number, any]>): string;
+        restoreList<T extends IEntity>(attrList: Iterable<Iterable<[number, any]>>, baseClass: typeof Entity): Iterable<T>;
+        protected createByType(type: string, attr?: Iterable<[number, any]>): IEntity;
+        restore<T extends IEntity>(attr: Iterable<[number, any]>, e: typeof Entity): T;
+        create<T extends IEntity>(e: typeof Entity): T;
+        protected createByAttr(attr: Iterable<[number, any]>): IEntity;
+        protected initEntity(entity: IEntity): void;
+        protected createAttributeList(type: string): IAttributeList;
+    }
+}
+declare namespace STSEngine.Core {
+    class EntityListService<T extends IEntity> implements IEntityListService<T> {
+        protected itemList: Map<number, T>;
+        protected filterService: IFilterService<T>;
+        constructor();
+        init(itemList: Iterable<T>): void;
+        get(itemId: number): T;
+        getSize(): number;
+        add(item: T): void;
+        has(id: number): boolean;
+        remove(id: number): void;
+        clear(): void;
+        getIterator(): IterableIterator<T>;
+        serialize(): [number, any][][];
+        setList(entityList: Iterable<T>, clear?: boolean): void;
+        getAll(condition: (item: IEntity) => boolean): IterableIterator<T>;
+        getFirst(condition: (item: IEntity) => boolean): T;
+        getTyped<V extends T>(itemId: number, type: any): V;
+        private onBeforeAdd;
+        private onAfterAdd;
+        private onBeforeRemove;
+        private onAfterRemove;
+        private onBeforeClear;
+        private onAfterClear;
+        protected triggerEvent(event: LiteEvent<IEventEntityListService<T>>, item?: T): void;
+        beforeAdd(): ILiteEvent<IEventEntityListService<T>>;
+        afterAdd(): ILiteEvent<IEventEntityListService<T>>;
+        beforeRemove(): ILiteEvent<IEventEntityListService<T>>;
+        afterRemove(): ILiteEvent<IEventEntityListService<T>>;
+    }
+}
+declare namespace STSEngine.Core {
+    class EntityListServiceCommitable<T extends IEntity> {
+        protected itemListService: IEntityListService<T>;
+        protected deletedItemIdList: Set<number>;
+        protected newItemIdList: Set<number>;
+        protected filterService: IFilterService<T>;
+        private onBeforeAdd;
+        private onBeforeRemove;
+        constructor();
+        init(itemList: Iterable<T>): void;
+        get(id: number): T;
+        has(id: number): boolean;
+        getSize(): number;
+        add(item: T): void;
+        protected isItemNotDeleted(item: T): boolean;
+        getIterator(): IterableIterator<T>;
+        serialize(): [number, any][][];
+        setList(entityList: Iterable<T>, clear?: boolean): void;
+        remove(id: number): void;
+        clear(): void;
+        commit(): void;
+        rollback(): void;
+        isDirty(): boolean;
+        getAll(condition: (item: T) => boolean): IterableIterator<T>;
+        getFirst(condition: (item: T) => boolean): T;
+        getTyped<V extends T>(itemId: number, type: any): V;
+        beforeAdd(): ILiteEvent<T>;
+        beforeRemove(): ILiteEvent<T>;
+    }
+}
+declare namespace STSEngine.Core {
+    class FilterService<T> implements IFilterService<T> {
+        getAll(itemList: Iterable<T>, condition: (item: T) => boolean): IterableIterator<T>;
+        getFirst(itemList: Iterable<T>, condition: (item: T) => boolean): T;
+    }
+}
+declare namespace STSEngine.Core {
+    class GameServer implements IGameServer {
+        protected emptyCommandList: ICommand[];
+        protected engine: IEngine;
+        protected metronome: IMetronome;
+        protected commandLog: ICommand[][];
+        protected timerId: any;
+        protected onUpdateWorld: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void;
+        constructor(engine: IEngine);
+        start(): void;
+        getCommandLog(startStepNumber: number): ICommand[][];
+        protected updateWorld(): void;
+        protected getStepNumber(): number;
+        setOnUpdateWorld(handler: (world: IWorld, currentStepNumber: number, commandList: ICommand[]) => void): void;
+    }
+}
+declare namespace STSEngine.Core {
+    class LiteEvent<V> implements ILiteEvent<V> {
+        private handlers;
+        getCount(): number;
+        on(handler: {
+            (data?: V): void;
+        }): void;
+        off(handler: {
+            (data?: V): void;
+        }): void;
+        trigger(data?: V): void;
+    }
+}
+declare namespace STSEngine.Core {
+    class Metronome implements IMetronome {
+        protected tickLength: number;
+        protected startTime: number;
+        protected pauseStart: number;
+        protected pauseLength: number;
+        protected isPaused: boolean;
+        constructor(tickLength: number);
+        start(startTime?: number): void;
+        getStartTime(): number;
+        pause(): void;
+        resume(): void;
+        getTickLength(): number;
+        getTickCount(): number;
     }
 }
 declare namespace STSEngine.Core {

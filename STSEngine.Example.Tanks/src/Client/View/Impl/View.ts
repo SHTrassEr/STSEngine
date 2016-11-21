@@ -83,7 +83,7 @@ namespace STSEngine.Example.Tanks {
 
         protected onStageMouseClick(event) {
             let p = event.data.getLocalPosition(this.stage);
-            this.onMouseClick.trigger(this, p);
+            this.onMouseClick.trigger(p);
         }
 
 
@@ -93,7 +93,7 @@ namespace STSEngine.Example.Tanks {
 
             VectorHelper.substract(p, s);
 
-            this.onTouchMove.trigger(this, p);
+            this.onTouchMove.trigger(p);
 
         }
 
@@ -101,12 +101,12 @@ namespace STSEngine.Example.Tanks {
 
             if (this.touchIdentifier === event.data.identifier) {
                 let p = event.data.getLocalPosition(this.stage);
-                this.onTouchEnd.trigger(this, p);
+                this.onTouchEnd.trigger(p);
                 this.touchIdentifier = null;
             }
             else {
                 let p = event.data.getLocalPosition(this.stage);
-                this.onMouseClick.trigger(this, p);
+                this.onMouseClick.trigger(p);
             }
         }
 

@@ -14,7 +14,10 @@
         setList(object: Iterable<T>, clear?: boolean): void;
         getTyped<V extends T>(objectId: number, type: any): V;
 
-        beforeAdd(): ILiteEvent<T>;
-        beforeRemove(): ILiteEvent<T>;
+        beforeAdd(): ILiteEvent<IEventEntityListService<T>>;
+        afterAdd(): ILiteEvent<IEventEntityListService<T>>;
+
+        beforeRemove(): ILiteEvent<IEventEntityListService<T>>;
+        afterRemove(): ILiteEvent<IEventEntityListService<T>>;
     }
 }

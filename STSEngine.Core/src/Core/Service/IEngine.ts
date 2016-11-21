@@ -3,10 +3,12 @@
     export interface IEngine {
         getWorld(): IWorld;
         getCommandListService(): ICommandListService;
-        step(): void;
+        getStep(): number;
+
+        update(): void;
         getCommandList(): ICommand[];
 
-        beforeStep(): ILiteEvent<IEngine>;
-        afterStep(): ILiteEvent<IEngine>;
+        beforeUpdate(): ILiteEvent<IEventEngine>;
+        afterUpdate(): ILiteEvent<IEventEngine>;
     }
 }

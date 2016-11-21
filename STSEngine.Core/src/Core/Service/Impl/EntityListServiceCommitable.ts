@@ -1,7 +1,7 @@
 ﻿
 namespace STSEngine.Core {
 
-    export class EntityListServiceCommitable<T extends IEntity> implements IEntityListService<T>, ICommitable {
+    export class EntityListServiceCommitable<T extends IEntity> {// implements IEntityListService<T>, ICommitable {
         protected itemListService: IEntityListService<T>;
         protected deletedItemIdList: Set<number>;
         protected newItemIdList: Set<number>;
@@ -41,7 +41,7 @@ namespace STSEngine.Core {
         }
 
         public add(item: T): void {
-            this.onBeforeAdd.trigger(this, item);
+            this.onBeforeAdd.trigger(item);
             this.itemListService.add(item);
             this.newItemIdList.add(item.getId());
         }

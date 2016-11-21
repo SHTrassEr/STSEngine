@@ -7,8 +7,8 @@
         protected commandDispatcher: ICommandDispatcher;
         protected commandListService: ICommandListService;
 
-        private onBeforeStep = new LiteEvent<IEngine>();
-        private onAfterStep = new LiteEvent<IEngine>();   
+        private onBeforeUpdate = new LiteEvent<IEventEngine>();
+        private onAfterUpdate = new LiteEvent<IEventEngine>();   
         
         constructor(world: IWorld, commandListService: ICommandListService) {
             this.world = world;
@@ -26,8 +26,8 @@
             return this.commandListService;
         }
 
-        public step() {
-            this.onBeforeStep.trigger(this, this);
+        public update() {
+            this.triggerEvent(this.onBeforeUpdate, this.getStep());
             this.increaseStepNumber();
             this.processCommandList();
             for (let i = 0; i < this.processListService.getProcessList().length; i++) {
@@ -36,12 +36,15 @@
             }
 
             this.processListService.removeFinished();
+            this.triggerEvent(this.onAfterUpdate, this.getStep());
+        }
 
-            this.onAfterStep.trigger(this, this);
+        public getStep(): number {
+            return this.world.getWorldAttributeList().getStepNumber();
         }
 
         protected increaseStepNumber(): void {
-            let stepNumber: number = this.world.getWorldAttributeList().getStepNumber() + 1;
+            let stepNumber: number = this.getStep() + 1;
             this.world.getWorldAttributeList().setStepNumber(stepNumber);
         }
 
@@ -57,13 +60,20 @@
             this.commandListService.clear();
         }
 
-        public beforeStep(): ILiteEvent<IEngine> {
-            return this.onBeforeStep;
+        protected triggerEvent(event: LiteEvent<IEventEngine>, step: number) {
+            if (event.getCount() > 0) {
+                let e = new EventEngine(this, step);
+                event.trigger(e);
+            }
+        }
+
+        public beforeUpdate(): ILiteEvent<IEventEngine> {
+            return this.onBeforeUpdate;
 
         }
 
-        public afterStep(): ILiteEvent<IEngine> {
-            return this.onAfterStep;
+        public afterUpdate(): ILiteEvent<IEventEngine> {
+            return this.onAfterUpdate;
         }
     }
 }

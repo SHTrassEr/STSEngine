@@ -91,7 +91,7 @@
             let commandListAttr = message.getCommandList();
             let commandList = this.engine.getWorld().getEntityFactory().restoreList<ICommand>(commandListAttr, Command);
             this.engine.getCommandListService().setCommandList(commandList);
-            this.engine.step();
+            this.engine.update();
         }
 
         protected processStepList(message: ClientServerMessageStepList) {

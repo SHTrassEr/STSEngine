@@ -36,7 +36,7 @@
                 let commandList = this.engine.getCommandList();
                 this.commandLog[currentStepNumber] = commandList;
 
-                this.engine.step();
+                this.engine.update();
 
                 if (this.onUpdateWorld) {
                     this.onUpdateWorld(this.engine.getWorld(), currentStepNumber, commandList);

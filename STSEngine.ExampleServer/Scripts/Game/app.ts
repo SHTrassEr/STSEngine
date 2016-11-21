@@ -79,16 +79,16 @@ function ready() {
         setInterval(updateScore, 100);
     }
 
-    function onStageMouseClick(s, p: STSEngine.Example.Tanks.IVector) {
+    function onStageMouseClick(p: STSEngine.Example.Tanks.IVector) {
         
         playerAction.fire(getPlayerObject().getId(), p);
     }
 
-    function onStageTouchEnd(s, p: STSEngine.Example.Tanks.IVector) {
+    function onStageTouchEnd(p: STSEngine.Example.Tanks.IVector) {
         playerAction.setClientForceVector(getPlayerObject().getId(), new STSEngine.Example.Tanks.Vector(0, 0));
     }
 
-    function onStageTouchMove(s, p: STSEngine.Example.Tanks.IVector) {
+    function onStageTouchMove(p: STSEngine.Example.Tanks.IVector) {
 
         let o = getPlayerObject();
         /*let v = o.getPosition();

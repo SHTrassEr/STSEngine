@@ -3,11 +3,11 @@
     export interface IEngine extends Core.IEngine {
         getWorld(): IWorld;
         getCommandListService(): STSEngine.Core.ICommandListService;
-        step(): void;
+        update(): void;
         getCommandList(): STSEngine.Core.ICommand[];
 
-        beforePhysicsEngineStep(): STSEngine.Core.ILiteEvent<IEngine>;
-        afterPhysicsEngineStep(): STSEngine.Core.ILiteEvent<IEngine>;
+        beforePhysicsEngineUpdate(): STSEngine.Core.ILiteEvent<IEngine>;
+        afterPhysicsEngineUpdate(): STSEngine.Core.ILiteEvent<IEngine>;
 
     }
 }

@@ -40,6 +40,10 @@
     <TypeScriptCompile Include="src\Core\Entity\Impl\Entity.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IEntity.ts" />
     <TypeScriptCompile Include="src\Core\Entity\IterableKeyValuePair.ts" />
+    <TypeScriptCompile Include="src\Core\Events\IEventEngine.ts" />
+    <TypeScriptCompile Include="src\Core\Events\IEventEntityListService.ts" />
+    <TypeScriptCompile Include="src\Core\Events\Impl\EventEngine.ts" />
+    <TypeScriptCompile Include="src\Core\Events\Impl\IEventEntityListService.ts" />
     <TypeScriptCompile Include="src\Core\Item\IItemListService.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageInit.ts" />
     <TypeScriptCompile Include="src\Core\Message\Impl\ClientServerMessageWorldFullInfo.ts" />

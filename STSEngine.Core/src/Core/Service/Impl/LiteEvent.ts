@@ -2,18 +2,24 @@
 
     export class LiteEvent<V> implements ILiteEvent<V> {
 
-        private handlers: { (sender: any, data?: V): void; }[] = [];
+        private handlers: { (data?: V): void; }[] = [];
 
-        public on(handler: { (sender: any, data?: V): void }) {
+        public getCount(): number {
+            return this.handlers.length;
+        }
+
+        public on(handler: { (data?: V): void }) {
             this.handlers.push(handler);
         }
 
-        public off(handler: { (sender: any, data?: V): void }) {
+        public off(handler: { (data?: V): void }) {
             this.handlers = this.handlers.filter(h => h !== handler);
         }
 
-        public trigger(sender: any, data?: V) {
-            this.handlers.slice(0).forEach(h => h(sender, data));
+        public trigger(data?: V) {
+            for (let handler of this.handlers) {
+                handler(data);
+            }
         }
     }
 }

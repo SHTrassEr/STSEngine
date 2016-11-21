@@ -22,12 +22,14 @@
             Matter.Engine.update(this.engine, delta);
         }
 
-        protected addItem(itemListService: IItemListService, item: IItem): void {
+        protected addItem(event: Core.IEventEntityListService<IItem>): void {
+            let item = event.getEntity();
             item.getBody().id = item.getId();
             Matter.World.add(this.engine.world, item.getBody());
         }
 
-        protected removeItem(itemListService: IItemListService, item: IItem): void {
+        protected removeItem(event: Core.IEventEntityListService<IItem>): void {
+            let item = event.getEntity();
             Matter.World.remove(this.engine.world, item.getBody());
         }
 
@@ -58,6 +60,7 @@
         }
 
         protected beforeUpdate(e: Matter.IEventTimestamped<Matter.Engine>): void {
+
             let itemList = this.world.getItemListService().getIterator();
             for (let item of itemList) {
                 item.applyForce();
