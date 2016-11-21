@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", 'express', './routes/index', 'http', 'path', 'stylus', 'stsEngine/server', 'stsEngine.example/server'], factory);
+        define(["require", "exports", 'express', './routes/index', 'http', 'path', 'stylus', 'stsEngine.example.tanks/server'], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -38,11 +38,16 @@
     http.createServer(app).listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));
     });
-    const server_1 = require('stsEngine/server');
-    const server_2 = require('stsEngine.example/server');
-    server_1.default.Example = server_2.default;
+    //import STSEngine from  'stsEngine.core/server';
+    const server_1 = require('stsEngine.example.tanks/server');
+    /*if (!STSEngine.Example) {
+        STSEngine.Example = {};
+    }*/
+    server_1.default.Example = server_1.default;
+    //STSEngine.Example.Tanks = STSEngineExampleTanks;
     var WebSocketServer = require('ws').Server;
     var server = new WebSocketServer({ port: 62785 });
-    var webSocketGameServer = new server_1.default.Example.WebSocketGameServer(server);
+    var webSocketGameServer = new server_1.default.Example.Tanks.WebSocketGameServer(server);
+    //var webSocketGameServer = new STSEngine.Example.Tanks.WebSocketGameServer(server);
     webSocketGameServer.start();
 });

@@ -4,7 +4,7 @@ var ts = require('gulp-typescript');
 var merge = require('merge2');
 var insert = require('gulp-insert');
 
-var nodeJsModuleDeclaration = '\ndeclare module \'stsEngine/server\' { export default STSEngine; }';
+var nodeJsModuleDeclaration = '\ndeclare module \'stsEngine.core/server\' { export default STSEngine; }';
 var useStrict = '\'use strict\';\n';
 
 
@@ -30,14 +30,13 @@ gulp.task('build-server', function () {
 
 gulp.task('copy-example', ['build-full'], function () {
     return merge([
-        gulp.src('out/full.d.ts').pipe(gulp.dest('../STSEngine.Example/lib/stsEngine/'))
+        gulp.src('out/full.d.ts').pipe(gulp.dest('../STSEngine.Example.Tanks/lib/stsEngine/'))
     ]);
 });
 
 gulp.task('copy-server', ['build-server'], function () {
     return merge([
         gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine/')),
-        gulp.src('out/server.js').pipe(gulp.dest('../STSEngine.ExampleServer/node_modules/stsEngine.example/node_modules/stsEngine/')),
         gulp.src('out/server.d.ts').pipe(gulp.dest('../STSEngine.ExampleServer/Scripts/typings/STSEngine')),
     ]);
 });

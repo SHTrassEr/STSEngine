@@ -37,8 +37,8 @@ function ready() {
     var loc = window.location;
 
     var socket = new WebSocket('ws://' + window.location.hostname + ':62785');
-    var playerAction = new STSEngine.Example.ClientAction();
-    var client = new STSEngine.Example.WebSocketGameClient(socket, sid, playerAction);
+    var playerAction = new STSEngine.Example.Tanks.ClientAction();
+    var client = new STSEngine.Example.Tanks.WebSocketGameClient(socket, sid, playerAction);
     client.setOnConnected(onClientConnected);
 
 
@@ -57,7 +57,7 @@ function ready() {
     engine.beforeStep().on(() => meter2.tickStart());
     engine.afterStep().on(() => meter2.tick());*/
 
-    var view = new STSEngine.Example.View(<HTMLDivElement>content, world);
+    var view = new STSEngine.Example.Tanks.View(<HTMLDivElement>content, world);
     function onClientConnected(client: STSEngine.Core.IWebSocketGameClient) {
 
         view.setClientId(client.getClientId());
@@ -79,16 +79,16 @@ function ready() {
         setInterval(updateScore, 100);
     }
 
-    function onStageMouseClick(s, p: STSEngine.Example.IVector) {
+    function onStageMouseClick(s, p: STSEngine.Example.Tanks.IVector) {
         
         playerAction.fire(getPlayerObject().getId(), p);
     }
 
-    function onStageTouchEnd(s, p: STSEngine.Example.IVector) {
-        playerAction.setClientForceVector(getPlayerObject().getId(), new STSEngine.Example.Vector(0, 0));
+    function onStageTouchEnd(s, p: STSEngine.Example.Tanks.IVector) {
+        playerAction.setClientForceVector(getPlayerObject().getId(), new STSEngine.Example.Tanks.Vector(0, 0));
     }
 
-    function onStageTouchMove(s, p: STSEngine.Example.IVector) {
+    function onStageTouchMove(s, p: STSEngine.Example.Tanks.IVector) {
 
         let o = getPlayerObject();
         /*let v = o.getPosition();
@@ -107,7 +107,7 @@ function ready() {
         var clientList = world.getClientListService().getIterator();
         let str = '';
         for (let client of clientList) {
-            if (client instanceof STSEngine.Example.ClientActive) {
+            if (client instanceof STSEngine.Example.Tanks.ClientActive) {
                 let name = "";
                 if (client.getName()) {
                     name = client.getName();
@@ -126,7 +126,7 @@ function ready() {
 
         var itemList = world.getItemListService().getIterator();
         for (let item of itemList) {
-            if (item instanceof STSEngine.Example.ItemTank) {
+            if (item instanceof STSEngine.Example.Tanks.ItemTank) {
                 let v = item.getPosition();
                 str += JSON.stringify(v);
             }
@@ -142,7 +142,7 @@ function ready() {
     var up: boolean, down: boolean, left: boolean, right: boolean;//, fire: boolean;
 
     function getPlayerObject() {
-        var o = objectListService.getFirst(o => (<STSEngine.Example.ItemTank>(<any>o)).getClientId() == client.getClientId());
+        var o = objectListService.getFirst(o => (<STSEngine.Example.Tanks.ItemTank>(<any>o)).getClientId() == client.getClientId());
         return o;
     }
 

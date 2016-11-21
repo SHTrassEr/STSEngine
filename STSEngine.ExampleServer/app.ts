@@ -38,14 +38,21 @@ http.createServer(app).listen(app.get('port'), function () {
 });
 
 
-import STSEngine from  'stsEngine/server';
-import STSEngineExample from  'stsEngine.example/server';
+//import STSEngine from  'stsEngine.core/server';
+import STSEngine from 'stsEngine.example.tanks/server';
 
-STSEngine.Example = STSEngineExample;
+/*if (!STSEngine.Example) {
+    STSEngine.Example = {};
+}*/
+
+STSEngine.Example = <any>STSEngine;
+
+//STSEngine.Example.Tanks = STSEngineExampleTanks;
 
 var WebSocketServer = require('ws').Server;
 var server = new WebSocketServer({ port: 62785 });
+var webSocketGameServer = new STSEngine.Example.Tanks.WebSocketGameServer(server);
 
-var webSocketGameServer = new STSEngine.Example.WebSocketGameServer(server);
+//var webSocketGameServer = new STSEngine.Example.Tanks.WebSocketGameServer(server);
 
 webSocketGameServer.start();
