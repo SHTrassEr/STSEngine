@@ -121,5 +121,13 @@ namespace STSEngine.Core {
         public afterRemove(): ILiteEvent<IEventEntityListService<T>> {
             return this.onAfterRemove;
         }
+
+        public beforeClear(): ILiteEvent<IEventEntityListService<T>> {
+            return this.onBeforeClear;
+        }
+
+        public afterClear(): ILiteEvent<IEventEntityListService<T>> {
+            return this.onAfterClear;
+        }
     }
 }

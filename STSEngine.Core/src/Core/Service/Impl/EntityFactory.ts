@@ -3,12 +3,12 @@ namespace STSEngine.Core {
 
     export class EntityFactory implements IEntityFactory {
 
-        private initEntityHandler: (entity: IEntity) => void;
+        private initEntityHandler: (entity: IEntity, t?: typeof Entity, attr?: Iterable<[number, any]>) => void;
         protected itemAttributeType: number = 1;
 
         protected entityList: Map<string, typeof Entity>;
 
-        constructor(initEntityHandler?: (entity: IEntity) => void) {
+        constructor(initEntityHandler?: (entity: IEntity, t?: typeof Entity, attr?: Iterable<[number, any]>) => void) {
             this.entityList = new Map<string, typeof Entity>();
             this.initEntityHandler = initEntityHandler;
         }
@@ -58,14 +58,18 @@ namespace STSEngine.Core {
                 this.initEntity(entity);
                 return entity;
             }
-            return null;
+
+            throw new Error(type);
         }
 
-        public restore<T extends IEntity>(attr: Iterable<[number, any]>, e: typeof Entity): T {
+        public restore<T extends IEntity>(attr: Iterable<[number, any]>, t: typeof Entity): T {
+            let entity: IEntity;
+            this.triggerEvent(this.onBeforeRestore, entity, t, attr);
             let type = this.getItemType(attr);
             if (type) {
-                let entity = this.createByType(type, attr);
-                if (entity instanceof e) {
+                entity = this.createByType(type, attr);
+                if (entity instanceof t) {
+                    this.triggerEvent(this.onAfterRestore, entity, t, attr);
                     return <T><any>entity;
                 }
             }
@@ -74,9 +78,12 @@ namespace STSEngine.Core {
             throw new Error(JSON.stringify(attr));
         }
 
-        public create<T extends IEntity>(e: typeof Entity): T {
-            let entity = this.createByType(e.type);
-            if (entity instanceof e) {
+        public create<T extends IEntity>(t: typeof Entity): T {
+            let entity: IEntity;
+            this.triggerEvent(this.onBeforeCreate, entity, t);
+            entity = this.createByType(t.type);
+            if (entity instanceof t) {
+                this.triggerEvent(this.onAfterCreate, entity, t);
                 return <T><any>entity;
             }
 
@@ -88,16 +95,56 @@ namespace STSEngine.Core {
             return this.createByType(itemType, attr);
         }
 
-        protected initEntity(entity: IEntity) {
+        protected initEntity(entity: IEntity, t?: typeof Entity, attr?: Iterable<[number, any]>) {
+            this.triggerEvent(this.onBeforeInit, entity, t, attr);
             if (this.initEntityHandler) {
-                return this.initEntityHandler(entity);
+                this.initEntityHandler(entity, t, attr);
             }
 
-            return null;
+            this.triggerEvent(this.onAfterInit, entity, t, attr);
         }
 
         protected createAttributeList(type: string): IAttributeList {
             return new AttributeListArray();
+        }
+
+        private onBeforeCreate = new LiteEvent<IEventEntityFactory>();
+        private onAfterCreate = new LiteEvent<IEventEntityFactory>();
+        private onBeforeRestore = new LiteEvent<IEventEntityFactory>();
+        private onAfterRestore = new LiteEvent<IEventEntityFactory>();
+
+        private onBeforeInit = new LiteEvent<IEventEntityFactory>();
+        private onAfterInit = new LiteEvent<IEventEntityFactory>();
+
+        protected triggerEvent(event: LiteEvent<IEventEntityFactory>, entity?: IEntity, type?: typeof Entity, attr?: Iterable<[number, any]>) {
+            if (event.getCount() > 0) {
+                let e = new EventEntityFactory(this, entity, type, attr);
+                event.trigger(e);
+            }
+        }
+
+        public beforeCreate(): ILiteEvent<IEventEntityFactory> {
+            return this.onBeforeCreate;
+        }
+
+        public afterCreate(): ILiteEvent<IEventEntityFactory> {
+            return this.onAfterCreate;
+        }
+
+        public beforeRestore(): ILiteEvent<IEventEntityFactory> {
+            return this.onBeforeRestore;
+        }
+
+        public afterRestore(): ILiteEvent<IEventEntityFactory> {
+            return this.onAfterRestore;
+        }
+
+        public beforeInit(): ILiteEvent<IEventEntityFactory> {
+            return this.onBeforeInit;
+        }
+
+        public afterInit(): ILiteEvent<IEventEntityFactory> {
+            return this.onAfterInit;
         }
     }
 }

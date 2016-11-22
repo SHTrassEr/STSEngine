@@ -16,8 +16,9 @@
 
         beforeAdd(): ILiteEvent<IEventEntityListService<T>>;
         afterAdd(): ILiteEvent<IEventEntityListService<T>>;
-
         beforeRemove(): ILiteEvent<IEventEntityListService<T>>;
         afterRemove(): ILiteEvent<IEventEntityListService<T>>;
+        beforeClear(): ILiteEvent<IEventEntityListService<T>>;
+        afterClear(): ILiteEvent<IEventEntityListService<T>>;
     }
 }
